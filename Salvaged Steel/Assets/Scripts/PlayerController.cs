@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     private float cameraSmoothSpeed = 7.5f;
     private float maxCameraDistance = 7.0f;
     private bool isAlive = true;
+    public Gun gun;
 
     private void Update()
     {
@@ -31,6 +32,12 @@ public class PlayerController : MonoBehaviour
 
         //Aim
         Aim();
+
+        //Shoot
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            gun.Shoot();
+        }
     }
 
     private (bool success, Vector3 position) GetMousePosition()
