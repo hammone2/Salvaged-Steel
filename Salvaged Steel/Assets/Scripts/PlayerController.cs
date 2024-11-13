@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private LayerMask groundMask;
+    [SerializeField] private LayerMask partMask;
     public GameObject rotated;
     public CharacterController characterController;
     public Camera playerCamera;
@@ -14,8 +15,12 @@ public class PlayerController : MonoBehaviour
     private float rotationSpeed = 8.0f;
     private float cameraSmoothSpeed = 7.5f;
     private float maxCameraDistance = 7.0f;
+    private float health = 10f;
     private bool isAlive = true;
     public Gun gun;
+    public GameObject gunSlot;
+
+    private PartObject selectedPart;
 
     private void Update()
     {
@@ -33,10 +38,45 @@ public class PlayerController : MonoBehaviour
         //Aim
         Aim();
 
+        //Picking up parts off the ground
+        LookForParts();
+        if (selectedPart != null)
+        {
+            if (Input.GetKeyDown(KeyCode.E) && selectedPart.isEquipped == false)
+            {
+                if (selectedPart.GetComponent<Gun>())
+                {
+                    gun.gameObject.GetComponent<PartObject>().Drop();
+                    selectedPart.Equip(gunSlot.transform);
+                    gun = selectedPart.GetComponent<Gun>();
+                    gun.GetCamera(playerCamera);
+                }
+                //else if (selectedPart.GetComponent<Turret>())
+            }
+        }
+
         //Shoot
         if (Input.GetKey(KeyCode.Mouse0))
         {
             gun.Shoot();
+        }
+    }
+
+    private void LookForParts()
+    {
+        var ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+
+        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, partMask))
+        {
+            PartObject partObject = hitInfo.collider.gameObject.GetComponent<PartObject>();
+            if (partObject != null)
+            {
+                selectedPart = partObject;
+            }           
+        }
+        else
+        {
+            selectedPart = null;
         }
     }
 
@@ -89,5 +129,10 @@ public class PlayerController : MonoBehaviour
             // Smoothly move the camera towards the desired position (now within max distance)
             playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, desiredCameraPosition, Time.deltaTime * cameraSmoothSpeed);
         }
+    }
+
+    public void TakeDamage(float damage)
+    {
+
     }
 }

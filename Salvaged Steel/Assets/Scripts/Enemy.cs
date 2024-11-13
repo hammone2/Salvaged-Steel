@@ -12,6 +12,8 @@ public class Enemy : MonoBehaviour
     public CharacterController characterController;
     public Gun gun;
     public LayerMask layersToHit;
+    public HealthComponent healthComponent;
+    public List<GameObject> partSlots;
 
     private float moveSpeed = 7.5f;
     private float rotationSpeed = 8.0f;
@@ -37,6 +39,8 @@ public class Enemy : MonoBehaviour
 
         // Start the coroutine to choose random positions
         StartCoroutine(ChooseRandomFlankPosition());
+
+        
     }
     void Update()
     {
@@ -67,6 +71,11 @@ public class Enemy : MonoBehaviour
                 //Debug.Log(hit.collider.gameObject.name + " was hit!");
             }
         }
+
+        if (healthComponent.health <= 0)
+        {
+            Die();
+        }
     }
 
     private IEnumerator ChooseRandomFlankPosition()
@@ -94,5 +103,30 @@ public class Enemy : MonoBehaviour
                 yield return null; // Wait until next frame
             }*/
         }
+    }
+
+    private void Die()
+    {
+        // Loop through each GameObject in the list
+        foreach (GameObject obj in partSlots)
+        {
+            // Loop through each direct child of the current GameObject
+            for (int i = 0; i < obj.transform.childCount; i++)
+            {
+                Transform child = obj.transform.GetChild(i);
+
+                // Check if the child has a PartObject component
+                PartObject partObject = child.GetComponent<PartObject>();
+
+                if (partObject != null)
+                {
+                    Debug.Log("Found PartObject in child: " + child.name);
+                    gun = null;
+                    partObject.Drop();
+                }
+            }
+        }
+
+        Destroy(this.gameObject);
     }
 }

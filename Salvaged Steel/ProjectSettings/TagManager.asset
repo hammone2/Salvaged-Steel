@@ -15,8 +15,8 @@ TagManager:
   - AimLayer
   - Walls
   - Player
-  - 
-  - 
+  - Enemies
+  - Parts
   - 
   - 
   - 

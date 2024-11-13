@@ -10,6 +10,7 @@ public class Gun : MonoBehaviour
     public float bulletSpeed = 32f;
     public float fireRate = 0.15f;
     public float shakeMagnitude = 0.15f;
+    public float damage = 5f;
 
     private float timerValue;
     private CameraShake cameraShake;
@@ -18,7 +19,7 @@ public class Gun : MonoBehaviour
     {
         timerValue = fireRate;
 
-        Transform cameraTransform = transform.parent.transform.parent.Find("Camera"); //get the player's camera
+        Transform cameraTransform = transform.parent.transform.parent.transform.parent.Find("Camera"); //get the player's camera
         if (cameraTransform != null)
         {
             cameraShake = cameraTransform.GetComponent<CameraShake>();
@@ -43,8 +44,18 @@ public class Gun : MonoBehaviour
             return;
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
+        bullet.GetComponent<Bullet>().damage = damage;
         timerValue = 0;
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
+    }
+
+    public void GetCamera(Camera camera)
+    {
+        Transform cameraTransform = camera.transform;
+        if (cameraTransform != null)
+        {
+            cameraShake = cameraTransform.GetComponent<CameraShake>();
+        }
     }
 }

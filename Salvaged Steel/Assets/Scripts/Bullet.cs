@@ -6,16 +6,29 @@ public class Bullet : MonoBehaviour
 {
 
     public float lifeTime = 5f;
-    private float damage;
+    public LayerMask layersToHit;
+    public float damage;
 
     void Awake()
     {
         Destroy(gameObject, lifeTime);
     }
 
-    void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        //Destroy(collision.gameObject);
-        Destroy(gameObject);
+        // Try to get the Health component from the other game object
+        HealthComponent healthComponent = other.GetComponent<HealthComponent>();
+
+        // If Health component exists, call TakeDamage
+        if (healthComponent != null)
+        {
+            healthComponent.TakeDamage(damage);
+        }
+
+        // Check if the collider is in one of the specified layers
+        if (((1 << other.gameObject.layer) & layersToHit) != 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
