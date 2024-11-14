@@ -8,8 +8,24 @@ public class PartObject : MonoBehaviour
     public BoxCollider bc;
     public bool isEquipped = true;
     private Transform originalParent;
-    private float forceStrength = 10f;
+    //private float forceStrength = 10f;
     private Vector3 forceDirection;
+
+    public enum Rarity
+    {
+        Common,
+        Uncommon,
+        Rare,
+        Epic,
+        Legendary
+    }
+    // Public list to hold only one rarity (always contains exactly one item)
+    [SerializeField]
+    public Rarity itemRarity = Rarity.Common;  // Default value set to Common
+
+    // Expose the current rarity to other classes, but do not allow modification of the list
+    //public Rarity CurrentRarity => currentRarity;
+
 
     // Store the original parent so that we can reassign it when dropping
     void Start()
@@ -38,7 +54,7 @@ public class PartObject : MonoBehaviour
         transform.localRotation = Quaternion.identity;  // Or any custom rotation
     }
 
-    public void Drop()
+    public void Drop(bool isExploding, float forceStrength)
     {
         isEquipped = false;
         // Unparent the object
@@ -54,7 +70,12 @@ public class PartObject : MonoBehaviour
             rb.useGravity = true;
 
             // Apply force to send the object flying
-            forceDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1.5f), Random.Range(-1f, 1f));
+            if (isExploding)
+                forceDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1.5f), Random.Range(-1f, 1f));
+            else
+                forceDirection = transform.forward;
+      
+
             rb.AddForce(forceDirection.normalized * forceStrength, ForceMode.Impulse);  // You can use ForceMode.Impulse for instant impact
         }
         if (bc != null)

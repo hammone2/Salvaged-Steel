@@ -11,6 +11,7 @@ public class Gun : MonoBehaviour
     public float fireRate = 0.15f;
     public float shakeMagnitude = 0.15f;
     public float damage = 5f;
+    public int ammo = 200;
 
     private float timerValue;
     private CameraShake cameraShake;
@@ -42,10 +43,13 @@ public class Gun : MonoBehaviour
     {
         if (timerValue < fireRate)
             return;
+        if (ammo <= 0)
+            return;
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
         bullet.GetComponent<Bullet>().damage = damage;
         timerValue = 0;
+        ammo -= 1;
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
     }

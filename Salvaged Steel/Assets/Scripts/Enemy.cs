@@ -11,13 +11,16 @@ public class Enemy : MonoBehaviour
     public GameObject rotated;
     public CharacterController characterController;
     public Gun gun;
+    public Propulsion propulsion;
     public LayerMask layersToHit;
     public HealthComponent healthComponent;
     public List<GameObject> partSlots;
 
     private float moveSpeed = 7.5f;
     private float rotationSpeed = 8.0f;
+    private float propRotSpeed = 8.0f;
     private float detectionDistance = 20f;
+    private float health = 0f; //this isnt the actual health value, only gets passed to the healthcomponent once its calculated
     private LayerMask playerLayer;
 
     private float minFlankTime = 1f;
@@ -25,10 +28,11 @@ public class Enemy : MonoBehaviour
     private float closeEnoughDistance = 1f;
     private float flankRadius = 15f;
     private Transform target;
+    private GameObject propulsionSlot;
     
     void Awake()
     {
-        agent.speed = moveSpeed;
+        agent.speed = propulsion.moveSpeed;
         playerLayer = LayerMask.GetMask("Player");
     }
 
@@ -36,6 +40,31 @@ public class Enemy : MonoBehaviour
     {
         GameObject playerObject = GameObject.FindWithTag("Player");
         target = playerObject.transform;
+
+        //Apply health to the enemy
+        // Loop through each GameObject in the list
+        foreach (GameObject obj in partSlots)
+        {
+            if (obj.name == "PropulsionSlot")
+                propulsionSlot = obj;
+            // Loop through each direct child of the current GameObject
+            for (int i = 0; i < obj.transform.childCount; i++)
+            {
+                Transform child = obj.transform.GetChild(i);
+
+                // Check if the child has a PartObject component
+                PartObject partObject = child.GetComponent<PartObject>();
+
+                if (partObject != null)
+                {
+                    Debug.Log("Found PartObject in child: " + child.name);
+                    HealthComponent _healthComponent = partObject.GetComponent<HealthComponent>();
+                    if (_healthComponent != null)
+                        health += _healthComponent.health;
+                }
+            }
+        }
+        healthComponent.health = health;
 
         // Start the coroutine to choose random positions
         StartCoroutine(ChooseRandomFlankPosition());
@@ -70,6 +99,22 @@ public class Enemy : MonoBehaviour
                 }
                 //Debug.Log(hit.collider.gameObject.name + " was hit!");
             }
+        }
+
+        // Get the current velocity of the agent (NavMeshAgent)
+        Vector3 velocity = agent.velocity;
+
+        // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
+        if (velocity.magnitude > 0.1f)
+        {
+            // Get the direction the enemy is moving (ignore Y axis)
+            Vector3 moveDirection = new Vector3(velocity.x, 0, velocity.z).normalized;
+
+            // Calculate the target rotation, looking in the direction of movement
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+
+            // Smoothly rotate the propulsionSlot towards the target rotation
+            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
         }
 
         if (healthComponent.health <= 0)
@@ -122,7 +167,7 @@ public class Enemy : MonoBehaviour
                 {
                     Debug.Log("Found PartObject in child: " + child.name);
                     gun = null;
-                    partObject.Drop();
+                    partObject.Drop(true, Random.Range(10f, 15f));
                 }
             }
         }
