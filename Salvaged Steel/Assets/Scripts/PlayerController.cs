@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask partMask;
     public GameObject rotated;
+    public GameObject playButton;
     public CharacterController characterController;
     public Camera playerCamera;
 
@@ -18,10 +19,11 @@ public class PlayerController : MonoBehaviour
     private float maxCameraDistance = 7.0f;
     private float health = 10f;
     private bool isAlive = true;
+    private bool isPlaying;
 
     [HideInInspector] public Gun gun;
-    private Turret turret;
-    private Propulsion propulsion;
+    [HideInInspector] public Turret turret;
+    [HideInInspector] public Propulsion propulsion;
     public GameObject gunSlot;
     public GameObject turretSlot;
     public GameObject propulsionSlot;
@@ -41,6 +43,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (!isPlaying)
+            return;
         if (!isAlive) // Dont do anything if the player is dead
             return;
 
@@ -168,6 +172,33 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(float damage)
     {
+        
+        if (isAlive == false)
+            return;
+        HealthComponent propHp = propulsion.GetComponent<HealthComponent>();
+        HealthComponent turretHp = turret.GetComponent<HealthComponent>();
 
+        propHp.TakeDamage(damage / 30);
+        turretHp.TakeDamage(damage / 30);
+
+        if (propHp.health <= 0 || turretHp.health <= 0)
+        {
+            isAlive = false;
+            End();
+        }
+        
+    }
+
+    public void End()
+    {
+        isPlaying = false;
+        playButton.SetActive(true);
+        Leaderboard.instance.SetLeaderboardEntry(-Mathf.RoundToInt(Global.score * 1000.0f));
+    }
+
+    public void Begin()
+    {
+        isPlaying = true;
+        playButton.SetActive(false);
     }
 }

@@ -8,9 +8,13 @@ public class HUD : MonoBehaviour
     public PlayerController player;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI hullText;
+    public TextMeshProUGUI turretText;
     void Update()
     {
         scoreText.text = "Score: " + Global.score;
         ammoText.text = "Ammo: " + player.gun.ammo;
+        hullText.text = "Hull Health: " + player.propulsion.GetComponent<HealthComponent>().health;
+        turretText.text = "Turret Health: " + player.turret.GetComponent<HealthComponent>().health;
     }
 }

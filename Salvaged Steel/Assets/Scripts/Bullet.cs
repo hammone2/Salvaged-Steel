@@ -18,11 +18,16 @@ public class Bullet : MonoBehaviour
     {
         // Try to get the Health component from the other game object
         HealthComponent healthComponent = other.GetComponent<HealthComponent>();
+        PlayerController playerController = other.GetComponent<PlayerController>();
 
         // If Health component exists, call TakeDamage
         if (healthComponent != null)
         {
             healthComponent.TakeDamage(damage);
+        }
+        else if (playerController != null)
+        {
+            playerController.TakeDamage(damage);
         }
 
         // Check if the collider is in one of the specified layers

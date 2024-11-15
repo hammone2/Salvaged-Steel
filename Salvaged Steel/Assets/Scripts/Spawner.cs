@@ -14,6 +14,8 @@ public class Spawner : MonoBehaviour
     public float minSpawnCooldown = 2f;
     public float maxSpawnCooldown = 5f;
 
+    public bool isSpawning = false;
+
     // Cooldown for each spawn point (to prevent double-spawning from same point)
     private float[] spawnPointCooldowns;
 
@@ -29,6 +31,8 @@ public class Spawner : MonoBehaviour
     // Coroutine to spawn enemies at random times
     private IEnumerator SpawnEnemies()
     {
+        //if (!isSpawning)
+            //return;
         // Keep spawning enemies
         while (true)
         {
@@ -59,5 +63,10 @@ public class Spawner : MonoBehaviour
         // Instantiate the enemy at the chosen spawn point's position and rotation
         Instantiate(enemyPrefab, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
         Debug.Log("Enemy spawned at spawn point: " + spawnPointIndex);
+    }
+
+    public void BeginSpawning()
+    {
+        isSpawning = true;
     }
 }
