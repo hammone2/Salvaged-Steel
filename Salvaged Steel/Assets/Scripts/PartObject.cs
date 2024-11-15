@@ -11,6 +11,12 @@ public class PartObject : MonoBehaviour
     //private float forceStrength = 10f;
     private Vector3 forceDirection;
 
+    // Timer variables
+    private float despawnTime = 45f; // Time in seconds before the item despawns
+    private float currentTimer = 0f; // Current time on the timer
+    private Coroutine despawnCoroutine; // Reference to the coroutine
+
+
     public enum Rarity
     {
         Common,
@@ -22,10 +28,6 @@ public class PartObject : MonoBehaviour
     // Public list to hold only one rarity (always contains exactly one item)
     [SerializeField]
     public Rarity itemRarity = Rarity.Common;  // Default value set to Common
-
-    // Expose the current rarity to other classes, but do not allow modification of the list
-    //public Rarity CurrentRarity => currentRarity;
-
 
     // Store the original parent so that we can reassign it when dropping
     void Start()
@@ -46,6 +48,14 @@ public class PartObject : MonoBehaviour
         {
             bc.isTrigger = true; //disable collisions
         }
+
+        //Stop the despawn timer
+        if (despawnCoroutine != null)
+        {
+            StopCoroutine(despawnCoroutine);
+            currentTimer = 0f; // Reset the timer
+        }
+
         // Set the object as a child of the new parent
         transform.SetParent(newParent);
 
@@ -82,5 +92,29 @@ public class PartObject : MonoBehaviour
         {
             bc.isTrigger = false; //enable collisions
         }
+
+        despawnCoroutine = StartCoroutine(DespawnTimer());
+    }
+
+    // Coroutine that handles the despawn timer
+    private IEnumerator DespawnTimer()
+    {
+        currentTimer = despawnTime;
+
+        while (currentTimer > 0f)
+        {
+            currentTimer -= Time.deltaTime; // Decrease the timer over time
+            yield return null; // Wait for the next frame
+        }
+
+        // When the timer reaches zero, despawn the item (destroy it)
+        DespawnItem();
+    }
+
+    // Method to destroy or deactivate the item
+    private void DespawnItem()
+    {
+        Debug.Log("Item despawned: " + name);
+        Destroy(gameObject); // Destroy the item GameObject
     }
 }

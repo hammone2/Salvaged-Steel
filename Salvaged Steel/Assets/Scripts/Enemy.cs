@@ -15,8 +15,8 @@ public class Enemy : MonoBehaviour
     public LayerMask layersToHit;
     public HealthComponent healthComponent;
     public List<GameObject> partSlots;
+    public int pointsForKill = 10;
 
-    private float moveSpeed = 7.5f;
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
     private float detectionDistance = 20f;
@@ -171,7 +171,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-
+        Global.score += pointsForKill;
         Destroy(this.gameObject);
     }
 }

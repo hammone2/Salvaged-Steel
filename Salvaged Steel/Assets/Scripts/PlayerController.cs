@@ -18,8 +18,8 @@ public class PlayerController : MonoBehaviour
     private float maxCameraDistance = 7.0f;
     private float health = 10f;
     private bool isAlive = true;
-    
-    private Gun gun;
+
+    [HideInInspector] public Gun gun;
     private Turret turret;
     private Propulsion propulsion;
     public GameObject gunSlot;
