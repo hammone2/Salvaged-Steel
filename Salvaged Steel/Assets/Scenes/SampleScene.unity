@@ -2806,6 +2806,7 @@ GameObject:
   - component: {fileID: 557453196}
   - component: {fileID: 557453195}
   - component: {fileID: 557453197}
+  - component: {fileID: 557453198}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -2887,6 +2888,14 @@ MonoBehaviour:
   gunSlot: {fileID: 773149562}
   turretSlot: {fileID: 709531548}
   propulsionSlot: {fileID: 35507689}
+--- !u!81 &557453198
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 557453194}
+  m_Enabled: 1
 --- !u!1 &572815239
 GameObject:
   m_ObjectHideFlags: 0
@@ -2897,8 +2906,8 @@ GameObject:
   m_Component:
   - component: {fileID: 572815242}
   - component: {fileID: 572815240}
-  - component: {fileID: 572815241}
   - component: {fileID: 572815243}
+  - component: {fileID: 572815244}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -2957,14 +2966,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &572815241
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 572815239}
-  m_Enabled: 1
 --- !u!4 &572815242
 Transform:
   m_ObjectHideFlags: 0
@@ -2993,6 +2994,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shakeMagnitude: 0
+--- !u!114 &572815244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 572815239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9e5208e549a4794db878b7ee6e992aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  effectMaterial: {fileID: 2100000, guid: fa3b02ddb114796439052e680d34a4f2, type: 2}
 --- !u!1 &580482260
 GameObject:
   m_ObjectHideFlags: 0
