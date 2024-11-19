@@ -90,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: shakeMagnitude
-      value: 0.07
+      value: 0.21
       objectReference: {fileID: 0}
     - target: {fileID: 8658097743384022886, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_LocalPosition.z
