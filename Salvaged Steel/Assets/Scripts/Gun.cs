@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-
+    public Texture2D crosshair;
     public Transform bulletSpawner;
     public GameObject bulletPrefab;
     public float bulletSpeed = 32f;

@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     {
         //Assign parts to vars
         gun = gunSlot.transform.GetChild(0).GetComponent<Gun>();
+        SetCustomCursor(gun.crosshair);
         turret = turretSlot.transform.GetChild(0).GetComponent<Turret>();
         rotationSpeed = turret.rotationSpeed;
         propulsion = propulsionSlot.transform.GetChild(0).GetComponent<Propulsion>();
@@ -85,6 +86,7 @@ public class PlayerController : MonoBehaviour
                     selectedPart.Equip(gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
+                    SetCustomCursor(gun.crosshair);
                 }
                 else if (selectedPart.GetComponent<Turret>())
                 {
@@ -178,13 +180,14 @@ public class PlayerController : MonoBehaviour
         HealthComponent propHp = propulsion.GetComponent<HealthComponent>();
         HealthComponent turretHp = turret.GetComponent<HealthComponent>();
 
-        propHp.TakeDamage(damage / 30);
-        turretHp.TakeDamage(damage / 30);
+        float damageFactor = 30f;
+        propHp.TakeDamage(damage / damageFactor);
+        turretHp.TakeDamage(damage / damageFactor);
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
             isAlive = false;
-            End();
+            End(); //get rid of this later when implementing multiplayer
         }
         
     }
@@ -200,5 +203,11 @@ public class PlayerController : MonoBehaviour
     {
         isPlaying = true;
         playButton.SetActive(false);
+    }
+
+    private void SetCustomCursor(Texture2D cursorTexture)
+    {
+        Vector2 cursorHotspot = new Vector2(cursorTexture.width/2, cursorTexture.height/2); // get the center of the crosshair
+        Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
     }
 }

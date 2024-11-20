@@ -111,12 +111,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb031f73922332846aac2bfc1f9efa79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crosshair: {fileID: 2800000, guid: 7286196301c02cb419ec5e3d8ab8ea46, type: 3}
   bulletSpawner: {fileID: 8658097743384022886}
   bulletPrefab: {fileID: 4333140916352716035, guid: 9e55a1431d15b2846860cb4f8281eb42, type: 3}
   bulletSpeed: 32
   fireRate: 0.15
   shakeMagnitude: 0.15
   damage: 5
+  ammo: 200
 --- !u!4 &5609770851023845395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2276170804055207960, guid: 3a30c5829dd330c4c9809857e69ad8eb, type: 3}
