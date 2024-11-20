@@ -193,7 +193,7 @@ public class PlayerController : MonoBehaviour
     {
         isPlaying = false;
         playButton.SetActive(true);
-        Leaderboard.instance.SetLeaderboardEntry(-Mathf.RoundToInt(Global.score * 1000.0f));
+        Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(Global.score /* 1000.0f*/));
     }
 
     public void Begin()
