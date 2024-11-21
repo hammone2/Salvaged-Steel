@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPun
 {
+    //components, objects, etc
+    [Header ("Components & Layers")]
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask partMask;
     public GameObject rotated;
@@ -12,6 +16,13 @@ public class PlayerController : MonoBehaviour
     public CharacterController characterController;
     public Camera playerCamera;
 
+    [Header ("Networking")]
+    //networking stuff
+    public Player photonPlayer;
+    public int id;
+
+    [Header ("Stats")]
+    //stats
     private float moveSpeed;
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
@@ -21,6 +32,8 @@ public class PlayerController : MonoBehaviour
     private bool isAlive = true;
     private bool isPlaying;
 
+    [Header ("Item Slots")]
+    //item slots
     [HideInInspector] public Gun gun;
     [HideInInspector] public Turret turret;
     [HideInInspector] public Propulsion propulsion;
@@ -40,6 +53,24 @@ public class PlayerController : MonoBehaviour
         rotationSpeed = turret.rotationSpeed;
         propulsion = propulsionSlot.transform.GetChild(0).GetComponent<Propulsion>();
         moveSpeed = propulsion.moveSpeed;
+    }
+
+    [PunRPC]
+    public void Initialize(Player player)
+    {
+        id = player.ActorNumber;
+        photonPlayer = player;
+        GameManager.instance.players[id - 1] = this;
+        // is this not our local player?
+        if (!photonView.IsMine)
+        {
+            GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            //rig.isKinematic = true;
+        }
+        else
+        {
+            //GameUI.instance.Initialize(this);
+        }
     }
 
     private void Update()
