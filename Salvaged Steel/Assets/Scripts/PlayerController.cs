@@ -164,6 +164,8 @@ public class PlayerController : MonoBehaviour
             }
 
             // Lerp camera position towards the halfway point
+            halfwayPoint.y = 10.5f; //doing this so the camera dosen't clip into the ground and cause weird shadows
+            halfwayPoint.z += -18.66f;
             playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
             // Smooth rotation towards the target direction
@@ -196,7 +198,7 @@ public class PlayerController : MonoBehaviour
     {
         isPlaying = false;
         playButton.SetActive(true);
-        Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(Global.score /* 1000.0f*/));
+        Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(Global.score));
     }
 
     public void Begin()
