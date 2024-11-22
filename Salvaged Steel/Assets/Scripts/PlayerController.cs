@@ -11,7 +11,6 @@ public class PlayerController : MonoBehaviourPun
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask partMask;
     public GameObject rotated;
-    public GameObject playButton;
     public CharacterController characterController;
     public Camera playerCamera;
 
@@ -26,9 +25,8 @@ public class PlayerController : MonoBehaviourPun
     private float propRotSpeed = 8.0f;
     private float cameraSmoothSpeed = 7.5f;
     private float maxCameraDistance = 7.0f;
-    private float health = 10f;
     private bool isAlive = true;
-    private bool isPlaying;
+    private bool isPlaying = true;
 
     [Header ("Item Slots")]
     [HideInInspector] public Gun gun;
@@ -225,14 +223,14 @@ public class PlayerController : MonoBehaviourPun
     public void End()
     {
         isPlaying = false;
-        playButton.SetActive(true);
+        //playButton.SetActive(true);
         Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(score));
     }
 
     public void Begin()
     {
         isPlaying = true;
-        playButton.SetActive(false);
+        //playButton.SetActive(false);
     }
 
     private void SetCustomCursor(Texture2D cursorTexture)

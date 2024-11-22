@@ -79,6 +79,8 @@ public class GameManager : MonoBehaviourPun
     }
     */
 
+    //add check lose condition here
+
     [PunRPC]
     void WinGame(int winningPlayer)
     {
