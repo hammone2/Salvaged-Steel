@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviourPun
 
     [Header("Players")]
     public string playerPrefabLocation;
+    //public GameObject playerPrefab;
     public PlayerController[] players;
     public Transform[] spawnPoints;
     public int alivePlayers;

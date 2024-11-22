@@ -9,6 +9,7 @@ using Photon.Realtime;
 public class Menu : MonoBehaviourPunCallbacks, ILobbyCallbacks
 {
     [Header("Screens")]
+    public GameObject loginScreen;
     public GameObject mainScreen;
     public GameObject createRoomScreen;
     public GameObject lobbyScreen;
@@ -54,6 +55,7 @@ public class Menu : MonoBehaviourPunCallbacks, ILobbyCallbacks
     void SetScreen(GameObject screen)
     {
         // disable all other screens
+        loginScreen.SetActive(false);
         mainScreen.SetActive(false);
         createRoomScreen.SetActive(false);
         lobbyScreen.SetActive(false);
@@ -75,6 +77,11 @@ public class Menu : MonoBehaviourPunCallbacks, ILobbyCallbacks
         // enable the menu buttons once we connect to the server
         createRoomButton.interactable = true;
         findRoomButton.interactable = true;
+    }
+
+    public void OnLoginButton()
+    {
+        SetScreen(mainScreen);
     }
 
     // called when the "Create Room" button has been pressed.
@@ -131,7 +138,7 @@ public class Menu : MonoBehaviourPunCallbacks, ILobbyCallbacks
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
         // tell everyone to load the game scene
-        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Game");
+        NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "SampleScene"); //replace this with a room randomly selected from a list
     }
 
     public void OnLeaveLobbyButton()
