@@ -7,7 +7,6 @@ using Photon.Realtime;
 
 public class PlayerController : MonoBehaviourPun
 {
-    //components, objects, etc
     [Header ("Components & Layers")]
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask partMask;
@@ -17,12 +16,11 @@ public class PlayerController : MonoBehaviourPun
     public Camera playerCamera;
 
     [Header ("Networking")]
-    //networking stuff
     public Player photonPlayer;
     public int id;
 
-    [Header ("Stats")]
-    //stats
+    [Header("Stats")]
+    public float score;
     private float moveSpeed;
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
@@ -33,7 +31,6 @@ public class PlayerController : MonoBehaviourPun
     private bool isPlaying;
 
     [Header ("Item Slots")]
-    //item slots
     [HideInInspector] public Gun gun;
     [HideInInspector] public Turret turret;
     [HideInInspector] public Propulsion propulsion;
@@ -229,7 +226,7 @@ public class PlayerController : MonoBehaviourPun
     {
         isPlaying = false;
         playButton.SetActive(true);
-        Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(Global.score));
+        Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(score));
     }
 
     public void Begin()

@@ -171,7 +171,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-        Global.score += pointsForKill;
+        //Global.score += pointsForKill; //give this to the bullet's parent id later
         Destroy(this.gameObject);
     }
 }

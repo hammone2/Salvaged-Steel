@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1237785110780500499
 RectTransform:
   m_ObjectHideFlags: 0
@@ -347,6 +347,7 @@ MonoBehaviour:
   playButton: {fileID: 4909436161778322264}
   characterController: {fileID: 6155153432676378862}
   playerCamera: {fileID: 7272727008885131595}
+  id: 0
   gun: {fileID: 0}
   turret: {fileID: 0}
   propulsion: {fileID: 0}
