@@ -188,6 +188,7 @@ MonoBehaviour:
   - {fileID: 1778236691879516834}
   - {fileID: 8564641386282320742}
   pointsForKill: 10
+  playerDetectRate: 0.2
 --- !u!195 &3088875532943100383
 NavMeshAgent:
   m_ObjectHideFlags: 0

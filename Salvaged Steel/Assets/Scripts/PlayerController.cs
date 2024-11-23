@@ -19,7 +19,7 @@ public class PlayerController : MonoBehaviourPun
     public int id;
 
     [Header("Stats")]
-    public float score;
+    public int score;
     private float moveSpeed;
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
@@ -39,16 +39,7 @@ public class PlayerController : MonoBehaviourPun
     private PartObject selectedPart;
     private int maxPickupDist = 7;
 
-    private void Start()
-    {
-        //Assign parts to vars
-        gun = gunSlot.transform.GetChild(0).GetComponent<Gun>();
-        SetCustomCursor(gun.crosshair);
-        turret = turretSlot.transform.GetChild(0).GetComponent<Turret>();
-        rotationSpeed = turret.rotationSpeed;
-        propulsion = propulsionSlot.transform.GetChild(0).GetComponent<Propulsion>();
-        moveSpeed = propulsion.moveSpeed;
-    }
+   
 
     [PunRPC]
     public void Initialize(Player player)
@@ -68,15 +59,29 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    private void Start()
+    {
+        //Assign parts to vars
+        gun = gunSlot.transform.GetChild(0).GetComponent<Gun>();
+        SetCustomCursor(gun.crosshair);
+        turret = turretSlot.transform.GetChild(0).GetComponent<Turret>();
+        rotationSpeed = turret.rotationSpeed;
+        propulsion = propulsionSlot.transform.GetChild(0).GetComponent<Propulsion>();
+        moveSpeed = propulsion.moveSpeed;
+    }
+
     private void Update()
     {
-        if (!isPlaying)
+        if (!photonView.IsMine) //dont do anything if there is no photon view
+            return;
+        if (!isPlaying) //dont do anything id controls are disabled
             return;
         if (!isAlive) // Dont do anything if the player is dead
             return;
+        
 
         //Move
-            // Get input for movement (WASD or arrow keys)
+        // Get input for movement (WASD or arrow keys)
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
             // Apply movement and normalize the vector using ClampedMagnitude()
@@ -200,6 +205,7 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    [PunRPC]
     public void TakeDamage(float damage)
     {
         
@@ -224,7 +230,7 @@ public class PlayerController : MonoBehaviourPun
     {
         isPlaying = false;
         //playButton.SetActive(true);
-        Leaderboard.instance.SetLeaderboardEntry(Mathf.RoundToInt(score));
+        Leaderboard.instance.SetLeaderboardEntry(score);
     }
 
     public void Begin()

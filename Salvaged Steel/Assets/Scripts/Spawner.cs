@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class Spawner : MonoBehaviour
+public class Spawner : MonoBehaviourPun
 {
     // Enemy prefab to spawn
     public GameObject enemyPrefab;
+    public string enemyPrefabPath;
 
     // List of spawn points
     public Transform[] spawnPoints;
@@ -14,7 +16,7 @@ public class Spawner : MonoBehaviour
     public float minSpawnCooldown = 2f;
     public float maxSpawnCooldown = 5f;
 
-    public bool isSpawning = false;
+    public bool isSpawning = true;
 
     // Cooldown for each spawn point (to prevent double-spawning from same point)
     private float[] spawnPointCooldowns;
@@ -25,43 +27,46 @@ public class Spawner : MonoBehaviour
         spawnPointCooldowns = new float[spawnPoints.Length];
 
         // Start spawning enemies
-        StartCoroutine(SpawnEnemies());
+        //StartCoroutine(SpawnEnemies());
+    }
+
+    private void Update()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+        SpawnEnemies();
     }
 
     // Coroutine to spawn enemies at random times
-    private IEnumerator SpawnEnemies()
+    private void SpawnEnemies()
     {
-        //if (!isSpawning)
-            //return;
+        if (!isSpawning)
+            return;
         // Keep spawning enemies
-        while (true)
+        
+        // Check all spawn points and attempt to spawn at each one
+        for (int i = 0; i < spawnPoints.Length; i++)
         {
-            // Check all spawn points and attempt to spawn at each one
-            for (int i = 0; i < spawnPoints.Length; i++)
+            if (spawnPointCooldowns[i] <= 0) // If cooldown is finished, spawn an enemy
             {
-                if (spawnPointCooldowns[i] <= 0) // If cooldown is finished, spawn an enemy
-                {
-                    SpawnEnemy(i);  // Spawn an enemy at the i-th spawn point
-                    // Set random cooldown for the spawn point
-                    spawnPointCooldowns[i] = Random.Range(minSpawnCooldown, maxSpawnCooldown);
-                }
-                else
-                {
-                    // Reduce cooldown for each spawn point
-                    spawnPointCooldowns[i] -= Time.deltaTime;
-                }
+                SpawnEnemy(i);  // Spawn an enemy at the i-th spawn point
+                // Set random cooldown for the spawn point
+                spawnPointCooldowns[i] = Random.Range(minSpawnCooldown, maxSpawnCooldown);
             }
-
-            // Wait for a frame before checking again
-            yield return null;
-        }
+            else
+            {
+                // Reduce cooldown for each spawn point
+                spawnPointCooldowns[i] -= Time.deltaTime;
+            }
+        }  
     }
 
     // Spawn an enemy at a specific spawn point
     private void SpawnEnemy(int spawnPointIndex)
     {
         // Instantiate the enemy at the chosen spawn point's position and rotation
-        Instantiate(enemyPrefab, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+        //Instantiate(enemyPrefab, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
+        GameObject enemy = PhotonNetwork.Instantiate(enemyPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
         Debug.Log("Enemy spawned at spawn point: " + spawnPointIndex);
     }
 

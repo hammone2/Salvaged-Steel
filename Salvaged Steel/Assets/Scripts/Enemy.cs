@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Photon.Pun;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviourPun
 {
 
     public NavMeshAgent agent;
@@ -20,6 +21,9 @@ public class Enemy : MonoBehaviour
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
     private float detectionDistance = 20f;
+    private float chaseRange = 60f;
+    public float playerDetectRate = 0.2f;
+    private float lastPlayerDetectTime;
     private float health = 0f; //this isnt the actual health value, only gets passed to the healthcomponent once its calculated
     private LayerMask playerLayer;
 
@@ -38,8 +42,8 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        GameObject playerObject = GameObject.FindWithTag("Player");
-        target = playerObject.transform;
+        //GameObject playerObject = GameObject.FindWithTag("Player");
+        //target = playerObject.transform;
 
         //Apply health to the enemy
         // Loop through each GameObject in the list
@@ -81,6 +85,8 @@ public class Enemy : MonoBehaviour
             // Wait for a short time before choosing a new flank position
             StartCoroutine(ChooseRandomFlankPosition());
         }*/
+        if (!PhotonNetwork.IsMasterClient)
+            return;
 
         if (target != null)
         {
@@ -97,9 +103,11 @@ public class Enemy : MonoBehaviour
                 {
                     gun.Shoot();
                 }
-                //Debug.Log(hit.collider.gameObject.name + " was hit!");
             }
         }
+
+        //Search for nearby players
+        DetectPlayer();
 
         // Get the current velocity of the agent (NavMeshAgent)
         Vector3 velocity = agent.velocity;
@@ -120,6 +128,31 @@ public class Enemy : MonoBehaviour
         if (healthComponent.health <= 0)
         {
             Die();
+        }
+    }
+
+    // updates the targeted player
+    void DetectPlayer()
+    {
+        if (Time.time - lastPlayerDetectTime > playerDetectRate)
+        {
+            lastPlayerDetectTime = Time.time;
+            // loop through all the players
+            foreach (PlayerController player in GameManager.instance.players)
+            {
+                // calculate distance between us and the player
+                float dist = Vector2.Distance(transform.position, player.transform.position);
+                if (player == target)
+                {
+                    if (dist > chaseRange)
+                        target = null;
+                }
+                else if (dist < chaseRange)
+                {
+                    if (target == null)
+                        target = player.transform;
+                }
+            }
         }
     }
 
@@ -172,6 +205,7 @@ public class Enemy : MonoBehaviour
             }
         }
         //Global.score += pointsForKill; //give this to the bullet's parent id later
-        Destroy(this.gameObject);
+        //Destroy(this.gameObject);
+        PhotonNetwork.Destroy(gameObject);
     }
 }

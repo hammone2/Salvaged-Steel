@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
 
 public class Gun : MonoBehaviour
 {
@@ -39,6 +41,7 @@ public class Gun : MonoBehaviour
         }
     }
 
+    [PunRPC]
     public void Shoot()
     {
         if (timerValue < fireRate)
@@ -48,6 +51,7 @@ public class Gun : MonoBehaviour
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
         bullet.GetComponent<Bullet>().damage = damage;
+        //bullet.GetComponent<Bullet>().Initialize(damage, );
         timerValue = 0;
         ammo -= 1;
         if (cameraShake != null)

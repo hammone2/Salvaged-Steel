@@ -7,12 +7,22 @@ public class Bullet : MonoBehaviour
 
     public float lifeTime = 5f;
     public LayerMask layersToHit;
-    public float damage;
+    [HideInInspector] public float damage;
+    private int attackerId;
+    private bool isMine;
 
     void Awake()
     {
         Destroy(gameObject, lifeTime);
     }
+
+    /*public void Initialize(int damage, int attackerId, bool isMine)
+    {
+        this.damage = damage;
+        this.attackerId = attackerId;
+        this.isMine = isMine;
+        Destroy(gameObject, lifeTime);
+    }*/
 
     private void OnTriggerEnter(Collider other)
     {
