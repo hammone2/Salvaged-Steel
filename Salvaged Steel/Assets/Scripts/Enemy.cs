@@ -29,7 +29,6 @@ public class Enemy : MonoBehaviourPun
 
     private float minFlankTime = 1f;
     private float maxFlankTime = 5f;
-    private float closeEnoughDistance = 1f;
     private float flankRadius = 15f;
     private Transform target;
     private GameObject propulsionSlot;
@@ -77,14 +76,6 @@ public class Enemy : MonoBehaviourPun
     }
     void Update()
     {
-        //agent.destination = target.position;
-
-        // If the enemy has reached the destination, continue the flank process
-        /*if (agent.remainingDistance <= closeEnoughDistance && !agent.pathPending)
-        {
-            // Wait for a short time before choosing a new flank position
-            StartCoroutine(ChooseRandomFlankPosition());
-        }*/
         if (!PhotonNetwork.IsMasterClient)
             return;
 
