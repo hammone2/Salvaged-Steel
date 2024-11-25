@@ -42,7 +42,7 @@ public class Gun : MonoBehaviour
     }
 
     [PunRPC]
-    public void Shoot()
+    public void Shoot(int id, bool isMine)
     {
         if (timerValue < fireRate)
             return;
@@ -50,8 +50,8 @@ public class Gun : MonoBehaviour
             return;
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
-        bullet.GetComponent<Bullet>().damage = damage;
-        //bullet.GetComponent<Bullet>().Initialize(damage, );
+        //bullet.GetComponent<Bullet>().damage = damage;
+        bullet.GetComponent<Bullet>().Initialize(damage, id, isMine);
         timerValue = 0;
         ammo -= 1;
         if (cameraShake != null)

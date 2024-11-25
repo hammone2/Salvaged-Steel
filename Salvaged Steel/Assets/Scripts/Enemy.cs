@@ -18,6 +18,8 @@ public class Enemy : MonoBehaviourPun
     public List<GameObject> partSlots;
     public int pointsForKill = 10;
 
+    private int curAttackerId;
+
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
     private float detectionDistance = 20f;
@@ -67,7 +69,7 @@ public class Enemy : MonoBehaviourPun
                 }
             }
         }
-        healthComponent.health = health;
+        //healthComponent.health = health;
 
         // Start the coroutine to choose random positions
         StartCoroutine(ChooseRandomFlankPosition());
@@ -92,7 +94,7 @@ public class Enemy : MonoBehaviourPun
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    gun.Shoot();
+                    gun.Shoot(0, false);
                 }
             }
         }
@@ -116,10 +118,10 @@ public class Enemy : MonoBehaviourPun
             propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
         }
 
-        if (healthComponent.health <= 0)
+        /*if (healthComponent.health <= 0)
         {
             Die();
-        }
+        }*/
     }
 
     // updates the targeted player
@@ -174,6 +176,18 @@ public class Enemy : MonoBehaviourPun
         }
     }
 
+    [PunRPC]
+    public void TakeDamage(int attackerId, float damage)
+    {
+        if (health <= 0)
+            return;
+        health -= damage;
+        curAttackerId = attackerId;
+        if (health <= 0)
+            Die();
+    }
+
+    [PunRPC]
     private void Die()
     {
         // Loop through each GameObject in the list
@@ -196,6 +210,8 @@ public class Enemy : MonoBehaviourPun
             }
         }
         //Global.score += pointsForKill; //give this to the bullet's parent id later
+        if (curAttackerId != 0)
+            GameManager.instance.GetPlayer(curAttackerId).photonView.RPC("AddKill", RpcTarget.All, pointsForKill);
         //Destroy(this.gameObject);
         PhotonNetwork.Destroy(gameObject);
     }

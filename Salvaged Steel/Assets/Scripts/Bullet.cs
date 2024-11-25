@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -11,18 +12,13 @@ public class Bullet : MonoBehaviour
     private int attackerId;
     private bool isMine;
 
-    void Awake()
-    {
-        Destroy(gameObject, lifeTime);
-    }
-
-    /*public void Initialize(int damage, int attackerId, bool isMine)
+    public void Initialize(float damage, int attackerId, bool isMine)
     {
         this.damage = damage;
         this.attackerId = attackerId;
         this.isMine = isMine;
         Destroy(gameObject, lifeTime);
-    }*/
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -30,15 +26,33 @@ public class Bullet : MonoBehaviour
         HealthComponent healthComponent = other.GetComponent<HealthComponent>();
         PlayerController playerController = other.GetComponent<PlayerController>();
 
-        // If Health component exists, call TakeDamage
+        // did we hit a player?
+        // if this is the local player's bullet, damage the hit player
+        // we're using client side hit detection
+        if (other.CompareTag("Player") && !isMine)
+        {
+            PlayerController player = GameManager.instance.GetPlayer(other.gameObject);
+
+            if (player.id != attackerId)
+                player.photonView.RPC("TakeDamage", player.photonPlayer, attackerId, damage);
+        }
+        else if (other.CompareTag("Enemy") && isMine)
+        {
+            // might do a GetEnemy() func in GameManager
+            Enemy enemy = other.GetComponent<Enemy>();
+            enemy.photonView.RPC("TakeDamage", RpcTarget.All, attackerId, damage);
+        }
+
+        /*// If Health component exists, call TakeDamage
         if (healthComponent != null)
         {
-            healthComponent.TakeDamage(damage);
+            // replace this with enemy's own unique dmg func
+            //healthComponent.TakeDamage(attackerId, damage);
         }
         else if (playerController != null)
         {
-            playerController.TakeDamage(damage);
-        }
+            playerController.TakeDamage(attackerId, damage);
+        }*/
 
         // Check if the collider is in one of the specified layers
         if (((1 << other.gameObject.layer) & layersToHit) != 0)

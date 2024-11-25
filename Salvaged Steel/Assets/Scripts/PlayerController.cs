@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEditor.Experimental.GraphView;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviourPun
     [Header ("Networking")]
     public Player photonPlayer;
     public int id;
+    private int curAttackerId;
 
     [Header("Stats")]
     public int score;
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviourPun
     public void Initialize(Player player)
     {
         id = player.ActorNumber;
+        Debug.Log(id);
         photonPlayer = player;
         GameManager.instance.players[id - 1] = this;
         // is this not our local player?
@@ -138,7 +141,7 @@ public class PlayerController : MonoBehaviourPun
         //Shoot
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            gun.Shoot();
+            gun.Shoot(id, photonView.IsMine);
         }
     }
 
@@ -206,13 +209,14 @@ public class PlayerController : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void TakeDamage(float damage)
+    public void TakeDamage(int attackerID, float damage)
     {
         
         if (isAlive == false)
             return;
         HealthComponent propHp = propulsion.GetComponent<HealthComponent>();
         HealthComponent turretHp = turret.GetComponent<HealthComponent>();
+        curAttackerId = attackerID;
 
         float damageFactor = 30f;
         propHp.TakeDamage(damage / damageFactor);
@@ -220,10 +224,25 @@ public class PlayerController : MonoBehaviourPun
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
-            isAlive = false;
-            End(); //get rid of this later when implementing multiplayer
+            //isAlive = false;
+            //End(); //get rid of this later when implementing multiplayer
+            photonView.RPC("Die", RpcTarget.All);
         }
         
+    }
+
+    [PunRPC]
+    public void Die()
+    {
+        isAlive = false;
+        End();
+    }
+
+    [PunRPC]
+    public void AddKill(int scoreToAdd)
+    {
+        score += scoreToAdd;
+        //GameUI.instance.UpdatePlayerInfoText();
     }
 
     public void End()
