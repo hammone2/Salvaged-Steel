@@ -46,6 +46,13 @@ MonoBehaviour:
   - Shoot
   - Die
   - AddKill
+  - DetectPlayer
+  - ChooseRandomFlankPosition
+  - shootAtTarget
+  - rotatePropulsionPart
+  - Drop
+  - Equip
+  - rotateStuffTowardsMouse
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1

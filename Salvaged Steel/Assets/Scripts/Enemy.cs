@@ -83,26 +83,30 @@ public class Enemy : MonoBehaviourPun
 
         if (target != null)
         {
-            Vector3 directionToPlayer = target.position - rotated.transform.position;
+            /*Vector3 directionToPlayer = target.position - rotated.transform.position;
             directionToPlayer.y = 0; // Keep the rotation flat
             Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
             rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, rotation, Time.deltaTime * rotationSpeed);
 
             // Raycast from rotated to detect the player
             RaycastHit hit;
-            if (Physics.Raycast(rotated.transform.position, rotated.transform.forward /*directionToPlayer.normalized*/, out hit, detectionDistance, layersToHit))
+            if (Physics.Raycast(rotated.transform.position, rotated.transform.forward, out hit, detectionDistance, layersToHit))
             {
                 if (hit.collider.CompareTag("Player"))
                 {
                     gun.Shoot(0, false);
                 }
-            }
+            }*/
+            photonView.RPC("shootAtTarget", RpcTarget.All);
         }
 
         //Search for nearby players
-        DetectPlayer();
+        photonView.RPC("DetectPlayer", RpcTarget.All);
 
-        // Get the current velocity of the agent (NavMeshAgent)
+        //rotate the propulsion part
+        photonView.RPC("rotatePropulsionPart", RpcTarget.All);
+
+        /*/ Get the current velocity of the agent (NavMeshAgent)
         Vector3 velocity = agent.velocity;
 
         // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
@@ -116,15 +120,11 @@ public class Enemy : MonoBehaviourPun
 
             // Smoothly rotate the propulsionSlot towards the target rotation
             propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
-        }
-
-        /*if (healthComponent.health <= 0)
-        {
-            Die();
         }*/
     }
 
     // updates the targeted player
+    [PunRPC]
     void DetectPlayer()
     {
         if (Time.time - lastPlayerDetectTime > playerDetectRate)
@@ -148,7 +148,7 @@ public class Enemy : MonoBehaviourPun
             }
         }
     }
-
+    
     private IEnumerator ChooseRandomFlankPosition()
     {
         while (true)
@@ -173,6 +173,46 @@ public class Enemy : MonoBehaviourPun
             {
                 yield return null; // Wait until next frame
             }*/
+        }
+    }
+
+    [PunRPC]
+    void shootAtTarget()
+    {
+        Vector3 directionToPlayer = target.position - rotated.transform.position;
+        directionToPlayer.y = 0; // Keep the rotation flat
+        Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
+        rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, rotation, Time.deltaTime * rotationSpeed);
+
+        // Raycast from rotated to detect the player
+        RaycastHit hit;
+        if (Physics.Raycast(rotated.transform.position, rotated.transform.forward /*directionToPlayer.normalized*/, out hit, detectionDistance, layersToHit))
+        {
+            if (hit.collider.CompareTag("Player"))
+            {
+                //gun.Shoot(0, false);
+                gun.photonView.RPC("Shoot", RpcTarget.All, 0, false);
+            }
+        }
+    }
+
+    [PunRPC]
+    void rotatePropulsionPart()
+    {
+        // Get the current velocity of the agent (NavMeshAgent)
+        Vector3 velocity = agent.velocity;
+
+        // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
+        if (velocity.magnitude > 0.1f)
+        {
+            // Get the direction the enemy is moving (ignore Y axis)
+            Vector3 moveDirection = new Vector3(velocity.x, 0, velocity.z).normalized;
+
+            // Calculate the target rotation, looking in the direction of movement
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+
+            // Smoothly rotate the propulsionSlot towards the target rotation
+            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
         }
     }
 

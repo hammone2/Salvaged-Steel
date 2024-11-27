@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Gun : MonoBehaviour
+public class Gun : MonoBehaviourPun
 {
     public Texture2D crosshair;
     public Transform bulletSpawner;

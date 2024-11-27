@@ -74,7 +74,7 @@ public class PlayerController : MonoBehaviourPun
 
     private void Update()
     {
-        if (!photonView.IsMine) //dont do anything if there is no photon view
+        if (!photonView.IsMine) //dont do anything if the photon view isnt the local player's
             return;
         if (!isPlaying) //dont do anything id controls are disabled
             return;
@@ -92,14 +92,16 @@ public class PlayerController : MonoBehaviourPun
         // If there is movement, rotate propulsionSlot to follow move direction
         if (move.magnitude > 0.1f)
         {
-            // Calculate the direction vector (ignoring the Y axis)
+            photonView.RPC("rotatePropulsuionPart", RpcTarget.All, move);
+
+            /*/ Calculate the direction vector (ignoring the Y axis)
             Vector3 moveDirection = move.normalized;
 
             // Calculate the target rotation, rotating only around the Y axis (since we're on a flat plane)
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
 
             // Smoothly rotate the propulsionSlot towards the target rotation
-            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
+            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);*/
         }
 
         //Aim
@@ -115,22 +117,28 @@ public class PlayerController : MonoBehaviourPun
                 float dropForce = 7f;
                 if (selectedPart.GetComponent<Gun>())
                 {
-                    gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
-                    selectedPart.Equip(gunSlot.transform);
+                    //gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    //selectedPart.Equip(gunSlot.transform);
+                    selectedPart.photonView.RPC("Equip", RpcTarget.All, gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
                     SetCustomCursor(gun.crosshair);
                 }
                 else if (selectedPart.GetComponent<Turret>())
                 {
-                    turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
-                    selectedPart.Equip(turretSlot.transform);
+                    //turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    //selectedPart.Equip(turretSlot.transform);
+                    selectedPart.photonView.RPC("Equip", RpcTarget.All, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
                 }
                 else if (selectedPart.GetComponent<Propulsion>())
                 {
-                    propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
-                    selectedPart.Equip(propulsionSlot.transform);
+                    //propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    //selectedPart.Equip(propulsionSlot.transform);
+                    selectedPart.photonView.RPC("Equip", RpcTarget.All, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
                 }
@@ -140,7 +148,8 @@ public class PlayerController : MonoBehaviourPun
         //Shoot
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            gun.Shoot(id, photonView.IsMine);
+            //gun.Shoot(id, photonView.IsMine);
+            gun.photonView.RPC("Shoot", RpcTarget.All, id, photonView.IsMine);
         }
     }
 
@@ -201,10 +210,32 @@ public class PlayerController : MonoBehaviourPun
             halfwayPoint.z += -18.66f;
             playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
-            // Smooth rotation towards the target direction
+            /*/ Smooth rotation towards the target direction
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed); //rotated.transform.forward = direction;
+            rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);*/ //rotated.transform.forward = direction;
+            photonView.RPC("rotateStuffTowardsMouse", RpcTarget.All, direction);
         }
+    }
+
+    [PunRPC]
+    void rotateStuffTowardsMouse(Vector3 _direction)
+    {
+        // Smooth rotation towards the target direction
+        Quaternion targetRotation = Quaternion.LookRotation(_direction);
+        rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed); //rotated.transform.forward = direction;
+    }
+
+    [PunRPC]
+    void rotatePropulsionPart(Vector3 _move)
+    {
+        // Calculate the direction vector (ignoring the Y axis)
+        Vector3 moveDirection = _move.normalized;
+
+        // Calculate the target rotation, rotating only around the Y axis (since we're on a flat plane)
+        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+
+        // Smoothly rotate the propulsionSlot towards the target rotation
+        propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
     }
 
     [PunRPC]
@@ -223,8 +254,6 @@ public class PlayerController : MonoBehaviourPun
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
-            //isAlive = false;
-            //End(); //get rid of this later when implementing multiplayer
             photonView.RPC("Die", RpcTarget.All);
         }
         

@@ -1,14 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class PartObject : MonoBehaviour
+public class PartObject : MonoBehaviourPun
 {
     public Rigidbody rb;
     public BoxCollider bc;
     public bool isEquipped = true;
     private Transform originalParent;
-    //private float forceStrength = 10f;
     private Vector3 forceDirection;
 
     // Timer variables
@@ -35,7 +35,7 @@ public class PartObject : MonoBehaviour
         originalParent = transform.parent;
     }
 
-
+    [PunRPC]
     public void Equip(Transform newParent)
     {
         isEquipped = true;
@@ -64,6 +64,7 @@ public class PartObject : MonoBehaviour
         transform.localRotation = Quaternion.identity;  // Or any custom rotation
     }
 
+    [PunRPC]
     public void Drop(bool isExploding, float forceStrength)
     {
         isEquipped = false;
