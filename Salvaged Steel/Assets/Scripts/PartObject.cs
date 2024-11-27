@@ -37,6 +37,8 @@ public class PartObject : MonoBehaviourPun
 
     public void Equip(Transform newParent)
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         isEquipped = true;
         if (rb != null)
         {
@@ -65,6 +67,8 @@ public class PartObject : MonoBehaviourPun
 
     public void Drop(bool isExploding, float forceStrength)
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         isEquipped = false;
         // Unparent the object
         transform.SetParent(null);
