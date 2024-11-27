@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviourPun
 
         if (target != null)
         {
-            /*Vector3 directionToPlayer = target.position - rotated.transform.position;
+            Vector3 directionToPlayer = target.position - rotated.transform.position;
             directionToPlayer.y = 0; // Keep the rotation flat
             Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
             rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, rotation, Time.deltaTime * rotationSpeed);
@@ -94,19 +94,17 @@ public class Enemy : MonoBehaviourPun
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    gun.Shoot(0, false);
+                    //gun.Shoot(0, false);
+                    gun.photonView.RPC("Shoot", RpcTarget.All, 0, false);
                 }
-            }*/
-            photonView.RPC("shootAtTarget", RpcTarget.All);
+            }
         }
 
         //Search for nearby players
-        photonView.RPC("DetectPlayer", RpcTarget.All);
+        DetectPlayer();
 
         //rotate the propulsion part
-        photonView.RPC("rotatePropulsionPart", RpcTarget.All);
-
-        /*/ Get the current velocity of the agent (NavMeshAgent)
+        // Get the current velocity of the agent (NavMeshAgent)
         Vector3 velocity = agent.velocity;
 
         // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
@@ -120,11 +118,10 @@ public class Enemy : MonoBehaviourPun
 
             // Smoothly rotate the propulsionSlot towards the target rotation
             propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
-        }*/
+        }
     }
 
     // updates the targeted player
-    [PunRPC]
     void DetectPlayer()
     {
         if (Time.time - lastPlayerDetectTime > playerDetectRate)
@@ -177,46 +174,6 @@ public class Enemy : MonoBehaviourPun
     }
 
     [PunRPC]
-    void shootAtTarget()
-    {
-        Vector3 directionToPlayer = target.position - rotated.transform.position;
-        directionToPlayer.y = 0; // Keep the rotation flat
-        Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
-        rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-
-        // Raycast from rotated to detect the player
-        RaycastHit hit;
-        if (Physics.Raycast(rotated.transform.position, rotated.transform.forward /*directionToPlayer.normalized*/, out hit, detectionDistance, layersToHit))
-        {
-            if (hit.collider.CompareTag("Player"))
-            {
-                //gun.Shoot(0, false);
-                gun.photonView.RPC("Shoot", RpcTarget.All, 0, false);
-            }
-        }
-    }
-
-    [PunRPC]
-    void rotatePropulsionPart()
-    {
-        // Get the current velocity of the agent (NavMeshAgent)
-        Vector3 velocity = agent.velocity;
-
-        // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
-        if (velocity.magnitude > 0.1f)
-        {
-            // Get the direction the enemy is moving (ignore Y axis)
-            Vector3 moveDirection = new Vector3(velocity.x, 0, velocity.z).normalized;
-
-            // Calculate the target rotation, looking in the direction of movement
-            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-
-            // Smoothly rotate the propulsionSlot towards the target rotation
-            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
-        }
-    }
-
-    [PunRPC]
     public void TakeDamage(int attackerId, float damage)
     {
         if (health <= 0)
@@ -227,7 +184,7 @@ public class Enemy : MonoBehaviourPun
             Die();
     }
 
-    [PunRPC]
+
     private void Die()
     {
         // Loop through each GameObject in the list
@@ -249,10 +206,8 @@ public class Enemy : MonoBehaviourPun
                 }
             }
         }
-        //Global.score += pointsForKill; //give this to the bullet's parent id later
         if (curAttackerId != 0)
             GameManager.instance.GetPlayer(curAttackerId).photonView.RPC("AddKill", RpcTarget.All, pointsForKill);
-        //Destroy(this.gameObject);
         PhotonNetwork.Destroy(gameObject);
     }
 }

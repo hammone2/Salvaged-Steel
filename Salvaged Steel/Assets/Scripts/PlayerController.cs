@@ -92,16 +92,14 @@ public class PlayerController : MonoBehaviourPun
         // If there is movement, rotate propulsionSlot to follow move direction
         if (move.magnitude > 0.1f)
         {
-            photonView.RPC("rotatePropulsuionPart", RpcTarget.All, move);
-
-            /*/ Calculate the direction vector (ignoring the Y axis)
+            // Calculate the direction vector (ignoring the Y axis)
             Vector3 moveDirection = move.normalized;
 
             // Calculate the target rotation, rotating only around the Y axis (since we're on a flat plane)
             Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
 
             // Smoothly rotate the propulsionSlot towards the target rotation
-            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);*/
+            propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
         }
 
         //Aim
@@ -117,28 +115,28 @@ public class PlayerController : MonoBehaviourPun
                 float dropForce = 7f;
                 if (selectedPart.GetComponent<Gun>())
                 {
-                    //gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
-                    gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    //selectedPart.Equip(gunSlot.transform);
-                    selectedPart.photonView.RPC("Equip", RpcTarget.All, gunSlot.transform);
+                    gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    //gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    selectedPart.Equip(gunSlot.transform);
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.All, gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
                     SetCustomCursor(gun.crosshair);
                 }
                 else if (selectedPart.GetComponent<Turret>())
                 {
-                    //turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
-                    turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    //selectedPart.Equip(turretSlot.transform);
-                    selectedPart.photonView.RPC("Equip", RpcTarget.All, turretSlot.transform);
+                    turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    //turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    selectedPart.Equip(turretSlot.transform);
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.All, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
                 }
                 else if (selectedPart.GetComponent<Propulsion>())
                 {
-                    //propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
-                    propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    //selectedPart.Equip(propulsionSlot.transform);
-                    selectedPart.photonView.RPC("Equip", RpcTarget.All, propulsionSlot.transform);
+                    propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    //propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    selectedPart.Equip(propulsionSlot.transform);
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.All, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
                 }
@@ -210,32 +208,10 @@ public class PlayerController : MonoBehaviourPun
             halfwayPoint.z += -18.66f;
             playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
-            /*/ Smooth rotation towards the target direction
+            // Smooth rotation towards the target direction
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);*/ //rotated.transform.forward = direction;
-            photonView.RPC("rotateStuffTowardsMouse", RpcTarget.All, direction);
+            rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed); //rotated.transform.forward = direction;
         }
-    }
-
-    [PunRPC]
-    void rotateStuffTowardsMouse(Vector3 _direction)
-    {
-        // Smooth rotation towards the target direction
-        Quaternion targetRotation = Quaternion.LookRotation(_direction);
-        rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed); //rotated.transform.forward = direction;
-    }
-
-    [PunRPC]
-    void rotatePropulsionPart(Vector3 _move)
-    {
-        // Calculate the direction vector (ignoring the Y axis)
-        Vector3 moveDirection = _move.normalized;
-
-        // Calculate the target rotation, rotating only around the Y axis (since we're on a flat plane)
-        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-
-        // Smoothly rotate the propulsionSlot towards the target rotation
-        propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
     }
 
     [PunRPC]

@@ -35,7 +35,6 @@ public class PartObject : MonoBehaviourPun
         originalParent = transform.parent;
     }
 
-    [PunRPC]
     public void Equip(Transform newParent)
     {
         isEquipped = true;
@@ -64,7 +63,6 @@ public class PartObject : MonoBehaviourPun
         transform.localRotation = Quaternion.identity;  // Or any custom rotation
     }
 
-    [PunRPC]
     public void Drop(bool isExploding, float forceStrength)
     {
         isEquipped = false;
@@ -115,7 +113,7 @@ public class PartObject : MonoBehaviourPun
     // Method to destroy or deactivate the item
     private void DespawnItem()
     {
-        Debug.Log("Item despawned: " + name);
+        //Debug.Log("Item despawned: " + name);
         Destroy(gameObject); // Destroy the item GameObject
     }
 }
