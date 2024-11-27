@@ -26,8 +26,9 @@ public class Bullet : MonoBehaviour
         HealthComponent healthComponent = other.GetComponent<HealthComponent>();
         PlayerController playerController = other.GetComponent<PlayerController>();
 
-        // did we hit a player?
-        // if this is the local player's bullet, damage the hit player
+        // did we hit a player or enemy?
+        // if this is the local player's bullet, damage the hit enemy
+        // if its not the local player, then damage the local player
         // we're using client side hit detection
         if (other.CompareTag("Player") && !isMine)
         {
