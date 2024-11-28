@@ -9,6 +9,7 @@ public class PartObject : MonoBehaviourPun
     public BoxCollider bc;
     public bool isEquipped = true;
     private Transform originalParent;
+    private Transform currentParent;
     private Vector3 forceDirection;
 
     // Timer variables
@@ -35,10 +36,31 @@ public class PartObject : MonoBehaviourPun
         originalParent = transform.parent;
     }
 
-    [PunRPC]
-    public void Equip(Transform newParent)
+    public void Equip(Transform newParent) //doing a local call then a RPC call to get around Photon not being able to serialize transforms
     {
-        Debug.Log("EQUIP ATTEMPT");
+        /*isEquipped = true;
+        if (rb != null)
+        {
+            rb.useGravity = false;
+            rb.isKinematic = true; // stop doing physics stuff
+        }
+        if (bc != null)
+        {
+            bc.isTrigger = true; //disable collisions
+        }*/
+
+        // Set the object as a child of the new parent
+        currentParent = newParent;
+        //transform.SetParent(currentParent);
+
+        photonView.RPC("EquipRPC", RpcTarget.All, currentParent.position, currentParent.rotation);
+
+    }
+
+    [PunRPC]
+    public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation)
+    {
+        Debug.Log("EQUIP RPC ATTEMPT");
         isEquipped = true;
         if (rb != null)
         {
@@ -58,11 +80,14 @@ public class PartObject : MonoBehaviourPun
         }
 
         // Set the object as a child of the new parent
-        transform.SetParent(newParent);
+        transform.SetParent(currentParent);
 
         // Position the object at the parent's position and rotation (optional: you could adjust it further)
-        transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
-        transform.localRotation = Quaternion.identity;  // Or any custom rotation
+        //transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
+        //transform.localRotation = Quaternion.identity;  // Or any custom rotation
+
+        transform.position = parentPosition;
+        transform.rotation = parentRotation;
     }
 
     [PunRPC]
@@ -71,6 +96,7 @@ public class PartObject : MonoBehaviourPun
         isEquipped = false;
         // Unparent the object
         transform.SetParent(null);
+        currentParent = null;
 
         // Set its world position and rotation (this lets it behave like a world object)
         // You can adjust this if you want it to fall from a specific point, like a character's hand

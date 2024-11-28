@@ -117,8 +117,8 @@ public class PlayerController : MonoBehaviourPun
                 {
                     //gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    //selectedPart.Equip(gunSlot.transform);
-                    selectedPart.photonView.RPC("Equip", photonPlayer, gunSlot.transform); //using photonPlayer instead of RpcTarget.All because it works for some reason
+                    selectedPart.Equip(gunSlot.transform);
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform); //using photonPlayer instead of RpcTarget.All because it works for some reason
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
                     SetCustomCursor(gun.crosshair);
@@ -127,16 +127,16 @@ public class PlayerController : MonoBehaviourPun
                 {
                     //turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    //selectedPart.Equip(turretSlot.transform);
-                    selectedPart.photonView.RPC("Equip", photonPlayer, turretSlot.transform);
+                    selectedPart.Equip(turretSlot.transform);
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
                 }
                 else if (selectedPart.GetComponent<Propulsion>())
                 {
                     //propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    //selectedPart.Equip(propulsionSlot.transform);
-                    selectedPart.photonView.RPC("Equip", photonPlayer, propulsionSlot.transform);
+                    selectedPart.Equip(propulsionSlot.transform);
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
                 }
