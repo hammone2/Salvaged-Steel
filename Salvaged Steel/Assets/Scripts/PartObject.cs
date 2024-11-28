@@ -38,17 +38,6 @@ public class PartObject : MonoBehaviourPun
 
     public void Equip(Transform newParent) //doing a local call then a RPC call to get around Photon not being able to serialize transforms
     {
-        /*isEquipped = true;
-        if (rb != null)
-        {
-            rb.useGravity = false;
-            rb.isKinematic = true; // stop doing physics stuff
-        }
-        if (bc != null)
-        {
-            bc.isTrigger = true; //disable collisions
-        }*/
-
         if (!photonView.IsMine)
         {
             photonView.RequestOwnership();  // Request ownership if it's not owned by the current player
@@ -58,7 +47,7 @@ public class PartObject : MonoBehaviourPun
         currentParent = newParent;
         //transform.SetParent(currentParent);
 
-        photonView.RPC("EquipRPC", RpcTarget.All, currentParent.position, currentParent.rotation);
+        photonView.RPC("EquipRPC", RpcTarget.All, newParent.position, newParent.rotation);
 
     }
 
@@ -88,10 +77,13 @@ public class PartObject : MonoBehaviourPun
         transform.SetParent(currentParent);
 
         // Position the object at the parent's position and rotation (optional: you could adjust it further)
-        //transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
-        //transform.localRotation = Quaternion.identity;  // Or any custom rotation
+        //transform.localPosition = Vector3.zero;
+        //transform.localRotation = Quaternion.identity;
 
-        transform.position = parentPosition;
+        if (!photonView.IsMine)
+            return;
+
+        transform.position = parentPosition; //I think theres something wrong with the parent vars
         transform.rotation = parentRotation;
     }
 
