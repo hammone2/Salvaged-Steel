@@ -36,7 +36,7 @@ public class PartObject : MonoBehaviourPun
         originalParent = transform.parent;
     }
 
-    public void Equip(Transform newParent) //doing a local call then a RPC call to get around Photon not being able to serialize transforms
+    public void Equip(Transform newParent, int parentID) //doing a local call then a RPC call to get around Photon not being able to serialize transforms
     {
         if (!photonView.IsMine)
         {
@@ -47,12 +47,12 @@ public class PartObject : MonoBehaviourPun
         currentParent = newParent;
         //transform.SetParent(currentParent);
 
-        photonView.RPC("EquipRPC", RpcTarget.All, newParent.position, newParent.rotation);
+        photonView.RPC("EquipRPC", RpcTarget.All, newParent.position, newParent.rotation, parentID);
 
     }
 
     [PunRPC]
-    public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation)
+    public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation, int parentID)
     {
         Debug.Log("EQUIP RPC ATTEMPT");
         isEquipped = true;
@@ -74,17 +74,14 @@ public class PartObject : MonoBehaviourPun
         }
 
         // Set the object as a child of the new parent
-        transform.SetParent(currentParent);
+        //transform.SetParent(currentParent);
+        transform.SetParent(PhotonView.Find(parentID).transform);
 
-        // Position the object at the parent's position and rotation (optional: you could adjust it further)
-        //transform.localPosition = Vector3.zero;
-        //transform.localRotation = Quaternion.identity;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
 
-        if (!photonView.IsMine)
-            return;
-
-        transform.position = parentPosition; //I think theres something wrong with the parent vars
-        transform.rotation = parentRotation;
+        //transform.position = parentPosition; //I think theres something wrong with the parent vars
+        //transform.rotation = parentRotation;
     }
 
     [PunRPC]

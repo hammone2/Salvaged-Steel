@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     //gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    selectedPart.Equip(gunSlot.transform);
+                    selectedPart.Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform); //using photonPlayer instead of RpcTarget.All because it works for some reason
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     //turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    selectedPart.Equip(turretSlot.transform);
+                    selectedPart.Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
                 }
@@ -135,7 +135,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     //propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    selectedPart.Equip(propulsionSlot.transform);
+                    selectedPart.Equip(propulsionSlot.transform, propulsionSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
