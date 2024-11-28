@@ -88,11 +88,11 @@ public class PartObject : MonoBehaviourPun
         transform.SetParent(currentParent);
 
         // Position the object at the parent's position and rotation (optional: you could adjust it further)
-        transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
-        transform.localRotation = Quaternion.identity;  // Or any custom rotation
+        //transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
+        //transform.localRotation = Quaternion.identity;  // Or any custom rotation
 
-        //transform.position = parentPosition;
-        //transform.rotation = parentRotation;
+        transform.position = parentPosition;
+        transform.rotation = parentRotation;
     }
 
     [PunRPC]
