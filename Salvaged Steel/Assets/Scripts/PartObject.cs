@@ -35,10 +35,10 @@ public class PartObject : MonoBehaviourPun
         originalParent = transform.parent;
     }
 
+    [PunRPC]
     public void Equip(Transform newParent)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
+        Debug.Log("EQUIP ATTEMPT");
         isEquipped = true;
         if (rb != null)
         {
@@ -65,10 +65,9 @@ public class PartObject : MonoBehaviourPun
         transform.localRotation = Quaternion.identity;  // Or any custom rotation
     }
 
+    [PunRPC]
     public void Drop(bool isExploding, float forceStrength)
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
         isEquipped = false;
         // Unparent the object
         transform.SetParent(null);
