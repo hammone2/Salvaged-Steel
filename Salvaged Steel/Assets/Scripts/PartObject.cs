@@ -49,6 +49,11 @@ public class PartObject : MonoBehaviourPun
             bc.isTrigger = true; //disable collisions
         }*/
 
+        if (!photonView.IsMine)
+        {
+            photonView.RequestOwnership();  // Request ownership if it's not owned by the current player
+        }
+
         // Set the object as a child of the new parent
         currentParent = newParent;
         //transform.SetParent(currentParent);
@@ -83,16 +88,25 @@ public class PartObject : MonoBehaviourPun
         transform.SetParent(currentParent);
 
         // Position the object at the parent's position and rotation (optional: you could adjust it further)
-        //transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
-        //transform.localRotation = Quaternion.identity;  // Or any custom rotation
+        transform.localPosition = Vector3.zero;  // Or any custom position relative to the parent
+        transform.localRotation = Quaternion.identity;  // Or any custom rotation
 
-        transform.position = parentPosition;
-        transform.rotation = parentRotation;
+        //transform.position = parentPosition;
+        //transform.rotation = parentRotation;
     }
 
     [PunRPC]
     public void Drop(bool isExploding, float forceStrength)
     {
+        if (photonView.IsMine)
+        {
+            // Option 1: Relinquish ownership to the server (or whoever will control it next)
+            photonView.TransferOwnership(0); // Removes ownership (transfers to server)
+
+            // Option 2: If you want to transfer ownership to another player (for example, Player B):
+            // photonView.TransferOwnership(otherPlayerId); // Use the player's ID to transfer ownership
+        }
+
         isEquipped = false;
         // Unparent the object
         transform.SetParent(null);
