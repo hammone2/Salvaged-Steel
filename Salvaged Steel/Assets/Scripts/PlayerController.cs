@@ -116,6 +116,7 @@ public class PlayerController : MonoBehaviourPun
                 float dropForce = 7f;
                 if (selectedPart.GetComponent<Gun>())
                 {
+                    gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
                     gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
                     selectedPart.Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform);
@@ -226,8 +227,8 @@ public class PlayerController : MonoBehaviourPun
         curAttackerId = attackerID;
 
         float damageFactor = 60f;
-        propHp.TakeDamage(damage / damageFactor);
-        turretHp.TakeDamage(damage / damageFactor);
+        propHp.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage / damageFactor);
+        turretHp.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage / damageFactor);
 
         HUD.instance.UpdateHullHealth();
         HUD.instance.UpdateTurretHealth();

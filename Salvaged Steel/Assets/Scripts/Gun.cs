@@ -42,7 +42,7 @@ public class Gun : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void Shoot(int id, bool isMine)
+    public void Shoot(int id, bool isMine) // the ammo for some reason is not being synced across clients
     {
         if (timerValue < fireRate)
             return;
@@ -65,5 +65,11 @@ public class Gun : MonoBehaviourPun
         {
             cameraShake = cameraTransform.GetComponent<CameraShake>();
         }
+    }
+
+    [PunRPC]
+    public void DisconnectCamera(Camera camera)
+    {
+        cameraShake = null;
     }
 }
