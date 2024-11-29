@@ -6,22 +6,23 @@ using Photon.Realtime;
 
 public class Gun : MonoBehaviourPun
 {
+    [Header("Components")]
     public Texture2D crosshair;
     public Transform bulletSpawner;
     public GameObject bulletPrefab;
+
+    [Header("Weapon Stats")]
     public float bulletSpeed = 32f;
     public float fireRate = 0.15f;
     public float shakeMagnitude = 0.15f;
     public float damage = 5f;
     public int ammo = 200;
 
-    private float timerValue;
+    private float lastShootTime;
     private CameraShake cameraShake;
 
     private void Awake()
     {
-        timerValue = fireRate;
-
         Transform cameraTransform = transform.parent.transform.parent.transform.parent.Find("Camera"); //get the player's camera
         if (cameraTransform != null)
         {
@@ -29,29 +30,17 @@ public class Gun : MonoBehaviourPun
         }
     }
 
-    private void Update()
-    {
-        if (timerValue < fireRate)
-        {
-            timerValue += Time.deltaTime;
-            if (timerValue > fireRate) 
-            {
-                timerValue = fireRate;
-            }
-        }
-    }
-
     [PunRPC]
     public void Shoot(int id, bool isMine) // the ammo for some reason is not being synced across clients
     {
-        if (timerValue < fireRate)
+        if (Time.time - lastShootTime < fireRate)
             return;
         if (ammo <= 0)
             return;
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
         bullet.GetComponent<Bullet>().Initialize(damage, id, isMine);
-        timerValue = 0;
+        lastShootTime = Time.time;
         ammo -= 1;
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
