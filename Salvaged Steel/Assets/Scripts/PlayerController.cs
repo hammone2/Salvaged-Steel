@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
-            //GameUI.instance.Initialize(this);
+            HUD.instance.Initialize(this);
         }
     }
 
@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviourPun
         rotationSpeed = turret.rotationSpeed;
         propulsion = propulsionSlot.transform.GetChild(0).GetComponent<Propulsion>();
         moveSpeed = propulsion.moveSpeed;
+        HUD.instance.InitializeValues();
     }
 
     private void Update()
@@ -115,30 +116,30 @@ public class PlayerController : MonoBehaviourPun
                 float dropForce = 7f;
                 if (selectedPart.GetComponent<Gun>())
                 {
-                    //gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
                     selectedPart.Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
-                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform); //using photonPlayer instead of RpcTarget.All because it works for some reason
+                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
                     SetCustomCursor(gun.crosshair);
+                    HUD.instance.UpdateAmmoText();
                 }
                 else if (selectedPart.GetComponent<Turret>())
                 {
-                    //turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
                     selectedPart.Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
+                    HUD.instance.UpdateTurretHealth();
                 }
                 else if (selectedPart.GetComponent<Propulsion>())
                 {
-                    //propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
                     selectedPart.Equip(propulsionSlot.transform, propulsionSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
+                    HUD.instance.UpdateHullHealth();
                 }
             }
         }
@@ -228,6 +229,9 @@ public class PlayerController : MonoBehaviourPun
         propHp.TakeDamage(damage / damageFactor);
         turretHp.TakeDamage(damage / damageFactor);
 
+        HUD.instance.UpdateHullHealth();
+        HUD.instance.UpdateTurretHealth();
+
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
             photonView.RPC("Die", RpcTarget.All);
@@ -246,7 +250,7 @@ public class PlayerController : MonoBehaviourPun
     public void AddKill(int scoreToAdd)
     {
         score += scoreToAdd;
-        //GameUI.instance.UpdatePlayerInfoText();
+        HUD.instance.UpdateScoreText();
     }
 
     public void End()

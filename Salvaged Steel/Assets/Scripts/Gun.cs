@@ -50,10 +50,10 @@ public class Gun : MonoBehaviourPun
             return;
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
-        //bullet.GetComponent<Bullet>().damage = damage;
         bullet.GetComponent<Bullet>().Initialize(damage, id, isMine);
         timerValue = 0;
         ammo -= 1;
+        HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
     }

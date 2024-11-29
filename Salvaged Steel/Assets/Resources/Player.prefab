@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1237785110780500499
 RectTransform:
   m_ObjectHideFlags: 0
@@ -118,7 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 327143b17384fe14f908e7c1ef813332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8559327883341479406}
   scoreText: {fileID: 423529731621510115}
   ammoText: {fileID: 4719425669814049414}
   hullText: {fileID: 360988829166246111}
@@ -157,8 +156,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1087136156371231757}
   - {fileID: 7521065853580043135}
+  - {fileID: 1087136156371231757}
   - {fileID: 3665589798355773946}
   - {fileID: 1942012297022536514}
   - {fileID: 1237785110780500499}

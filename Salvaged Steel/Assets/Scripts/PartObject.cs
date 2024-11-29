@@ -45,10 +45,7 @@ public class PartObject : MonoBehaviourPun
 
         // Set the object as a child of the new parent
         currentParent = newParent;
-        //transform.SetParent(currentParent);
-
         photonView.RPC("EquipRPC", RpcTarget.All, newParent.position, newParent.rotation, parentID);
-
     }
 
     [PunRPC]
@@ -74,14 +71,10 @@ public class PartObject : MonoBehaviourPun
         }
 
         // Set the object as a child of the new parent
-        //transform.SetParent(currentParent);
         transform.SetParent(PhotonView.Find(parentID).transform);
 
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
-
-        //transform.position = parentPosition; //I think theres something wrong with the parent vars
-        //transform.rotation = parentRotation;
     }
 
     [PunRPC]
@@ -89,7 +82,6 @@ public class PartObject : MonoBehaviourPun
     {
         if (photonView.IsMine)
         {
-            // Option 1: Relinquish ownership to the server (or whoever will control it next)
             photonView.TransferOwnership(0); // Removes ownership (transfers to server)
 
             // Option 2: If you want to transfer ownership to another player (for example, Player B):
