@@ -7,6 +7,7 @@ public class PartObject : MonoBehaviourPun
 {
     public Rigidbody rb;
     public BoxCollider bc;
+    public TrailRenderer trail;
     public bool isEquipped = true;
     private Transform originalParent;
     private Transform currentParent;
@@ -51,6 +52,7 @@ public class PartObject : MonoBehaviourPun
     [PunRPC]
     public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation, int parentID)
     {
+        trail.emitting = false;
         Debug.Log("EQUIP RPC ATTEMPT");
         isEquipped = true;
         if (rb != null)
@@ -104,10 +106,14 @@ public class PartObject : MonoBehaviourPun
 
             // Apply force to send the object flying
             if (isExploding)
+            {
                 forceDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1.5f), Random.Range(-1f, 1f));
+                trail.emitting = true;
+            }
             else
+            {
                 forceDirection = transform.forward;
-      
+            }
 
             rb.AddForce(forceDirection.normalized * forceStrength, ForceMode.Impulse);  // You can use ForceMode.Impulse for instant impact
         }

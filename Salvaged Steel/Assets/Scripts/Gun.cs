@@ -57,8 +57,9 @@ public class Gun : MonoBehaviourPun
     }
 
     [PunRPC]
-    public void DisconnectCamera(Camera camera)
+    public void DisconnectCamera()
     {
-        cameraShake = null;
+        if (cameraShake != null)
+            cameraShake = null;
     }
 }
