@@ -103,6 +103,10 @@ public class PlayerController : MonoBehaviourPun
             propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
         }
 
+        // doing this because player started flying upwards for some reason
+        if (transform.position.y > 0)
+            transform.position = new Vector3(transform.position.x, 0, transform.position.z);
+
         //Aim
         Aim();
 
