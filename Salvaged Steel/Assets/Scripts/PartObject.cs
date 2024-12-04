@@ -9,6 +9,7 @@ public class PartObject : MonoBehaviourPun
     public BoxCollider bc;
     public TrailRenderer trail;
     public bool isEquipped = true;
+    private Outline outline;
     private Transform originalParent;
     private Transform currentParent;
     private Vector3 forceDirection;
@@ -31,10 +32,28 @@ public class PartObject : MonoBehaviourPun
     [SerializeField]
     public Rarity itemRarity = Rarity.Common;  // Default value set to Common
 
-    // Store the original parent so that we can reassign it when dropping
+    // Dictionary to store rarity-color mappings
+    private static readonly Dictionary<Rarity, Color> rarityColors = new Dictionary<Rarity, Color>()
+    {
+        { Rarity.Common, Color.white },
+        { Rarity.Uncommon, Color.green },
+        { Rarity.Rare, Color.blue },
+        { Rarity.Epic, new Color(0.5f, 0, 0.5f) }, // Purple color
+        { Rarity.Legendary, Color.yellow }
+    };
+
+    // Method to get color based on the item's rarity
+    public Color GetRarityColor()
+    {
+        return rarityColors[itemRarity];
+    }
+
+    
     void Start()
     {
-        originalParent = transform.parent;
+        originalParent = transform.parent; // Store the original parent so that we can reassign it when dropping
+        outline = GetComponent<Outline>();
+        outline.OutlineColor = GetRarityColor(); //set the rarity color
     }
 
     public void Equip(Transform newParent, int parentID) //doing a local call then a RPC call to get around Photon not being able to serialize transforms
@@ -53,6 +72,7 @@ public class PartObject : MonoBehaviourPun
     public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation, int parentID)
     {
         trail.emitting = false;
+        outline.enabled = false;
         Debug.Log("EQUIP RPC ATTEMPT");
         isEquipped = true;
         if (rb != null)
@@ -123,6 +143,7 @@ public class PartObject : MonoBehaviourPun
         }
 
         despawnCoroutine = StartCoroutine(DespawnTimer());
+        outline.enabled = true;
     }
 
     // Coroutine that handles the despawn timer

@@ -65,9 +65,21 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: bfa1330a048e5534ab0e786eec4372d5, type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: bfa1330a048e5534ab0e786eec4372d5, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: bfa1330a048e5534ab0e786eec4372d5, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 663b9f3cbb3a5a94784921c5c432f52a, type: 2}
+    - target: {fileID: -7511558181221131132, guid: bfa1330a048e5534ab0e786eec4372d5, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: c0e39cb11e599d64cb3820a79de0faf0, type: 2}
     - target: {fileID: 919132149155446097, guid: bfa1330a048e5534ab0e786eec4372d5, type: 3}
       propertyPath: m_Name
       value: mediumTurret
@@ -153,6 +165,14 @@ PrefabInstance:
     - target: {fileID: 1883225123191837408, guid: b824fca8f4316854abe52f1c5cd5e1b3, type: 3}
       propertyPath: m_Center.z
       value: -0.08766407
+      objectReference: {fileID: 0}
+    - target: {fileID: 2650044799563791963, guid: b824fca8f4316854abe52f1c5cd5e1b3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6402802575981450272, guid: b824fca8f4316854abe52f1c5cd5e1b3, type: 3}
+      propertyPath: itemRarity
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7297963332153743572, guid: b824fca8f4316854abe52f1c5cd5e1b3, type: 3}
       propertyPath: m_Name
