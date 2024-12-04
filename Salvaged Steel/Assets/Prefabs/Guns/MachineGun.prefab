@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1983747818331767355, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: itemRarity
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 2745913597905473231, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_Name
       value: MachineGun

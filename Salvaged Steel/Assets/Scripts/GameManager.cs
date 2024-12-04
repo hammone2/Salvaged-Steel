@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviourPun
     public Transform[] spawnPoints;
     public int alivePlayers;
     private int playersInGame;
+
+    [Header("Game Settings")]
+    public float respawnTime = 3f;
+
     // instance
     public static GameManager instance;
     void Awake()

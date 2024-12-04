@@ -22,7 +22,7 @@ public class HUD : MonoBehaviour
     public void Initialize(PlayerController localPlayer)
     {
         player = localPlayer;
-        InitializeValues();
+        //InitializeValues();
     }
 
     public void InitializeValues()

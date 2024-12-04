@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEditor;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -28,6 +29,7 @@ public class PlayerController : MonoBehaviourPun
     private float maxCameraDistance = 7.0f;
     private bool isAlive = true;
     private bool isPlaying = true;
+    private int lives = 3;
 
     [Header ("Item Slots")]
     [HideInInspector] public Gun gun;
@@ -239,17 +241,37 @@ public class PlayerController : MonoBehaviourPun
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
-            photonView.RPC("Die", RpcTarget.All);
+            //photonView.RPC("Die", RpcTarget.All);
+            lives--;
+            Die();
         }
         
     }
 
-    [PunRPC]
+    //[PunRPC]
     public void Die()
     {
         isAlive = false;
-        End();
+        if (lives > 0)
+        {
+            Vector3 spawnPos = GameManager.instance.spawnPoints[Random.Range(0, GameManager.instance.spawnPoints.Length)].position;
+            StartCoroutine(Spawn(spawnPos, GameManager.instance.respawnTime));
+        }
+        else if (lives <= 0)
+            End();
     }
+
+    IEnumerator Spawn(Vector3 spawnPos, float timeToSpawn)
+    {
+        yield return new WaitForSeconds(timeToSpawn);
+        turret.GetComponent<HealthComponent>().health = 15;
+        propulsion.GetComponent<HealthComponent>().health = 15;
+        isAlive = true;
+        transform.position = spawnPos;
+        // update the health bar
+        //headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
+    }
+
 
     [PunRPC]
     public void AddKill(int scoreToAdd)
