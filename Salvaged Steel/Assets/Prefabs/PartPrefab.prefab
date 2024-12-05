@@ -102,6 +102,7 @@ MonoBehaviour:
   bc: {fileID: 806445550721682672}
   trail: {fileID: 7374917427301126970}
   isEquipped: 1
+  outline: {fileID: 3879084742231711819}
   itemRarity: 0
 --- !u!114 &39742901688635065
 MonoBehaviour:

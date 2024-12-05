@@ -84,9 +84,19 @@ MonoBehaviour:
   partMask:
     serializedVersion: 2
     m_Bits: 1024
+  defaultTurretPrefabPath: MediumTurret
+  defaultPropulsionPrefabPath: MediumLegs
+  defaultGunPrefabPath: MachineGun
+  defaultTurret: {fileID: 1987979874673700454, guid: f6cf8ab1324dd7e47b78b7ab77079431, type: 3}
+  defaultPropulsion: {fileID: 3703683743884006210, guid: 496d51c4018a4c84383d5d6dc150c049, type: 3}
+  defaultGun: {fileID: 7679884548056279701, guid: d78a87a5532856144a6a83fba8ad87d2, type: 3}
   rotated: {fileID: 8474589995969924259}
   characterController: {fileID: 6155153432676378862}
   playerCamera: {fileID: 7272727008885131595}
+  partSlots:
+  - {fileID: 3285437720762532343}
+  - {fileID: 525513987054452319}
+  - {fileID: 7222148909579455023}
   id: 0
   score: 0
   gun: {fileID: 0}

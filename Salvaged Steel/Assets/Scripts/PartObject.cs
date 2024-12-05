@@ -9,7 +9,7 @@ public class PartObject : MonoBehaviourPun
     public BoxCollider bc;
     public TrailRenderer trail;
     public bool isEquipped = true;
-    private Outline outline;
+    [SerializeField] private Outline outline;
     private Transform originalParent;
     private Transform currentParent;
     private Vector3 forceDirection;
@@ -52,7 +52,6 @@ public class PartObject : MonoBehaviourPun
     void Start()
     {
         originalParent = transform.parent; // Store the original parent so that we can reassign it when dropping
-        outline = GetComponent<Outline>();
         outline.OutlineColor = GetRarityColor(); //set the rarity color
     }
 

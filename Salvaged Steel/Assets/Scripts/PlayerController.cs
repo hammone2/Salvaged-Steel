@@ -11,9 +11,16 @@ public class PlayerController : MonoBehaviourPun
     [Header ("Components & Layers")]
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask partMask;
+    [SerializeField] private string defaultTurretPrefabPath;
+    [SerializeField] private string defaultPropulsionPrefabPath;
+    [SerializeField] private string defaultGunPrefabPath;
+    [SerializeField] private GameObject defaultTurret;
+    [SerializeField] private GameObject defaultPropulsion;
+    [SerializeField] private GameObject defaultGun;
     public GameObject rotated;
     public CharacterController characterController;
     public Camera playerCamera;
+    public List<GameObject> partSlots;
 
     [Header ("Networking")]
     public Player photonPlayer;
@@ -67,6 +74,7 @@ public class PlayerController : MonoBehaviourPun
     {
         //Assign parts to vars
         gun = gunSlot.transform.GetChild(0).GetComponent<Gun>();
+        gun.GetCamera(playerCamera);
         SetCustomCursor(gun.crosshair);
         turret = turretSlot.transform.GetChild(0).GetComponent<Turret>();
         rotationSpeed = turret.rotationSpeed;
@@ -243,15 +251,37 @@ public class PlayerController : MonoBehaviourPun
         {
             //photonView.RPC("Die", RpcTarget.All);
             lives--;
+            Debug.Log("LIVES LEFT: " + lives);
+            gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
             Die();
-        }
-        
+        }       
     }
 
     //[PunRPC]
     public void Die()
     {
         isAlive = false;
+
+        // Loop through each GameObject in the list
+        foreach (GameObject obj in partSlots)
+        {
+            // Loop through each direct child of the current GameObject
+            for (int i = 0; i < obj.transform.childCount; i++)
+            {
+                Transform child = obj.transform.GetChild(i);
+
+                // Check if the child has a PartObject component
+                PartObject partObject = child.GetComponent<PartObject>();
+
+                if (partObject != null)
+                {
+                    Debug.Log("Found PartObject in child: " + child.name);
+                    partObject.photonView.RPC("Drop", RpcTarget.All, true, Random.Range(10f, 15f));
+                }
+            }
+        }
+
+        //respawn sequence
         if (lives > 0)
         {
             Vector3 spawnPos = GameManager.instance.spawnPoints[Random.Range(0, GameManager.instance.spawnPoints.Length)].position;
@@ -263,11 +293,33 @@ public class PlayerController : MonoBehaviourPun
 
     IEnumerator Spawn(Vector3 spawnPos, float timeToSpawn)
     {
+        CharacterController cc = GetComponent<CharacterController>();
+        cc.enabled = false; //temporarily disabling the character controller so we dont respawn at the death point instead of the spawn point
         yield return new WaitForSeconds(timeToSpawn);
-        turret.GetComponent<HealthComponent>().health = 15;
-        propulsion.GetComponent<HealthComponent>().health = 15;
-        isAlive = true;
+
         transform.position = spawnPos;
+
+        GameObject newTurret = PhotonNetwork.Instantiate(defaultTurretPrefabPath, turretSlot.transform.position, Quaternion.identity);
+        newTurret.GetComponent<PartObject>().Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
+        turret = newTurret.GetComponent<Turret>();
+        HUD.instance.UpdateTurretHealth();
+
+        GameObject newPropulsion = PhotonNetwork.Instantiate(defaultPropulsionPrefabPath, propulsionSlot.transform.position, Quaternion.identity);
+        newPropulsion.GetComponent<PartObject>().Equip(propulsionSlot.transform, propulsionSlot.GetComponent<PhotonView>().ViewID);
+        propulsion = newPropulsion.GetComponent<Propulsion>();
+        moveSpeed = propulsion.moveSpeed;
+        HUD.instance.UpdateHullHealth();
+
+        GameObject newGun = PhotonNetwork.Instantiate(defaultGunPrefabPath, gunSlot.transform.position, Quaternion.identity);
+        newGun.GetComponent<PartObject>().Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
+        gun = newGun.GetComponent<Gun>();
+        gun.GetCamera(playerCamera);
+        SetCustomCursor(gun.crosshair);
+        HUD.instance.UpdateAmmoText();
+
+        cc.enabled = true;
+        isAlive = true;
+
         // update the health bar
         //headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
     }

@@ -21,15 +21,6 @@ public class Gun : MonoBehaviourPun
     private float lastShootTime;
     private CameraShake cameraShake;
 
-    private void Awake()
-    {
-        Transform cameraTransform = transform.parent.transform.parent.transform.parent.Find("Camera"); //get the player's camera
-        if (cameraTransform != null)
-        {
-            cameraShake = cameraTransform.GetComponent<CameraShake>();
-        }
-    }
-
     [PunRPC]
     public void Shoot(int id, bool isMine) // the ammo for some reason is not being synced across clients
     {
