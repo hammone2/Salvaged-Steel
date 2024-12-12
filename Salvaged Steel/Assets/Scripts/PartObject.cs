@@ -47,7 +47,6 @@ public class PartObject : MonoBehaviourPun
     {
         return rarityColors[itemRarity];
     }
-
     
     void Start()
     {

@@ -262,6 +262,9 @@ public class PlayerController : MonoBehaviourPun
     {
         isAlive = false;
 
+        CharacterController cc = GetComponent<CharacterController>();
+        cc.enabled = false; //temporarily disabling the character controller so we dont respawn at the death point instead of the spawn point
+
         // Loop through each GameObject in the list
         foreach (GameObject obj in partSlots)
         {
@@ -295,8 +298,19 @@ public class PlayerController : MonoBehaviourPun
     {
         CharacterController cc = GetComponent<CharacterController>();
         cc.enabled = false; //temporarily disabling the character controller so we dont respawn at the death point instead of the spawn point
-        yield return new WaitForSeconds(timeToSpawn);
+        HUD.instance.respawnScreen.SetActive(true);
+        float countdown = timeToSpawn;
 
+        // Display the countdown on the TextMesh while waiting
+        while (countdown > 0)
+        {
+            // Update the TextMesh with the remaining time (rounded to the nearest second)
+            HUD.instance.respawnText.text = "Respawn in... " + Mathf.Ceil(countdown).ToString();
+
+            countdown -= 1f;  // Decrease the countdown by 1 second
+            yield return new WaitForSeconds(1f); // Wait for 1 second before updating again
+        }
+        HUD.instance.respawnScreen.SetActive(false);
         transform.position = spawnPos;
 
         GameObject newTurret = PhotonNetwork.Instantiate(defaultTurretPrefabPath, turretSlot.transform.position, Quaternion.identity);
@@ -337,12 +351,12 @@ public class PlayerController : MonoBehaviourPun
         isPlaying = false;
         //playButton.SetActive(true);
         Leaderboard.instance.SetLeaderboardEntry(score);
+        HUD.instance.deathScreen.SetActive(true);
     }
 
     public void Begin()
     {
         isPlaying = true;
-        //playButton.SetActive(false);
     }
 
     private void SetCustomCursor(Texture2D cursorTexture)

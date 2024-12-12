@@ -11,6 +11,9 @@ public class HUD : MonoBehaviour
     public TextMeshProUGUI ammoText;
     public TextMeshProUGUI hullText;
     public TextMeshProUGUI turretText;
+    public TextMeshProUGUI respawnText;
+    public GameObject respawnScreen;
+    public GameObject deathScreen;
 
     // instance
     public static HUD instance;

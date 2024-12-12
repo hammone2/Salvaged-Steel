@@ -6,8 +6,7 @@ using Photon.Pun;
 public class Spawner : MonoBehaviourPun
 {
     // Enemy prefab to spawn
-    public GameObject enemyPrefab;
-    public string enemyPrefabPath;
+    public List<string> enemyPrefabList = new List<string>();
 
     // List of spawn points
     public Transform[] spawnPoints;
@@ -25,9 +24,6 @@ public class Spawner : MonoBehaviourPun
     void Start()
     {
         spawnPointCooldowns = new float[spawnPoints.Length];
-
-        // Start spawning enemies
-        //StartCoroutine(SpawnEnemies());
     }
 
     private void Update()
@@ -65,8 +61,14 @@ public class Spawner : MonoBehaviourPun
     private void SpawnEnemy(int spawnPointIndex)
     {
         // Instantiate the enemy at the chosen spawn point's position and rotation
-        //Instantiate(enemyPrefab, spawnPoints[spawnPointIndex].position, spawnPoints[spawnPointIndex].rotation);
-        GameObject enemy = PhotonNetwork.Instantiate(enemyPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
+        
+        // Get a random index from the enemyPrefabList
+        int randomIndex = Random.Range(0, enemyPrefabList.Count);
+
+        // Get the random prefab path
+        string randomPrefabPath = enemyPrefabList[randomIndex];
+
+        GameObject enemy = PhotonNetwork.Instantiate(randomPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
         Debug.Log("Enemy spawned at spawn point: " + spawnPointIndex);
     }
 

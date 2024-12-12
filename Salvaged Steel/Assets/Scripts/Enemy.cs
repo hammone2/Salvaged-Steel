@@ -43,9 +43,6 @@ public class Enemy : MonoBehaviourPun
 
     void Start()
     {
-        //GameObject playerObject = GameObject.FindWithTag("Player");
-        //target = playerObject.transform;
-
         //Apply health to the enemy
         // Loop through each GameObject in the list
         foreach (GameObject obj in partSlots)
@@ -70,7 +67,8 @@ public class Enemy : MonoBehaviourPun
             }
         }
         //healthComponent.health = health;
-
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         // Start the coroutine to choose random positions
         StartCoroutine(ChooseRandomFlankPosition());
 
@@ -94,7 +92,6 @@ public class Enemy : MonoBehaviourPun
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    //gun.Shoot(0, false);
                     gun.photonView.RPC("Shoot", RpcTarget.All, 0, false);
                 }
             }
@@ -137,7 +134,7 @@ public class Enemy : MonoBehaviourPun
                     if (dist > chaseRange)
                         target = null;
                 }
-                else if (dist < chaseRange)
+                else if (dist <= chaseRange)
                 {
                     if (target == null)
                         target = player.transform;
@@ -163,13 +160,6 @@ public class Enemy : MonoBehaviourPun
 
             // Set the new destination
             agent.SetDestination(flankPosition);
-            //target.position = flankPosition;
-
-            // Wait until the agent has reached the new destination
-            /*while (agent.remainingDistance > closeEnoughDistance)
-            {
-                yield return null; // Wait until next frame
-            }*/
         }
     }
 
