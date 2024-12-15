@@ -1,21 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
 
 public class HUD : MonoBehaviour
 {
     private PlayerController player;
+    private HealthComponent propulsionHealth;
+    private HealthComponent turretHealth;
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI ammoText;
+    public TextMeshProUGUI livesText;
     public TextMeshProUGUI hullText;
     public TextMeshProUGUI turretText;
+    public Image turretHealthBar;
+    public Image propulsionHealthBar;
     public TextMeshProUGUI respawnText;
     public GameObject respawnScreen;
     public GameObject deathScreen;
 
-    // instance
     public static HUD instance;
     void Awake()
     {
@@ -25,35 +30,39 @@ public class HUD : MonoBehaviour
     public void Initialize(PlayerController localPlayer)
     {
         player = localPlayer;
-        //InitializeValues();
     }
 
     public void InitializeValues()
     {
         UpdateScoreText();
         UpdateAmmoText();
+        UpdateLivesText();
+        UpdatePropulsionPart();
+        UpdateTurretPart();
+    }
+
+    public void UpdatePropulsionPart()
+    {
+        propulsionHealth = player.propulsion.GetComponent<HealthComponent>();
         UpdateHullHealth();
+    }
+
+    public void UpdateTurretPart()
+    {
+        turretHealth = player.turret.GetComponent<HealthComponent>();
         UpdateTurretHealth();
     }
-    /*public void UpdateHealthBar()
-    {
-        healthBar.value = player.curHp;
-    }*/
-
-    /*public void UpdatePlayerInfoText()
-    {
-        playerInfoText.text = "<b>Alive:</b> " + GameManager.instance.alivePlayers + "\n<b > Kills:</ b > " + player.kills;
-
-    }*/
 
     public void UpdateHullHealth()
     {
-        hullText.text = "Hull Health: " + player.propulsion.GetComponent<HealthComponent>().health;
+        hullText.text = "Hull Health: " + propulsionHealth.health;
+        propulsionHealthBar.fillAmount = propulsionHealth.health / propulsionHealth.maxHealth;
     }
 
     public void UpdateTurretHealth()
     {
-        turretText.text = "Turret Health: " + player.turret.GetComponent<HealthComponent>().health;
+        turretText.text = "Turret Health: " + turretHealth.health;
+        turretHealthBar.fillAmount = turretHealth.health / turretHealth.maxHealth;
     }
 
     public void UpdateScoreText()
@@ -64,6 +73,11 @@ public class HUD : MonoBehaviour
     public void UpdateAmmoText()
     {
         ammoText.text = "Ammo: " + player.gun.ammo;
+    }
+
+    public void UpdateLivesText()
+    {
+        livesText.text = "" + player.lives;
     }
 
     /*public void SetWinText(string winnerName)

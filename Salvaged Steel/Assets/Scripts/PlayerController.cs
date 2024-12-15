@@ -5,6 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEditor;
+using TMPro;
 
 public class PlayerController : MonoBehaviourPun
 {
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviourPun
     public CharacterController characterController;
     public Camera playerCamera;
     public List<GameObject> partSlots;
+    public TextMeshPro nameTag;
 
     [Header ("Networking")]
     public Player photonPlayer;
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviourPun
 
     [Header("Stats")]
     public int score;
+    public int lives = 3;
     private float moveSpeed;
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
@@ -36,7 +39,7 @@ public class PlayerController : MonoBehaviourPun
     private float maxCameraDistance = 7.0f;
     private bool isAlive = true;
     private bool isPlaying = true;
-    private int lives = 3;
+    
 
     [Header ("Item Slots")]
     [HideInInspector] public Gun gun;
@@ -62,10 +65,12 @@ public class PlayerController : MonoBehaviourPun
         if (!photonView.IsMine)
         {
             GetComponentInChildren<Camera>().gameObject.SetActive(false);
+            nameTag.text = "" + player.NickName;
             //rig.isKinematic = true;
         }
         else
         {
+            nameTag.text = "YOU";
             HUD.instance.Initialize(this);
         }
     }
@@ -145,7 +150,7 @@ public class PlayerController : MonoBehaviourPun
                     selectedPart.Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
-                    HUD.instance.UpdateTurretHealth();
+                    HUD.instance.UpdateTurretPart();
                 }
                 else if (selectedPart.GetComponent<Propulsion>())
                 {
@@ -154,7 +159,7 @@ public class PlayerController : MonoBehaviourPun
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
-                    HUD.instance.UpdateHullHealth();
+                    HUD.instance.UpdatePropulsionPart();
                 }
             }
         }
@@ -163,7 +168,7 @@ public class PlayerController : MonoBehaviourPun
         if (Input.GetKey(KeyCode.Mouse0))
         {
             //gun.Shoot(id, photonView.IsMine);
-            gun.photonView.RPC("Shoot", RpcTarget.All, id, photonView.IsMine);
+            gun.photonView.RPC("Shoot", RpcTarget.All, id, photonView.IsMine, true);
         }
     }
 
@@ -251,6 +256,7 @@ public class PlayerController : MonoBehaviourPun
         {
             //photonView.RPC("Die", RpcTarget.All);
             lives--;
+            HUD.instance.UpdateLivesText();
             Debug.Log("LIVES LEFT: " + lives);
             gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
             Die();
@@ -316,13 +322,13 @@ public class PlayerController : MonoBehaviourPun
         GameObject newTurret = PhotonNetwork.Instantiate(defaultTurretPrefabPath, turretSlot.transform.position, Quaternion.identity);
         newTurret.GetComponent<PartObject>().Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
         turret = newTurret.GetComponent<Turret>();
-        HUD.instance.UpdateTurretHealth();
+        HUD.instance.UpdateTurretPart();
 
         GameObject newPropulsion = PhotonNetwork.Instantiate(defaultPropulsionPrefabPath, propulsionSlot.transform.position, Quaternion.identity);
         newPropulsion.GetComponent<PartObject>().Equip(propulsionSlot.transform, propulsionSlot.GetComponent<PhotonView>().ViewID);
         propulsion = newPropulsion.GetComponent<Propulsion>();
         moveSpeed = propulsion.moveSpeed;
-        HUD.instance.UpdateHullHealth();
+        HUD.instance.UpdatePropulsionPart();
 
         GameObject newGun = PhotonNetwork.Instantiate(defaultGunPrefabPath, gunSlot.transform.position, Quaternion.identity);
         newGun.GetComponent<PartObject>().Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);

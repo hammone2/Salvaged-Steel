@@ -7,6 +7,12 @@ public class HealthComponent : MonoBehaviourPun
 {
 
     public float health = 30f;
+    [HideInInspector] public float maxHealth;
+
+    private void Start()
+    {
+        maxHealth = health;
+    }
 
     [PunRPC]
     public void TakeDamage(float damage)

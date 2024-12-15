@@ -73,21 +73,25 @@ public class PartObject : MonoBehaviourPun
         outline.enabled = false;
         Debug.Log("EQUIP RPC ATTEMPT");
         isEquipped = true;
-        if (rb != null)
-        {
-            rb.useGravity = false;
-            rb.isKinematic = true; // stop doing physics stuff
-        }
-        if (bc != null)
-        {
-            bc.isTrigger = true; //disable collisions
-        }
 
-        //Stop the despawn timer
-        if (despawnCoroutine != null)
+        if (PhotonNetwork.IsMasterClient) // do physics stuff if executed on the master client
         {
-            StopCoroutine(despawnCoroutine);
-            currentTimer = 0f; // Reset the timer
+            if (rb != null)
+            {
+                rb.useGravity = false;
+                rb.isKinematic = true; // stop doing physics stuff
+            }
+            if (bc != null)
+            {
+                bc.isTrigger = true; //disable collisions
+            }
+
+            //Stop the despawn timer
+            if (despawnCoroutine != null)
+            {
+                StopCoroutine(despawnCoroutine);
+                currentTimer = 0f; // Reset the timer
+            }
         }
 
         // Set the object as a child of the new parent
@@ -117,30 +121,35 @@ public class PartObject : MonoBehaviourPun
         // You can adjust this if you want it to fall from a specific point, like a character's hand
         transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z); // Set this to whatever you want
 
-        if (rb != null)
+        if (PhotonNetwork.IsMasterClient)
         {
-            rb.isKinematic = false;  // Allow it to fall if there's a Rigidbody
-            rb.useGravity = true;
-
-            // Apply force to send the object flying
-            if (isExploding)
+            if (rb != null)
             {
-                forceDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1.5f), Random.Range(-1f, 1f));
-                trail.emitting = true;
+                rb.isKinematic = false;  // Allow it to fall if there's a Rigidbody
+                rb.useGravity = true;
+
+                // Apply force to send the object flying
+                if (isExploding)
+                {
+                    forceDirection = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1.5f), Random.Range(-1f, 1f));
+                }
+                else
+                {
+                    forceDirection = transform.forward;
+                }
+
+                rb.AddForce(forceDirection.normalized * forceStrength, ForceMode.Impulse);  // You can use ForceMode.Impulse for instant impact
             }
-            else
+            if (bc != null)
             {
-                forceDirection = transform.forward;
+                bc.isTrigger = false; //enable collisions
             }
 
-            rb.AddForce(forceDirection.normalized * forceStrength, ForceMode.Impulse);  // You can use ForceMode.Impulse for instant impact
+            despawnCoroutine = StartCoroutine(DespawnTimer());
         }
-        if (bc != null)
-        {
-            bc.isTrigger = false; //enable collisions
-        }
-
-        despawnCoroutine = StartCoroutine(DespawnTimer());
+        
+        if (isExploding)
+            trail.emitting = true;
         outline.enabled = true;
     }
 
@@ -163,6 +172,7 @@ public class PartObject : MonoBehaviourPun
     private void DespawnItem()
     {
         //Debug.Log("Item despawned: " + name);
-        Destroy(gameObject); // Destroy the item GameObject
+        //Destroy(gameObject); // Destroy the item GameObject
+        PhotonNetwork.Destroy(gameObject);
     }
 }

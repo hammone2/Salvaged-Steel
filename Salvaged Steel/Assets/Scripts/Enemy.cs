@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviourPun
     public Propulsion propulsion;
     public LayerMask layersToHit;
     public HealthComponent healthComponent;
+    public HeaderInfo headerInfo;
+    public string enemyName;
     public List<GameObject> partSlots;
     public int pointsForKill = 10;
 
@@ -67,12 +69,12 @@ public class Enemy : MonoBehaviourPun
             }
         }
         //healthComponent.health = health;
+        headerInfo.Initialize(enemyName, health);
+
         if (!PhotonNetwork.IsMasterClient)
             return;
         // Start the coroutine to choose random positions
         StartCoroutine(ChooseRandomFlankPosition());
-
-        
     }
     void Update()
     {
@@ -92,7 +94,7 @@ public class Enemy : MonoBehaviourPun
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    gun.photonView.RPC("Shoot", RpcTarget.All, 0, false);
+                    gun.photonView.RPC("Shoot", RpcTarget.All, 0, false, false);
                 }
             }
         }
@@ -169,6 +171,7 @@ public class Enemy : MonoBehaviourPun
         if (health <= 0)
             return;
         health -= damage;
+        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, health);
         curAttackerId = attackerId;
         if (health <= 0)
             Die();

@@ -22,7 +22,7 @@ public class Gun : MonoBehaviourPun
     private CameraShake cameraShake;
 
     [PunRPC]
-    public void Shoot(int id, bool isMine) // the ammo for some reason is not being synced across clients
+    public void Shoot(int id, bool isMine, bool isPlayer) // the ammo for some reason is not being synced across clients
     {
         if (Time.time - lastShootTime < fireRate)
             return;
@@ -32,7 +32,8 @@ public class Gun : MonoBehaviourPun
         bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
         bullet.GetComponent<Bullet>().Initialize(damage, id, isMine);
         lastShootTime = Time.time;
-        ammo -= 1;
+        if (isPlayer)
+            ammo -= 1;
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
