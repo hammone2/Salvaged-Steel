@@ -169,10 +169,8 @@ public class PartObject : MonoBehaviourPun
     }
 
     // Method to destroy or deactivate the item
-    private void DespawnItem()
+    public void DespawnItem()
     {
-        //Debug.Log("Item despawned: " + name);
-        //Destroy(gameObject); // Destroy the item GameObject
         PhotonNetwork.Destroy(gameObject);
     }
 }

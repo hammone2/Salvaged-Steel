@@ -66,7 +66,6 @@ public class PlayerController : MonoBehaviourPun
         {
             GetComponentInChildren<Camera>().gameObject.SetActive(false);
             nameTag.text = "" + player.NickName;
-            //rig.isKinematic = true;
         }
         else
         {
@@ -136,7 +135,10 @@ public class PlayerController : MonoBehaviourPun
                 if (selectedPart.GetComponent<Gun>())
                 {
                     gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
-                    gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    if (gun.ammo > 0)
+                        gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                    else
+                        gun.gameObject.GetComponent<PartObject>().DespawnItem();
                     selectedPart.Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
@@ -339,9 +341,6 @@ public class PlayerController : MonoBehaviourPun
 
         cc.enabled = true;
         isAlive = true;
-
-        // update the health bar
-        //headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, curHp);
     }
 
 
