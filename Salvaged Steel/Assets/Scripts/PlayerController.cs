@@ -169,8 +169,8 @@ public class PlayerController : MonoBehaviourPun
         //Shoot
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            //gun.Shoot(id, photonView.IsMine);
-            gun.photonView.RPC("Shoot", RpcTarget.All, id, photonView.IsMine, true);
+            gun.Shoot(id, photonView.IsMine, true);
+            //gun.photonView.RPC("Shoot", RpcTarget.All, id, photonView.IsMine, true);
         }
     }
 
@@ -253,6 +253,7 @@ public class PlayerController : MonoBehaviourPun
 
         HUD.instance.UpdateHullHealth();
         HUD.instance.UpdateTurretHealth();
+        HUD.instance.lastHitTime = Time.time;
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {

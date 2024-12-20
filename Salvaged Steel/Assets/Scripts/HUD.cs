@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using Photon.Pun;
+using static UnityEngine.GraphicsBuffer;
 
 public class HUD : MonoBehaviour
 {
@@ -17,9 +18,15 @@ public class HUD : MonoBehaviour
     public TextMeshProUGUI turretText;
     public Image turretHealthBar;
     public Image propulsionHealthBar;
+    [SerializeField] private Image turretHealthAnimBar;
+    [SerializeField] private Image propHealthAnimBar;
     public TextMeshProUGUI respawnText;
     public GameObject respawnScreen;
     public GameObject deathScreen;
+
+    private float reduceSpeed = 1f;
+    public float lastHitTime;
+    private float animPause = 0.25f;
 
     public static HUD instance;
     void Awake()
@@ -30,6 +37,16 @@ public class HUD : MonoBehaviour
     public void Initialize(PlayerController localPlayer)
     {
         player = localPlayer;
+    }
+
+    private void Update()
+    {
+        if (Time.time - lastHitTime >= animPause)
+        {
+            turretHealthAnimBar.fillAmount = Mathf.MoveTowards(turretHealthAnimBar.fillAmount, turretHealthBar.fillAmount, reduceSpeed * Time.deltaTime);
+            propHealthAnimBar.fillAmount = Mathf.MoveTowards(propHealthAnimBar.fillAmount, propulsionHealthBar.fillAmount, reduceSpeed * Time.deltaTime);
+        }
+            
     }
 
     public void InitializeValues()

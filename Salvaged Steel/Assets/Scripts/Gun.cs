@@ -27,7 +27,7 @@ public class Gun : MonoBehaviourPun
     private float lastShootTime;
     private CameraShake cameraShake;
 
-    [PunRPC]
+    //[PunRPC]
     public void Shoot(int id, bool isMine, bool isPlayer) // the ammo for some reason is not being synced across clients
     {
         if (Time.time - lastShootTime < fireRate)
@@ -35,6 +35,7 @@ public class Gun : MonoBehaviourPun
         if (ammo <= 0)
             return;
 
+        // old shoot code (delete this later once I have the new shoot code finalized)
         /*var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
         if (bullet.GetComponent<Bullet>() != null) // doing this so we can have bullet prefabs that aren't bullets in the traditional sense
         {
@@ -54,17 +55,34 @@ public class Gun : MonoBehaviourPun
             Quaternion rotation = Quaternion.Euler(0f, angle + randomYDeviation, 0f); // Rotate around the Y-axis
             Vector3 direction = rotation * bulletSpawner.forward; // Forward direction with applied angle
 
-            var bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.LookRotation(direction));
+            /*var bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.LookRotation(direction));
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);
+            bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);*/
+
+            photonView.RPC("SpawnBullet", RpcTarget.All, id, isMine, direction);
         }
 
         lastShootTime = Time.time;
         if (isPlayer)
-            ammo -= 1;
+            photonView.RPC("UpdateStats", RpcTarget.AllBuffered);
+            //ammo -= 1;
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
+    }
+
+    [PunRPC]
+    private void SpawnBullet(int id, bool isMine, Vector3 direction)
+    {
+        var bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.LookRotation(direction));
+        bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+        bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);
+    }
+
+    [PunRPC]
+    private void UpdateStats()
+    {
+        ammo -= 1;
     }
 
     public void GetCamera(Camera camera)

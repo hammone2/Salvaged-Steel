@@ -94,7 +94,8 @@ public class Enemy : MonoBehaviourPun
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    gun.photonView.RPC("Shoot", RpcTarget.All, 0, false, false);
+                    //gun.photonView.RPC("Shoot", RpcTarget.All, 0, false, false);
+                    gun.Shoot(0, false, false);
                 }
             }
         }
