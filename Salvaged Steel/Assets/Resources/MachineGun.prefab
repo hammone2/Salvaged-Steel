@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1983747818331767355, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: itemRarity
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2745913597905473231, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_Name
@@ -85,6 +85,10 @@ PrefabInstance:
       value: 7.5
       objectReference: {fileID: 0}
     - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: accuracy
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: fireRate
       value: 0.05
       objectReference: {fileID: 0}
@@ -95,6 +99,30 @@ PrefabInstance:
     - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: shakeMagnitude
       value: 0.21
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: spreadAngles.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: spreadAngles.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: spreadAngles.Array.data[1]
+      value: -15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: spreadAngles.Array.data[2]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: spreadAngles.Array.data[3]
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
+      propertyPath: spreadAngles.Array.data[4]
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8658097743384022886, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_LocalPosition.z

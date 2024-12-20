@@ -12,11 +12,12 @@ public class Bullet : MonoBehaviour
     private int attackerId;
     private bool isMine;
 
-    public void Initialize(float damage, int attackerId, bool isMine)
+    public void Initialize(float damage, int attackerId, bool isMine, float lifeTime)
     {
         this.damage = damage;
         this.attackerId = attackerId;
         this.isMine = isMine;
+        this.lifeTime = lifeTime;
         Destroy(gameObject, lifeTime);
     }
 
