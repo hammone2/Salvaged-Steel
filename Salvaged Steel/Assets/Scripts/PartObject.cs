@@ -8,6 +8,7 @@ public class PartObject : MonoBehaviourPun
     public Rigidbody rb;
     public BoxCollider bc;
     public TrailRenderer trail;
+    public GameObject infoPrefab;
     public bool isEquipped = true;
     [SerializeField] private Outline outline;
     private Transform originalParent;
@@ -18,6 +19,7 @@ public class PartObject : MonoBehaviourPun
     private float despawnTime = 45f; // Time in seconds before the item despawns
     private float currentTimer = 0f; // Current time on the timer
     private Coroutine despawnCoroutine; // Reference to the coroutine
+    private bool selected = false;
 
 
     public enum Rarity
@@ -52,6 +54,24 @@ public class PartObject : MonoBehaviourPun
     {
         originalParent = transform.parent; // Store the original parent so that we can reassign it when dropping
         outline.OutlineColor = GetRarityColor(); //set the rarity color
+    }
+
+    public void ShowInfo()
+    {
+        if (isEquipped)
+            return;
+        if (selected == true)
+            return;
+        selected = true;
+        infoPrefab.SetActive(true);
+        infoPrefab.GetComponent<ItemInfo>().Initialize(GetRarityColor(), gameObject);
+    }
+
+    public void HideInfo()
+    {
+        infoPrefab.GetComponent<ItemInfo>().selected = false;
+        infoPrefab.SetActive(false);
+        selected = false;
     }
 
     public void Equip(Transform newParent, int parentID) //doing a local call then a RPC call to get around Photon not being able to serialize transforms

@@ -50,6 +50,7 @@ public class PlayerController : MonoBehaviourPun
     public GameObject propulsionSlot;
 
     private PartObject selectedPart;
+    private PartObject lastSelectedPart = null;
     private int maxPickupDist = 7;
 
    
@@ -181,14 +182,41 @@ public class PlayerController : MonoBehaviourPun
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, partMask))
         {
             PartObject partObject = hitInfo.collider.gameObject.GetComponent<PartObject>();
-            if (partObject != null)
+            /*if (partObject != null)
             {
                 selectedPart = partObject;
-            }           
+                selectedPart.ShowInfo();
+            }*/
+            if (partObject != null)
+            {
+                // If the selected part is different from the current part
+                if (selectedPart != partObject)
+                {
+                    // If there was a previously selected part, hide its info
+                    if (lastSelectedPart != null)
+                    {
+                        lastSelectedPart.HideInfo();
+                    }
+
+                    // Update the last selected part to the current one
+                    lastSelectedPart = selectedPart;
+
+                    // Set the new selected part and show its info
+                    selectedPart = partObject;
+                    selectedPart.ShowInfo();
+                }
+            }
         }
         else
         {
-            selectedPart = null;
+            //selectedPart = null;
+
+            // If no part is selected and the previous part is not null, hide its info
+            if (selectedPart != null)
+            {
+                selectedPart.HideInfo();
+                selectedPart = null;
+            }
         }
     }
 
