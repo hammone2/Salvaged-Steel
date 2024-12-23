@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviourPun
 
     private PartObject selectedPart;
     private PartObject lastSelectedPart = null;
-    private int maxPickupDist = 7;
+    private int maxPickupDist = 15;
 
    
 
