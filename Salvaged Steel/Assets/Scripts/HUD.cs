@@ -72,13 +72,13 @@ public class HUD : MonoBehaviour
 
     public void UpdateHullHealth()
     {
-        hullText.text = "Hull Health: " + propulsionHealth.health;
+        hullText.text = (Mathf.Round(propulsionHealth.health * 100f) / 100f) + " HP";
         propulsionHealthBar.fillAmount = propulsionHealth.health / propulsionHealth.maxHealth;
     }
 
     public void UpdateTurretHealth()
     {
-        turretText.text = "Turret Health: " + turretHealth.health;
+        turretText.text = (Mathf.Round(turretHealth.health * 100f) / 100f) + " HP";
         turretHealthBar.fillAmount = turretHealth.health / turretHealth.maxHealth;
     }
 
