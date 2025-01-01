@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviourPun
     [SerializeField] private GameObject defaultTurret;
     [SerializeField] private GameObject defaultPropulsion;
     [SerializeField] private GameObject defaultGun;
+    public GameObject explosionParticles;
     public GameObject rotated;
     public CharacterController characterController;
     public Camera playerCamera;
@@ -320,6 +321,8 @@ public class PlayerController : MonoBehaviourPun
                 }
             }
         }
+
+        Instantiate(explosionParticles, transform.position, Quaternion.identity);
 
         //respawn sequence
         if (lives > 0)

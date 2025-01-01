@@ -367,6 +367,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   agent: {fileID: 3088875532943100383}
+  explosionParticles: {fileID: 417761080263594737, guid: 7800b8f6b712bfe49bd663eeb3ebe1e4, type: 3}
   rotated: {fileID: 3485029664499138854}
   characterController: {fileID: 7304468747229311114}
   gun: {fileID: 4550571574785985083}

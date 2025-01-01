@@ -8,6 +8,7 @@ public class PartObject : MonoBehaviourPun
     public Rigidbody rb;
     public BoxCollider bc;
     public TrailRenderer trail;
+    public ParticleSystem fireParticles;
     public GameObject infoPrefab;
     public bool isEquipped = true;
     [SerializeField] private Outline outline;
@@ -90,6 +91,7 @@ public class PartObject : MonoBehaviourPun
     public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation, int parentID)
     {
         trail.emitting = false;
+        fireParticles.Stop();
         outline.enabled = false;
         Debug.Log("EQUIP RPC ATTEMPT");
         isEquipped = true;
@@ -169,7 +171,8 @@ public class PartObject : MonoBehaviourPun
         }
         
         if (isExploding)
-            trail.emitting = true;
+            fireParticles.Play();
+            //trail.emitting = true;
         outline.enabled = true;
     }
 

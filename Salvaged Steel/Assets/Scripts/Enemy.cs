@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviourPun
 {
 
     public NavMeshAgent agent;
-
+    public GameObject explosionParticles;
     public GameObject rotated;
     public CharacterController characterController;
     public Gun gun;
@@ -202,6 +202,7 @@ public class Enemy : MonoBehaviourPun
         }
         if (curAttackerId != 0)
             GameManager.instance.GetPlayer(curAttackerId).photonView.RPC("AddKill", RpcTarget.All, pointsForKill);
+        Instantiate(explosionParticles, transform.position, Quaternion.identity);
         PhotonNetwork.Destroy(gameObject);
     }
 }
