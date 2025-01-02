@@ -317,7 +317,16 @@ public class PlayerController : MonoBehaviourPun
                 if (partObject != null)
                 {
                     Debug.Log("Found PartObject in child: " + child.name);
-                    partObject.photonView.RPC("Drop", RpcTarget.All, true, Random.Range(10f, 15f));
+                    HealthComponent partHealth = partObject.GetComponent<HealthComponent>();
+                    if (partHealth != null)
+                    {
+                        if (partHealth.health <= 0)
+                            PhotonNetwork.Destroy(partObject.gameObject);
+                        else if (partHealth.health > 0)
+                            partObject.photonView.RPC("Drop", RpcTarget.All, true, Random.Range(10f, 15f));
+                    }
+                    else
+                        partObject.photonView.RPC("Drop", RpcTarget.All, true, Random.Range(10f, 15f));
                 }
             }
         }

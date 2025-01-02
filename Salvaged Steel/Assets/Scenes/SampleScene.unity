@@ -3629,6 +3629,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefabList:
   - Enemy
+  - Shotgunner
   spawnPoints:
   - {fileID: 1500138187}
   - {fileID: 2111187128}

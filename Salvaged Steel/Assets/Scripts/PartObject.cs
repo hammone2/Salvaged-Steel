@@ -7,7 +7,6 @@ public class PartObject : MonoBehaviourPun
 {
     public Rigidbody rb;
     public BoxCollider bc;
-    public TrailRenderer trail;
     public ParticleSystem fireParticles;
     public GameObject infoPrefab;
     public bool isEquipped = true;
@@ -90,7 +89,6 @@ public class PartObject : MonoBehaviourPun
     [PunRPC]
     public void EquipRPC(Vector3 parentPosition, Quaternion parentRotation, int parentID)
     {
-        trail.emitting = false;
         fireParticles.Stop();
         outline.enabled = false;
         Debug.Log("EQUIP RPC ATTEMPT");
@@ -172,7 +170,6 @@ public class PartObject : MonoBehaviourPun
         
         if (isExploding)
             fireParticles.Play();
-            //trail.emitting = true;
         outline.enabled = true;
     }
 
