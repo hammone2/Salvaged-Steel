@@ -101,6 +101,11 @@ public class Outline : MonoBehaviour {
 
   void OnEnable() {
     foreach (var renderer in renderers) {
+      // Skip ParticleSystemRenderers or TrailRenderers
+      if (renderer is ParticleSystemRenderer || renderer is TrailRenderer)
+      {
+        continue;
+      }
 
       // Append outline shaders
       var materials = renderer.sharedMaterials.ToList();
@@ -139,6 +144,11 @@ public class Outline : MonoBehaviour {
 
   void OnDisable() {
     foreach (var renderer in renderers) {
+      // Skip ParticleSystemRenderers or TrailRenderers
+      if (renderer is ParticleSystemRenderer || renderer is TrailRenderer)
+      {
+        continue;
+      }
 
       // Remove outline shaders
       var materials = renderer.sharedMaterials.ToList();
