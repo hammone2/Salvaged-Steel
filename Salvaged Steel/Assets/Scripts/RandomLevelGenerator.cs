@@ -5,162 +5,139 @@ using UnityEngine.AI;
 
 public class RandomLevelGenerator : MonoBehaviour
 {
-    // Grid parameters
-    public int gridWidth = 20;
-    public int gridHeight = 20;
-    public float tileSize = 1f;
+    public GameObject wallPrefab;  // Wall prefab (e.g., cube)
+    public GameObject floorPrefab; // Floor prefab (e.g., empty space or plane)
+    public int width = 50;         // Grid width (number of tiles in X direction)
+    public int height = 50;        // Grid height (number of tiles in Z direction)
+    public int walkLength = 500;   // Number of steps the drunkard will take
 
-    // Prefabs for level generation
-    public GameObject floorPrefab;
-    public GameObject wallPrefab;
-    public GameObject pickupPrefab;
+    public int tileSize = 1;      // Size of each tile (wall/floor) in world space
 
-    // Cellular Automata parameters
-    [Range(0f, 1f)] public float fillProbability = 0.25f;  // Initial probability of walls
-    public int birthLimit = 4; // Wall-to-floor rule: number of neighboring walls required for floor to become wall
-    public int deathLimit = 3; // Floor-to-wall rule: number of neighboring walls required for wall to become floor
-    public int iterations = 5; // Number of iterations to run the CA algorithm
+    private Vector3 currentPos;    // Current position of the drunkard (world position)
+    private GameObject[,] grid;    // 2D array to hold grid references (wall/floor objects)
+    private bool[,] visited;       // 2D array to track visited tiles (floor or wall)
 
-    private int[,] map; // 2D array to store the map data (1 for wall, 0 for floor)
-
-    private void Start()
+    void Start()
     {
-        GenerateLevel();
-        //BakeNavMesh();  // Bake NavMesh after generating the level
+        // Initialize the grid and set up walls
+        InitializeGrid();
+
+        // Start the drunkard's walk from a random position
+        currentPos = new Vector3(Random.Range(1, width - 2) * tileSize, 0, Random.Range(1, height - 2) * tileSize);
+
+        // Start the walk process
+        StartCoroutine(DrunkardsWalkCoroutine());
     }
 
-    public void GenerateLevel()
+    void InitializeGrid()
     {
-        // Initialize the map with random walls and floors
-        map = new int[gridWidth, gridHeight];
-        InitializeMap();
+        grid = new GameObject[width, height];
+        visited = new bool[width, height];  // Initialize the visited array
 
-        // Run the cellular automata algorithm
-        for (int i = 0; i < iterations; i++)
+        // Populate the grid with wall prefabs
+        for (int x = 0; x < width; x++)
         {
-            map = SimulateCA(map);
-        }
-
-        // Generate the level objects based on the final map
-        BuildLevel();
-    }
-
-    // Initialize map with random walls/floors
-    private void InitializeMap()
-    {
-        for (int x = 0; x < gridWidth; x++)
-        {
-            for (int z = 0; z < gridHeight; z++)
+            for (int z = 0; z < height; z++)
             {
-                if (Random.value < fillProbability)
-                    map[x, z] = 1; // Wall
-                else
-                    map[x, z] = 0; // Floor
+                Vector3 position = new Vector3(x * tileSize, 0, z * tileSize); // Adjust the position based on the tile size
+                grid[x, z] = Instantiate(wallPrefab, position, Quaternion.identity);
+                visited[x, z] = false;  // Mark all tiles as unvisited initially
             }
         }
     }
 
-    // Cellular Automata simulation step
-    private int[,] SimulateCA(int[,] map)
+    IEnumerator DrunkardsWalkCoroutine()
     {
-        int[,] newMap = new int[gridWidth, gridHeight];
+        // Start carving the path by turning the initial position into a floor
+        CarveFloor(currentPos);
 
-        for (int x = 0; x < gridWidth; x++)
+        // Walk for the specified number of steps
+        //for (int i = 0; i <= walkLength; i++)
+        while (walkLength > 0)
         {
-            for (int z = 0; z < gridHeight; z++)
+            // Randomly choose a direction to walk
+            MoveRandomDirection();
+
+            // If the new position is already a floor, skip this step
+            if (visited[Mathf.FloorToInt(currentPos.x / tileSize), Mathf.FloorToInt(currentPos.z / tileSize)])
             {
-                int neighborWalls = CountNeighborWalls(x, z);
-
-                // Apply rules: Birth (floor to wall) and Death (wall to floor)
-                if (map[x, z] == 1)
-                {
-                    newMap[x, z] = (neighborWalls >= deathLimit) ? 1 : 0; // Wall stays if there are enough neighboring walls
-                }
-                else
-                {
-                    newMap[x, z] = (neighborWalls > birthLimit) ? 1 : 0; // Floor becomes wall if there are too many neighboring walls
-                }
+                continue; // Skip to the next iteration if the tile has already been visited
             }
-        }
 
-        return newMap;
-    }
+            // Carve the current position into a floor (remove wall)
+            CarveFloor(currentPos);
 
-    // Count neighboring walls around a tile (8-connected neighbors)
-    private int CountNeighborWalls(int x, int z)
-    {
-        int wallCount = 0;
-        for (int dx = -1; dx <= 1; dx++)
-        {
-            for (int dz = -1; dz <= 1; dz++)
-            {
-                // Skip the center tile (itself)
-                if (dx == 0 && dz == 0) continue;
+            //Debug.Log("Step #: "+i+" / "+walkLength);
+            walkLength--;
 
-                int nx = x + dx;
-                int nz = z + dz;
-
-                // Wrap-around or wall bounds
-                if (nx < 0 || nz < 0 || nx >= gridWidth || nz >= gridHeight)
-                    wallCount++; // Treat out-of-bound cells as walls
-                else
-                    wallCount += map[nx, nz]; // Count neighboring walls
-            }
-        }
-        return wallCount;
-    }
-
-    // Build the level from the final map
-    private void BuildLevel()
-    {
-        // Destroy any existing objects in the scene
-        foreach (Transform child in transform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // Instantiate the floor and wall objects based on the final map
-        for (int x = 0; x < gridWidth; x++)
-        {
-            for (int z = 0; z < gridHeight; z++)
-            {
-                Vector3 position = new Vector3(x * tileSize, 0, z * tileSize);
-
-                if (map[x, z] == 1) // Wall
-                {
-                    Instantiate(wallPrefab, position, Quaternion.identity, transform);
-                }
-                else // Floor
-                {
-                    //GameObject floor = Instantiate(floorPrefab, position, Quaternion.identity, transform);
-
-                    // Add a NavMeshSurface component to the floor tile to make it walkable
-                    /*NavMeshSurface navMeshSurface = floor.GetComponent<NavMeshSurface>();
-                    if (navMeshSurface == null)
-                    {
-                        navMeshSurface = floor.AddComponent<NavMeshSurface>();
-                    }
-
-                    navMeshSurface.collectObjects = CollectObjects.Children;  // Collect objects under this surface 
-
-                    // Randomly place pickups
-                    if (Random.value < 0.05f)  // Change the chance as needed
-                    {
-                        Instantiate(pickupPrefab, position + new Vector3(0, 1, 0), Quaternion.identity, transform); // Offset to make pickup above the floor
-                    } */
-                }
-            }
+            // Wait a small amount of time before the next step
+            yield return new WaitForSeconds(0.001f);
         }
     }
 
-    // Bake the NavMesh after the level is generated
-    /*public void BakeNavMesh()
+    void MoveRandomDirection()
     {
-        // Find all the NavMeshSurface components in the scene and bake them
-        NavMeshSurface[] surfaces = FindObjectsOfType<NavMeshSurface>();
-        foreach (NavMeshSurface surface in surfaces)
+        // Randomly pick a direction (0 - 3: north, south, east, west)
+        int direction = Random.Range(0, 4);
+
+        // Calculate the movement step based on tileSize
+        Vector3 step = Vector3.zero;
+
+        switch (direction)
         {
-            surface.BuildNavMesh();  // Bake the NavMesh for each surface
+            case 0:
+                step += new Vector3(tileSize, 0, 0);  // Move right (east)
+                break;
+            case 1:
+                step += new Vector3(-tileSize, 0, 0); // Move left (west)
+                break;
+            case 2:
+                step += new Vector3(0, 0, tileSize);  // Move up (north)
+                break;
+            case 3:
+                step += new Vector3(0, 0, -tileSize); // Move down (south)
+                break;
         }
-    }*/
+
+        // Calculate the new position in world space
+        Vector3 newPos = currentPos + step;
+
+        // Convert world position to grid position (indices)
+        int gridX = Mathf.FloorToInt(newPos.x / tileSize);
+        int gridZ = Mathf.FloorToInt(newPos.z / tileSize);
+
+        // Prevent moving into the outermost edges (left, right, bottom, top)
+        if (gridX > 0 && gridX < width - 1 && gridZ > 0 && gridZ < height - 1)
+        {
+            // Update the position only if it's within the valid bounds
+            currentPos = newPos;
+        }
+
+        // Keep the drunkard within bounds of the grid
+        currentPos.x = Mathf.Clamp(currentPos.x, 0, (width - 2) * tileSize);
+        currentPos.z = Mathf.Clamp(currentPos.z, 0, (height - 2) * tileSize);
+    }
+
+    void CarveFloor(Vector3 position)
+    {
+        // Convert world position to grid position
+        int gridX = Mathf.FloorToInt(position.x / tileSize);
+        int gridZ = Mathf.FloorToInt(position.z / tileSize);
+
+        // If we're within bounds, replace the wall with a floor (empty space)
+        if (gridX >= 0 && gridX < width && gridZ >= 0 && gridZ < height)
+        {
+            // Adjust the position based on the tile size for correct placement
+            Vector3 floorPosition = new Vector3(gridX * tileSize, 0, gridZ * tileSize);
+
+            // Destroy the wall at this position
+            Destroy(grid[gridX, gridZ]);
+
+            // Instantiate a new floor at this position
+            grid[gridX, gridZ] = Instantiate(floorPrefab, floorPosition, Quaternion.identity);
+
+            // Mark this tile as visited (now a floor)
+            visited[gridX, gridZ] = true;
+        }
+    }
 }
