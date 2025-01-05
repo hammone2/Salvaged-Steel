@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 using UnityEngine.AI;
+using Unity.AI.Navigation;
 
-public class RandomLevelGenerator : MonoBehaviour
+public class RandomLevelGenerator : MonoBehaviourPun
 {
     public GameObject wallPrefab;  // Wall prefab (e.g., cube)
     public GameObject floorPrefab; // Floor prefab (e.g., empty space or plane)
@@ -19,14 +21,20 @@ public class RandomLevelGenerator : MonoBehaviour
 
     void Start()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
+
         // Initialize the grid and set up walls
         InitializeGrid();
 
         // Start the drunkard's walk from a random position
         currentPos = new Vector3(Random.Range(1, width - 2) * tileSize, 0, Random.Range(1, height - 2) * tileSize);
 
+        // Start carving the path by turning the initial position into a floor
+        CarveFloor(currentPos);
+
         // Start the walk process
-        StartCoroutine(DrunkardsWalkCoroutine());
+        GenerateLevel();
     }
 
     void InitializeGrid()
@@ -46,13 +54,9 @@ public class RandomLevelGenerator : MonoBehaviour
         }
     }
 
-    IEnumerator DrunkardsWalkCoroutine()
+    void GenerateLevel()
     {
-        // Start carving the path by turning the initial position into a floor
-        CarveFloor(currentPos);
-
         // Walk for the specified number of steps
-        //for (int i = 0; i <= walkLength; i++)
         while (walkLength > 0)
         {
             // Randomly choose a direction to walk
@@ -69,9 +73,11 @@ public class RandomLevelGenerator : MonoBehaviour
 
             //Debug.Log("Step #: "+i+" / "+walkLength);
             walkLength--;
-
-            // Wait a small amount of time before the next step
-            yield return new WaitForSeconds(0.001f);
+        }
+        if (walkLength <= 0)
+        {
+            GetComponent<NavMeshSurface>().BuildNavMesh();
+            photonView.RPC("SyncLevel", RpcTarget.AllBuffered);
         }
     }
 
@@ -134,10 +140,40 @@ public class RandomLevelGenerator : MonoBehaviour
             Destroy(grid[gridX, gridZ]);
 
             // Instantiate a new floor at this position
-            grid[gridX, gridZ] = Instantiate(floorPrefab, floorPosition, Quaternion.identity);
+            //grid[gridX, gridZ] = Instantiate(floorPrefab, floorPosition, Quaternion.identity);
+
+            //have code here that creates 1 of 4 player spawn points so all spawns are at the first 4 generated tiles
 
             // Mark this tile as visited (now a floor)
             visited[gridX, gridZ] = true;
+        }
+    }
+
+    [PunRPC]
+    void SyncLevel()
+    {
+        //sync the level accross clients
+        //check to see if this is the master client, if it is then return. (since the level is already generated on the master)
+        if (PhotonNetwork.IsMasterClient)
+            return;
+
+        // Loop through the grid to instantiate the objects on the non-master client
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                // Get the current grid cell
+                GameObject currentTile = grid[x, y];
+
+                if (currentTile == null)
+                    continue;
+
+                // Instantiate the object across the network
+                Vector3 position = new Vector3(x*tileSize, 0, y*tileSize); //multiply the grid position by the tile size 
+                Quaternion rotation = Quaternion.identity;
+
+                Instantiate(currentTile, position, rotation);
+            }
         }
     }
 }

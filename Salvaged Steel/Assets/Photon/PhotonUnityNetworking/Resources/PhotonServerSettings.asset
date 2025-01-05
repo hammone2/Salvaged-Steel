@@ -59,6 +59,7 @@ MonoBehaviour:
   - SpawnBullet
   - UpdateStats
   - SpawnTank
+  - SyncLevel
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
