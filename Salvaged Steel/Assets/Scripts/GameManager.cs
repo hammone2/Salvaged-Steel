@@ -83,7 +83,11 @@ public class GameManager : MonoBehaviourPun
     }
     */
 
-    //add check lose condition here
+    public void CheckLoseCondition()
+    {
+        if (alivePlayers <= 0)
+            photonView.RPC("LoseGame", RpcTarget.All);
+    }
 
     [PunRPC]
     void WinGame(int winningPlayer)
@@ -92,8 +96,15 @@ public class GameManager : MonoBehaviourPun
         //GameUI.instance.SetWinText(GetPlayer(winningPlayer).photonPlayer.NickName);
         Invoke("GoBackToMenu", postGameTime);
     }
+
+    [PunRPC]
+    void LoseGame()
+    {
+        Invoke("GoBackToMenu", postGameTime);
+    }
+
     void GoBackToMenu()
     {
-        NetworkManager.instance.ChangeScene("Menu");
+        NetworkManager.instance.ChangeScene("MainMenu");
     }
 }

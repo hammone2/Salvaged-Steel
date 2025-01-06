@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using OpenCover.Framework.Model;
 
 public class ItemInfo : MonoBehaviour
 {
@@ -60,7 +59,7 @@ public class ItemInfo : MonoBehaviour
         switch (true)
         {
             case bool _ when gun != null:
-                itemType = ItemType.Gun;
+                //itemType = ItemType.Gun;
                 gunInfo.SetActive(true);
                 damage.text = "Damage: " + gun.damage;
                 fireRate.text = "Fire Rate: " + gun.fireRate;
@@ -68,14 +67,14 @@ public class ItemInfo : MonoBehaviour
                 break;
 
             case bool _ when propulsion != null:
-                itemType = ItemType.Propulsion;
+                //itemType = ItemType.Propulsion;
                 propulsionInfo.SetActive(true);
                 propHealth.text = "Health: " + health.health;
                 moveSpeed.text = "Speed: " + propulsion.moveSpeed;
                 break;
 
             case bool _ when turret != null:
-                itemType = ItemType.Turret;
+                //itemType = ItemType.Turret;
                 turretInfo.SetActive(true);
                 turretHealth.text = "Health: " + health.health;
                 rotateSpeed.text = "Rotation Speed: " + turret.rotationSpeed;

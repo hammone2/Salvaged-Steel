@@ -61,7 +61,6 @@ public class Enemy : MonoBehaviourPun
 
                 if (partObject != null)
                 {
-                    Debug.Log("Found PartObject in child: " + child.name);
                     HealthComponent _healthComponent = partObject.GetComponent<HealthComponent>();
                     if (_healthComponent != null)
                         health += _healthComponent.health;
@@ -194,7 +193,6 @@ public class Enemy : MonoBehaviourPun
 
                 if (partObject != null)
                 {
-                    Debug.Log("Found PartObject in child: " + child.name);
                     gun = null;
                     partObject.Drop(true, Random.Range(10f, 15f));
                 }

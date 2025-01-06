@@ -23,6 +23,8 @@ public class Spawner : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         spawnPointCooldowns = new float[spawnPoints.Length];
     }
 
@@ -30,16 +32,13 @@ public class Spawner : MonoBehaviourPun
     {
         if (!PhotonNetwork.IsMasterClient)
             return;
-        SpawnEnemies();
+        if (isSpawning)
+            SpawnEnemies();
     }
 
     // Coroutine to spawn enemies at random times
     private void SpawnEnemies()
     {
-        if (!isSpawning)
-            return;
-        // Keep spawning enemies
-        
         // Check all spawn points and attempt to spawn at each one
         for (int i = 0; i < spawnPoints.Length; i++)
         {
@@ -60,8 +59,6 @@ public class Spawner : MonoBehaviourPun
     // Spawn an enemy at a specific spawn point
     private void SpawnEnemy(int spawnPointIndex)
     {
-        // Instantiate the enemy at the chosen spawn point's position and rotation
-        
         // Get a random index from the enemyPrefabList
         int randomIndex = Random.Range(0, enemyPrefabList.Count);
 
@@ -69,11 +66,5 @@ public class Spawner : MonoBehaviourPun
         string randomPrefabPath = enemyPrefabList[randomIndex];
 
         GameObject enemy = PhotonNetwork.Instantiate(randomPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
-        Debug.Log("Enemy spawned at spawn point: " + spawnPointIndex);
-    }
-
-    public void BeginSpawning()
-    {
-        isSpawning = true;
     }
 }

@@ -289,7 +289,6 @@ public class PlayerController : MonoBehaviourPun
             //photonView.RPC("Die", RpcTarget.All);
             lives--;
             HUD.instance.UpdateLivesText();
-            Debug.Log("LIVES LEFT: " + lives);
             gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
             Die();
         }       
@@ -340,7 +339,13 @@ public class PlayerController : MonoBehaviourPun
             StartCoroutine(Spawn(spawnPos, GameManager.instance.respawnTime));
         }
         else if (lives <= 0)
+        {
+            GameManager.instance.alivePlayers--;
+            // host will check win condition
+            if (PhotonNetwork.IsMasterClient)
+                GameManager.instance.CheckLoseCondition();
             End();
+        }
     }
 
     IEnumerator Spawn(Vector3 spawnPos, float timeToSpawn)
@@ -395,7 +400,6 @@ public class PlayerController : MonoBehaviourPun
     public void End()
     {
         isPlaying = false;
-        //playButton.SetActive(true);
         Leaderboard.instance.SetLeaderboardEntry(score);
         HUD.instance.deathScreen.SetActive(true);
     }

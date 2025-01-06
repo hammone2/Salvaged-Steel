@@ -16,6 +16,7 @@ public class HUD : MonoBehaviour
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI hullText;
     public TextMeshProUGUI turretText;
+    public TextMeshProUGUI wavesSurvivedText;
     public Image turretHealthBar;
     public Image propulsionHealthBar;
     [SerializeField] private Image turretHealthAnimBar;
@@ -23,6 +24,7 @@ public class HUD : MonoBehaviour
     public TextMeshProUGUI respawnText;
     public GameObject respawnScreen;
     public GameObject deathScreen;
+    public GameObject loseScreen;
 
     private float reduceSpeed = 1f;
     public float lastHitTime;
@@ -103,4 +105,9 @@ public class HUD : MonoBehaviour
         winText.text = winnerName + " wins";
     }*/
 
+    public void SetLoseText(int highestWave)
+    {
+        loseScreen.SetActive(true);
+        wavesSurvivedText.SetText("Waves Survived: " + highestWave);
+    }
 }
