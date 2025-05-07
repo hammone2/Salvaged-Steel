@@ -75,7 +75,7 @@ public class Gun : MonoBehaviourPun
     private void SpawnBullet(int id, bool isMine, Vector3 direction)
     {
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.LookRotation(direction));
-        bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+        bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
         bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);
     }
 
