@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Photon.Pun;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -17,11 +14,10 @@ public class Bullet : MonoBehaviour
 
     public LayerMask damageableLayer;
 
-    public void Initialize(float damage, int attackerId, bool isMine, float lifeTime)
+    public void Initialize(float damage, int attackerId, float lifeTime)
     {
         this.damage = damage;
         this.attackerId = attackerId;
-        this.isMine = isMine;
         this.lifeTime = lifeTime;
         Destroy(gameObject, lifeTime);
     }
@@ -36,30 +32,17 @@ public class Bullet : MonoBehaviour
         // if this is the local player's bullet, damage the hit enemy
         // if its not the local player, then damage the local player
         // we're using client side hit detection
-        if (other.CompareTag("Player") && !isMine)
+        if (other.CompareTag("Player"))
         {
-            PlayerController player = GameManager.instance.GetPlayer(other.gameObject);
-
-            if (player.id != attackerId)
-                player.photonView.RPC("TakeDamage", player.photonPlayer, attackerId, damage);
+            PlayerController player = GameManager.instance.GetPlayer();
+            player.TakeDamage(attackerId, damage);
         }
-        else if (other.CompareTag("Enemy") && isMine)
+        else if (other.CompareTag("Enemy"))
         {
             // might do a GetEnemy() func in GameManager
             Enemy enemy = other.GetComponent<Enemy>();
-            enemy.photonView.RPC("TakeDamage", RpcTarget.All, attackerId, damage);
+            enemy.TakeDamage(attackerId, damage);
         }
-
-        /*// If Health component exists, call TakeDamage
-        if (healthComponent != null)
-        {
-            // replace this with enemy's own unique dmg func
-            //healthComponent.TakeDamage(attackerId, damage);
-        }
-        else if (playerController != null)
-        {
-            playerController.TakeDamage(attackerId, damage);
-        }*/
 
         // Check if the collider is in one of the specified layers
         if (((1 << other.gameObject.layer) & layersToHit) != 0)
@@ -80,36 +63,19 @@ public class Bullet : MonoBehaviour
         foreach (var hitCollider in hitColliders)
         {
 
-            if (hitCollider.CompareTag("Player") && !isMine)
+            if (hitCollider.CompareTag("Player"))
             {
-                PlayerController player = GameManager.instance.GetPlayer(hitCollider.gameObject);
+                PlayerController player = GameManager.instance.GetPlayer();
 
                 if (player.id != attackerId)
-                    player.photonView.RPC("TakeDamage", player.photonPlayer, attackerId, damage);
+                    player.TakeDamage(attackerId, damage);
             }
-            else if (hitCollider.CompareTag("Enemy") && isMine)
+            else if (hitCollider.CompareTag("Enemy"))
             {
                 // might do a GetEnemy() func in GameManager
                 Enemy enemy = hitCollider.GetComponent<Enemy>();
-                enemy.photonView.RPC("TakeDamage", RpcTarget.All, attackerId, damage);
+                enemy.TakeDamage(attackerId, damage);
             }
-
-
-            // Check if the object hit has a health component (i.e., it is damageable)
-            /*HealthComponent targetHealth = hitCollider.GetComponent<HealthComponent>();
-            if (targetHealth != null)
-            {
-                // Apply damage to the object (you can scale this based on distance or other factors)
-                targetHealth.TakeDamage(damage);
-            }*/
-
-            // Optionally, apply a force to rigidbodies to simulate an explosion effect (e.g., knockback)
-            /*Rigidbody rb = hitCollider.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                Vector3 direction = hitCollider.transform.position - explosionPoint;
-                rb.AddForce(direction.normalized * force, ForceMode.Impulse);
-            }*/
         }
     }
 

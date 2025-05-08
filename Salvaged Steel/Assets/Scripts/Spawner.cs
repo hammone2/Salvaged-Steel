@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class Spawner : MonoBehaviourPun
+public class Spawner : MonoBehaviour
 {
     // Enemy prefab to spawn
-    public List<string> enemyPrefabList = new List<string>();
+    public List<GameObject> enemyPrefabList = new List<GameObject>();
 
     // List of spawn points
     public Transform[] spawnPoints;
@@ -23,15 +22,11 @@ public class Spawner : MonoBehaviourPun
     // Start is called before the first frame update
     void Start()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
         spawnPointCooldowns = new float[spawnPoints.Length];
     }
 
     private void Update()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
         if (isSpawning)
             SpawnEnemies();
     }
@@ -63,8 +58,8 @@ public class Spawner : MonoBehaviourPun
         int randomIndex = Random.Range(0, enemyPrefabList.Count);
 
         // Get the random prefab path
-        string randomPrefabPath = enemyPrefabList[randomIndex];
+        GameObject randomPrefabPath = enemyPrefabList[randomIndex];
 
-        GameObject enemy = PhotonNetwork.Instantiate(randomPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
+        GameObject enemy = Instantiate(randomPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
     }
 }

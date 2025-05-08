@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
 
-public class Gun : MonoBehaviourPun
+public class Gun : MonoBehaviour
 {
     [Header("Components")]
     public Texture2D crosshair;
@@ -27,21 +23,12 @@ public class Gun : MonoBehaviourPun
     private float lastShootTime;
     private CameraShake cameraShake;
 
-    //[PunRPC]
-    public void Shoot(int id, bool isMine, bool isPlayer) // the ammo for some reason is not being synced across clients
+    public void Shoot(int id, bool isPlayer)
     {
         if (Time.time - lastShootTime < fireRate)
             return;
         if (ammo <= 0)
             return;
-
-        // old shoot code (delete this later once I have the new shoot code finalized)
-        /*var bullet = Instantiate(bulletPrefab, bulletSpawner.position, bulletSpawner.rotation);
-        if (bullet.GetComponent<Bullet>() != null) // doing this so we can have bullet prefabs that aren't bullets in the traditional sense
-        {
-            bullet.GetComponent<Rigidbody>().velocity = bulletSpawner.forward * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);
-        }*/
 
         // Calculate the deviation based on accuracy
         float deviation = 100f - accuracy; // Convert percentage into a factor
@@ -55,31 +42,24 @@ public class Gun : MonoBehaviourPun
             Quaternion rotation = Quaternion.Euler(0f, angle + randomYDeviation, 0f); // Rotate around the Y-axis
             Vector3 direction = rotation * bulletSpawner.forward; // Forward direction with applied angle
 
-            /*var bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.LookRotation(direction));
-            bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
-            bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);*/
-
-            photonView.RPC("SpawnBullet", RpcTarget.All, id, isMine, direction);
+            SpawnBullet(id, direction);
         }
 
         lastShootTime = Time.time;
         if (isPlayer)
-            photonView.RPC("UpdateStats", RpcTarget.AllBuffered);
-            //ammo -= 1;
+            UpdateStats();
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
     }
 
-    [PunRPC]
-    private void SpawnBullet(int id, bool isMine, Vector3 direction)
+    private void SpawnBullet(int id, Vector3 direction)
     {
         var bullet = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.LookRotation(direction));
         bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
-        bullet.GetComponent<Bullet>().Initialize(damage, id, isMine, bulletLifeTime);
+        bullet.GetComponent<Bullet>().Initialize(damage, id, bulletLifeTime);
     }
 
-    [PunRPC]
     private void UpdateStats()
     {
         ammo -= 1;
@@ -93,8 +73,6 @@ public class Gun : MonoBehaviourPun
             cameraShake = cameraTransform.GetComponent<CameraShake>();
         }
     }
-
-    [PunRPC]
     public void DisconnectCamera()
     {
         if (cameraShake != null)

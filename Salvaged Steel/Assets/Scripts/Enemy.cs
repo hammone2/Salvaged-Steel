@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using Photon.Pun;
 
-public class Enemy : MonoBehaviourPun
+public class Enemy : MonoBehaviour
 {
 
     public NavMeshAgent agent;
     public GameObject explosionParticles;
     public GameObject rotated;
-    public CharacterController characterController;
+    //public CharacterController characterController;
     public Gun gun;
     public Propulsion propulsion;
     public LayerMask layersToHit;
@@ -70,16 +69,11 @@ public class Enemy : MonoBehaviourPun
         //healthComponent.health = health;
         headerInfo.Initialize(enemyName, health);
 
-        if (!PhotonNetwork.IsMasterClient)
-            return;
         // Start the coroutine to choose random positions
         StartCoroutine(ChooseRandomFlankPosition());
     }
     void Update()
     {
-        if (!PhotonNetwork.IsMasterClient)
-            return;
-
         if (target != null)
         {
             Vector3 directionToPlayer = target.position - rotated.transform.position;
@@ -93,8 +87,7 @@ public class Enemy : MonoBehaviourPun
             {
                 if (hit.collider.CompareTag("Player"))
                 {
-                    //gun.photonView.RPC("Shoot", RpcTarget.All, 0, false, false);
-                    gun.Shoot(0, false, false);
+                    gun.Shoot(0, false);
                 }
             }
         }
@@ -126,12 +119,13 @@ public class Enemy : MonoBehaviourPun
         if (Time.time - lastPlayerDetectTime > playerDetectRate)
         {
             lastPlayerDetectTime = Time.time;
-            // loop through all the players
-            foreach (PlayerController player in GameManager.instance.players)
+            if (GameManager.instance.player != null)
             {
+                PlayerController player = GameManager.instance.player;
+
                 // calculate distance between us and the player
                 float dist = Vector2.Distance(transform.position, player.transform.position);
-                if (player == target)
+                if (player.transform == target)
                 {
                     if (dist > chaseRange)
                         target = null;
@@ -142,6 +136,7 @@ public class Enemy : MonoBehaviourPun
                         target = player.transform;
                 }
             }
+            
         }
     }
     
@@ -158,20 +153,22 @@ public class Enemy : MonoBehaviourPun
             randomDirection.y = 0; // Keep the Y position flat
 
             // Calculate the target position relative to the player
-            Vector3 flankPosition = target.position + randomDirection;
+            if (target != null)
+            {
+                Vector3 flankPosition = target.position + randomDirection;
 
-            // Set the new destination
-            agent.SetDestination(flankPosition);
+                // Set the new destination
+                agent.SetDestination(flankPosition);
+            }
         }
     }
 
-    [PunRPC]
     public void TakeDamage(int attackerId, float damage)
     {
         if (health <= 0)
             return;
         health -= damage;
-        headerInfo.photonView.RPC("UpdateHealthBar", RpcTarget.All, health);
+        headerInfo.UpdateHealthBar(health);
         curAttackerId = attackerId;
         if (health <= 0)
             Die();
@@ -199,8 +196,8 @@ public class Enemy : MonoBehaviourPun
             }
         }
         if (curAttackerId != 0)
-            GameManager.instance.GetPlayer(curAttackerId).photonView.RPC("AddKill", RpcTarget.All, pointsForKill);
+            GameManager.instance.GetPlayer().AddKill(pointsForKill);
         Instantiate(explosionParticles, transform.position, Quaternion.identity);
-        PhotonNetwork.Destroy(gameObject);
+        Destroy(gameObject);
     }
 }

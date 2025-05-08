@@ -1,13 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using Photon.Pun;
-using Photon.Realtime;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEditor;
 using TMPro;
 
-public class PlayerController : MonoBehaviourPun
+public class PlayerController : MonoBehaviour
 {
     [Header ("Components & Layers")]
     [SerializeField] private LayerMask groundMask;
@@ -26,7 +24,6 @@ public class PlayerController : MonoBehaviourPun
     public TextMeshPro nameTag;
 
     [Header ("Networking")]
-    public Player photonPlayer;
     public int id;
     private int curAttackerId;
 
@@ -54,31 +51,11 @@ public class PlayerController : MonoBehaviourPun
     private PartObject lastSelectedPart = null;
     private int maxPickupDist = 15;
 
-   
-
-    [PunRPC]
-    public void Initialize(Player player)
-    {
-        id = player.ActorNumber;
-        Debug.Log(id);
-        photonPlayer = player;
-        GameManager.instance.players[id - 1] = this;
-        // is this not our local player?
-        if (!photonView.IsMine)
-        {
-            GetComponentInChildren<Camera>().gameObject.SetActive(false);
-            nameTag.text = "" + player.NickName;
-        }
-        else
-        {
-            nameTag.text = "YOU";
-            HUD.instance.Initialize(this);
-        }
-    }
-
     private void Start()
     {
         //Assign parts to vars
+        nameTag.text = "YOU";
+        HUD.instance.Initialize(this);
         gun = gunSlot.transform.GetChild(0).GetComponent<Gun>();
         gun.GetCamera(playerCamera);
         SetCustomCursor(gun.crosshair);
@@ -87,12 +64,11 @@ public class PlayerController : MonoBehaviourPun
         propulsion = propulsionSlot.transform.GetChild(0).GetComponent<Propulsion>();
         moveSpeed = propulsion.moveSpeed;
         HUD.instance.InitializeValues();
+        GameManager.instance.player = this;
     }
 
     private void Update()
     {
-        if (!photonView.IsMine) //dont do anything if the photon view isnt the local player's
-            return;
         if (!isPlaying) //dont do anything id controls are disabled
             return;
         if (!isAlive) // Dont do anything if the player is dead
@@ -134,14 +110,14 @@ public class PlayerController : MonoBehaviourPun
             if (Input.GetKeyDown(KeyCode.E) && selectedPart.isEquipped == false && distance <= maxPickupDist) 
             {
                 float dropForce = 7f;
-                if (selectedPart.GetComponent<Gun>())
+                if (selectedPart.GetComponent<Gun>() != null)
                 {
-                    gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
+                    gun.DisconnectCamera();
                     if (gun.ammo > 0)
-                        gun.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
+                        gun.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     else
-                        gun.gameObject.GetComponent<PartObject>().DespawnItem();
-                    selectedPart.Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
+                        gun.gameObject.GetComponent<PartObject>().DespawnItem(); //despawn the gun if there is no ammo left
+                    selectedPart.Equip(gunSlot.transform);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
@@ -150,16 +126,16 @@ public class PlayerController : MonoBehaviourPun
                 }
                 else if (selectedPart.GetComponent<Turret>())
                 {
-                    turret.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    selectedPart.Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
+                    turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    selectedPart.Equip(turretSlot.transform);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
                     HUD.instance.UpdateTurretPart();
                 }
                 else if (selectedPart.GetComponent<Propulsion>())
                 {
-                    propulsion.gameObject.GetComponent<PartObject>().photonView.RPC("Drop", RpcTarget.All, false, dropForce);
-                    selectedPart.Equip(propulsionSlot.transform, propulsionSlot.GetComponent<PhotonView>().ViewID);
+                    propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
+                    selectedPart.Equip(propulsionSlot.transform);
                     //selectedPart.photonView.RPC("Equip", RpcTarget.Others, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
@@ -171,8 +147,7 @@ public class PlayerController : MonoBehaviourPun
         //Shoot
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            gun.Shoot(id, photonView.IsMine, true);
-            //gun.photonView.RPC("Shoot", RpcTarget.All, id, photonView.IsMine, true);
+            gun.Shoot(id, true);
         }
     }
 
@@ -183,11 +158,7 @@ public class PlayerController : MonoBehaviourPun
         if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity, partMask))
         {
             PartObject partObject = hitInfo.collider.gameObject.GetComponent<PartObject>();
-            /*if (partObject != null)
-            {
-                selectedPart = partObject;
-                selectedPart.ShowInfo();
-            }*/
+
             if (partObject != null)
             {
                 // If the selected part is different from the current part
@@ -210,8 +181,6 @@ public class PlayerController : MonoBehaviourPun
         }
         else
         {
-            //selectedPart = null;
-
             // If no part is selected and the previous part is not null, hide its info
             if (selectedPart != null)
             {
@@ -266,7 +235,6 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    [PunRPC]
     public void TakeDamage(int attackerID, float damage)
     {
         
@@ -277,8 +245,8 @@ public class PlayerController : MonoBehaviourPun
         curAttackerId = attackerID;
 
         float damageFactor = 60f;
-        propHp.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage / damageFactor);
-        turretHp.photonView.RPC("TakeDamage", RpcTarget.AllBuffered, damage / damageFactor);
+        propHp.TakeDamage(damage / damageFactor);
+        turretHp.TakeDamage(damage / damageFactor);
 
         HUD.instance.UpdateHullHealth();
         HUD.instance.UpdateTurretHealth();
@@ -286,15 +254,14 @@ public class PlayerController : MonoBehaviourPun
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
-            //photonView.RPC("Die", RpcTarget.All);
             lives--;
             HUD.instance.UpdateLivesText();
-            gun.photonView.RPC("DisconnectCamera", RpcTarget.All);
+            gun.DisconnectCamera();
             Die();
         }       
     }
 
-    //[PunRPC]
+
     public void Die()
     {
         isAlive = false;
@@ -320,12 +287,12 @@ public class PlayerController : MonoBehaviourPun
                     if (partHealth != null)
                     {
                         if (partHealth.health <= 0)
-                            PhotonNetwork.Destroy(partObject.gameObject);
+                            Destroy(partObject.gameObject);
                         else if (partHealth.health > 0)
-                            partObject.photonView.RPC("Drop", RpcTarget.All, true, Random.Range(10f, 15f));
+                            partObject.Drop(true, Random.Range(10f, 15f));
                     }
                     else
-                        partObject.photonView.RPC("Drop", RpcTarget.All, true, Random.Range(10f, 15f));
+                        partObject.Drop(true, Random.Range(10f, 15f));
                 }
             }
         }
@@ -341,9 +308,7 @@ public class PlayerController : MonoBehaviourPun
         else if (lives <= 0)
         {
             GameManager.instance.alivePlayers--;
-            // host will check win condition
-            if (PhotonNetwork.IsMasterClient)
-                GameManager.instance.CheckLoseCondition();
+            GameManager.instance.CheckLoseCondition();
             End();
         }
     }
@@ -367,19 +332,19 @@ public class PlayerController : MonoBehaviourPun
         HUD.instance.respawnScreen.SetActive(false);
         transform.position = spawnPos;
 
-        GameObject newTurret = PhotonNetwork.Instantiate(defaultTurretPrefabPath, turretSlot.transform.position, Quaternion.identity);
-        newTurret.GetComponent<PartObject>().Equip(turretSlot.transform, turretSlot.GetComponent<PhotonView>().ViewID);
+        GameObject newTurret = Instantiate(defaultTurret, turretSlot.transform.position, Quaternion.identity);
+        newTurret.GetComponent<PartObject>().Equip(turretSlot.transform);
         turret = newTurret.GetComponent<Turret>();
         HUD.instance.UpdateTurretPart();
 
-        GameObject newPropulsion = PhotonNetwork.Instantiate(defaultPropulsionPrefabPath, propulsionSlot.transform.position, Quaternion.identity);
-        newPropulsion.GetComponent<PartObject>().Equip(propulsionSlot.transform, propulsionSlot.GetComponent<PhotonView>().ViewID);
+        GameObject newPropulsion = Instantiate(defaultPropulsion, propulsionSlot.transform.position, Quaternion.identity);
+        newPropulsion.GetComponent<PartObject>().Equip(propulsionSlot.transform);
         propulsion = newPropulsion.GetComponent<Propulsion>();
         moveSpeed = propulsion.moveSpeed;
         HUD.instance.UpdatePropulsionPart();
 
-        GameObject newGun = PhotonNetwork.Instantiate(defaultGunPrefabPath, gunSlot.transform.position, Quaternion.identity);
-        newGun.GetComponent<PartObject>().Equip(gunSlot.transform, gunSlot.GetComponent<PhotonView>().ViewID);
+        GameObject newGun = Instantiate(defaultGun, gunSlot.transform.position, Quaternion.identity);
+        newGun.GetComponent<PartObject>().Equip(gunSlot.transform);
         gun = newGun.GetComponent<Gun>();
         gun.GetCamera(playerCamera);
         SetCustomCursor(gun.crosshair);
@@ -390,7 +355,6 @@ public class PlayerController : MonoBehaviourPun
     }
 
 
-    [PunRPC]
     public void AddKill(int scoreToAdd)
     {
         score += scoreToAdd;

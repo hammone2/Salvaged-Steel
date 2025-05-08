@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using Photon.Pun;
 
-public class HeaderInfo : MonoBehaviourPun
+public class HeaderInfo : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI nameText;
@@ -30,8 +29,7 @@ public class HeaderInfo : MonoBehaviourPun
             animBar.fillAmount = Mathf.MoveTowards(animBar.fillAmount, target, reduceSpeed * Time.deltaTime);
     }
 
-    [PunRPC]
-    void UpdateHealthBar(float value)
+    public void UpdateHealthBar(float value)
     {
         float newValue = value / maxValue;
         bar.fillAmount = newValue;

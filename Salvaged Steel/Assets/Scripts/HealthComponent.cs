@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class HealthComponent : MonoBehaviourPun
+public class HealthComponent : MonoBehaviour
 {
 
     public float health = 30f;
@@ -14,7 +13,6 @@ public class HealthComponent : MonoBehaviourPun
         maxHealth = health;
     }
 
-    [PunRPC]
     public void TakeDamage(float damage)
     {
         if (health <= 0)

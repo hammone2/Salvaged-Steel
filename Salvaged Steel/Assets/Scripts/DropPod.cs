@@ -1,33 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Photon.Pun;
 
-public class DropPod : MonoBehaviourPun
+public class DropPod : MonoBehaviour
 {
-    
 
-
-    void Start()
-    {
-        
-    }
-
-    
     void Update()
     {
         if (transform.position.y <= 0)
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                photonView.RPC("SpawnTank", RpcTarget.All);
-            }
+            SpawnTank();
+            
             //add particle effect here later
             Destroy(gameObject);
         }
     }
-
-    [PunRPC]
     private void SpawnTank()
     {
 
