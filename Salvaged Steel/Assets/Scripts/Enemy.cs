@@ -7,9 +7,9 @@ public class Enemy : MonoBehaviour
 {
 
     public NavMeshAgent agent;
+    public AiSensor sensor;
     public GameObject explosionParticles;
     public GameObject rotated;
-    //public CharacterController characterController;
     public Gun gun;
     public Propulsion propulsion;
     public LayerMask layersToHit;
@@ -82,13 +82,18 @@ public class Enemy : MonoBehaviour
             rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, rotation, Time.deltaTime * rotationSpeed);
 
             // Raycast from rotated to detect the player
-            RaycastHit hit;
+            /*RaycastHit hit;
             if (Physics.Raycast(rotated.transform.position, rotated.transform.forward, out hit, detectionDistance, layersToHit))
             {
                 if (hit.collider.CompareTag("Player"))
                 {
                     gun.Shoot(0, false);
                 }
+            }*/
+
+            if (sensor.IsInSight(GameManager.instance.player.gameObject))
+            {
+                gun.Shoot(0, false);
             }
         }
 
@@ -195,8 +200,7 @@ public class Enemy : MonoBehaviour
                 }
             }
         }
-        if (curAttackerId != 0)
-            GameManager.instance.GetPlayer().AddKill(pointsForKill);
+        GameManager.instance.GetPlayer().AddKill(pointsForKill);
         Instantiate(explosionParticles, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }

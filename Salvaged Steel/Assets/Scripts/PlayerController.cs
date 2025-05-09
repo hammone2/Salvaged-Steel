@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (!isPlaying) //dont do anything id controls are disabled
+        if (!isPlaying) //dont do anything if controls are disabled
             return;
         if (!isAlive) // Dont do anything if the player is dead
             return;
