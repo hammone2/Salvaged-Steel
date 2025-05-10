@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
 
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
-    private float detectionDistance = 20f;
+    public float detectionDistance = 20f;
     private float chaseRange = 60f;
     public float playerDetectRate = 0.2f;
     private float lastPlayerDetectTime;
@@ -39,6 +39,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         agent.speed = propulsion.moveSpeed;
+        sensor.distance = detectionDistance;
         playerLayer = LayerMask.GetMask("Player");
     }
 

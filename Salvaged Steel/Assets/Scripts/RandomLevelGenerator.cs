@@ -12,7 +12,7 @@ public class RandomLevelGenerator : MonoBehaviour
     public int height = 50;        // Grid height (number of tiles in Z direction)
     public int walkLength = 500;   // Number of steps the drunkard will take
 
-    public int tileSize = 1;      // Size of each tile (wall/floor) in world space
+    public int tileSize = 2;      // Size of each tile (wall/floor) in world space
 
     private Vector3 currentPos;    // Current position of the drunkard (world position)
     private GameObject[,] grid;    // 2D array to hold grid references (wall/floor objects)
@@ -32,6 +32,15 @@ public class RandomLevelGenerator : MonoBehaviour
 
         // Start the walk process
         GenerateLevel();
+
+        StartCoroutine(CreateNavMesh());
+    }
+
+    IEnumerator CreateNavMesh()
+    {
+        //using a coroutine since mesh was being generated over destroyed level geometry
+        yield return new WaitForSeconds(1);
+        GetComponent<NavMeshSurface>().BuildNavMesh();
     }
 
     void InitializeGrid()
@@ -70,10 +79,6 @@ public class RandomLevelGenerator : MonoBehaviour
 
             //Debug.Log("Step #: "+i+" / "+walkLength);
             walkLength--;
-        }
-        if (walkLength <= 0)
-        {
-            GetComponent<NavMeshSurface>().BuildNavMesh();
         }
     }
 
