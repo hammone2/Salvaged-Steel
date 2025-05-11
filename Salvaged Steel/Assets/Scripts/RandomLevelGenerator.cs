@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 
 public class RandomLevelGenerator : MonoBehaviour
 {
@@ -32,8 +33,9 @@ public class RandomLevelGenerator : MonoBehaviour
 
         // Start the walk process
         GenerateLevel();
-
+        transform.eulerAngles = new Vector3(0, 45, 0);
         StartCoroutine(CreateNavMesh());
+        GameManager.instance.SpawnPlayer();
     }
 
     IEnumerator CreateNavMesh()
@@ -45,7 +47,7 @@ public class RandomLevelGenerator : MonoBehaviour
 
     void InitializeGrid()
     {
-        grid = new GameObject[width, height];
+        grid = new GameObject[width, height]; 
         visited = new bool[width, height];  // Initialize the visited array
 
         // Populate the grid with wall prefabs
@@ -54,7 +56,9 @@ public class RandomLevelGenerator : MonoBehaviour
             for (int z = 0; z < height; z++)
             {
                 Vector3 position = new Vector3(x * tileSize, 0, z * tileSize); // Adjust the position based on the tile size
-                grid[x, z] = Instantiate(wallPrefab, position, Quaternion.identity);
+                var wall = Instantiate(wallPrefab, position, Quaternion.identity);
+                grid[x, z] = wall;
+                wall.transform.SetParent(this.transform);
                 visited[x, z] = false;  // Mark all tiles as unvisited initially
             }
         }
@@ -144,7 +148,11 @@ public class RandomLevelGenerator : MonoBehaviour
             //grid[gridX, gridZ] = Instantiate(floorPrefab, floorPosition, Quaternion.identity);
 
             //have code here that creates 1 of 4 player spawn points so all spawns are at the first 4 generated tiles
-
+            GameObject spawnPoint = new GameObject("SpawnPoint"); 
+            spawnPoint.transform.position = floorPosition;
+            grid[gridX, gridZ] = spawnPoint;
+            spawnPoint.transform.SetParent(this.transform);
+            GameManager.instance.spawnPointList.Add(spawnPoint.transform);
             // Mark this tile as visited (now a floor)
             visited[gridX, gridZ] = true;
         }
