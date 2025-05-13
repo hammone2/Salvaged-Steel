@@ -53,7 +53,7 @@ public class AiSensor : MonoBehaviour
         for (int i = 0; i < count; ++i)
         {
             GameObject obj = colliders[i].gameObject;
-            Debug.Log("ENTERED SPHERE OF INFLUENCE: " + obj);
+            //Debug.Log("ENTERED SPHERE OF INFLUENCE: " + obj);
             if (IsInSight(obj))
             {
                 objects.Add(obj);
@@ -66,23 +66,26 @@ public class AiSensor : MonoBehaviour
         Vector3 origin = transform.position;
         Vector3 dest = obj.transform.position;
         Vector3 direction = dest - origin;
-        if (direction.y < 0 || direction.y > height)
+        if (direction.y < -1 || direction.y > height) //using -1 so that the enemies will always be able to shoot when the player is grounded
             return false;
+            
 
         direction.y = 0;
         float deltaAngle = Vector3.Angle(direction, transform.forward);
         if (deltaAngle > angle)
             return false;
+            
 
         origin.y += height / 2;
         dest.y = origin.y;
         if (Physics.Linecast(origin, dest, occlusionLayers))
             return false;
+            
 
         if (Vector3.Distance(dest, origin) > distance)
-            return false;
+            return false;          
 
-        Debug.Log("IN SIGHT: " + obj);
+        //Debug.Log("IN SIGHT: " + obj);
         return true;
     }
 

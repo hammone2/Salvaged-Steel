@@ -18,11 +18,12 @@ public class Spawner : MonoBehaviour
 
     // Cooldown for each spawn point (to prevent double-spawning from same point)
     private float[] spawnPointCooldowns;
+    private float spawnCoolDown;
 
     // Start is called before the first frame update
     void Start()
     {
-        spawnPointCooldowns = new float[spawnPoints.Length];
+        //spawnPointCooldowns = new float[spawnPoints.Length];
     }
 
     private void Update()
@@ -32,10 +33,10 @@ public class Spawner : MonoBehaviour
     }
 
     // Coroutine to spawn enemies at random times
-    private void SpawnEnemies()
+    private void SpawnEnemies() //make this into coroutine?
     {
         // Check all spawn points and attempt to spawn at each one
-        for (int i = 0; i < spawnPoints.Length; i++)
+        /*for (int i = 0; i < spawnPoints.Length; i++)
         {
             if (spawnPointCooldowns[i] <= 0) // If cooldown is finished, spawn an enemy
             {
@@ -48,7 +49,28 @@ public class Spawner : MonoBehaviour
                 // Reduce cooldown for each spawn point
                 spawnPointCooldowns[i] -= Time.deltaTime;
             }
-        }  
+        }*/
+        spawnCoolDown -= Time.deltaTime;
+        if (spawnCoolDown > 0)
+            return;
+        
+        int randomSpawns = Random.Range(3, 7); //choose how many enemies to spawn
+        List<Transform> pointsVisited = new List<Transform>();
+        for (int i = 0; i < randomSpawns; i++)
+        {
+            int spawnPoint = Random.Range(0, GameManager.instance.spawnPointList.Count);
+            for (int p = 0; p < pointsVisited.Count; p++)
+            {
+                if (pointsVisited[p] == GameManager.instance.spawnPointList[spawnPoint])
+                {
+                    pointsVisited.Add(GameManager.instance.spawnPointList[spawnPoint]);
+                    continue;
+                }
+            }
+            SpawnEnemy(spawnPoint);
+        }
+
+        spawnCoolDown = Random.Range(minSpawnCooldown, maxSpawnCooldown);
     }
 
     // Spawn an enemy at a specific spawn point
@@ -60,6 +82,6 @@ public class Spawner : MonoBehaviour
         // Get the random prefab path
         GameObject randomPrefabPath = enemyPrefabList[randomIndex];
 
-        GameObject enemy = Instantiate(randomPrefabPath, spawnPoints[spawnPointIndex].position, Quaternion.identity);
+        Instantiate(randomPrefabPath, GameManager.instance.spawnPointList[spawnPointIndex].position /*spawnPoints[spawnPointIndex].position*/, Quaternion.identity);
     }
 }

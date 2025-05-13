@@ -8,7 +8,6 @@ using Unity.VisualScripting;
 public class RandomLevelGenerator : MonoBehaviour
 {
     public GameObject wallPrefab;  // Wall prefab (e.g., cube)
-    public GameObject floorPrefab; // Floor prefab (e.g., empty space or plane)
     public int width = 50;         // Grid width (number of tiles in X direction)
     public int height = 50;        // Grid height (number of tiles in Z direction)
     public int walkLength = 500;   // Number of steps the drunkard will take
@@ -147,12 +146,13 @@ public class RandomLevelGenerator : MonoBehaviour
             // Instantiate a new floor at this position
             //grid[gridX, gridZ] = Instantiate(floorPrefab, floorPosition, Quaternion.identity);
 
-            //have code here that creates 1 of 4 player spawn points so all spawns are at the first 4 generated tiles
+            //Place spawn points for enemies/players in empty spaces
             GameObject spawnPoint = new GameObject("SpawnPoint"); 
             spawnPoint.transform.position = floorPosition;
             grid[gridX, gridZ] = spawnPoint;
             spawnPoint.transform.SetParent(this.transform);
             GameManager.instance.spawnPointList.Add(spawnPoint.transform);
+            
             // Mark this tile as visited (now a floor)
             visited[gridX, gridZ] = true;
         }

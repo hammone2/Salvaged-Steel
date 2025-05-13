@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
     {
         if (isRandomlyGenerated)
             return;
+        /*int index = Random.Range(0, spawnPoints.Length);
+        Transform spawnPoint = spawnPoints[index];
+        Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity); //using vector 3 instead of transform so player isnt parented to the level*/
         SpawnPlayer();
     }
 

@@ -302,7 +302,7 @@ public class PlayerController : MonoBehaviour
         //respawn sequence
         if (lives > 0)
         {
-            Vector3 spawnPos = GameManager.instance.spawnPoints[Random.Range(0, GameManager.instance.spawnPoints.Length)].position;
+            Vector3 spawnPos = GameManager.instance.spawnPointList[Random.Range(0, GameManager.instance.spawnPointList.Count)].position;
             StartCoroutine(Spawn(spawnPos, GameManager.instance.respawnTime));
         }
         else if (lives <= 0)
