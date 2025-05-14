@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +16,7 @@ public class Enemy : MonoBehaviour
     public LayerMask layersToHit;
     public HealthComponent healthComponent;
     public HeaderInfo headerInfo;
+    public TextMeshProUGUI stateText;
     public string enemyName;
     public List<GameObject> partSlots;
     public int pointsForKill = 10;
@@ -24,9 +26,10 @@ public class Enemy : MonoBehaviour
     private float rotationSpeed = 8.0f;
     private float propRotSpeed = 8.0f;
     public float detectionDistance = 20f;
-    private float chaseRange = 60f;
     public float playerDetectRate = 0.2f;
     private float lastPlayerDetectTime;
+    private float flankWaitTime;
+    private float lastIdleTime;
     private float health = 0f; //this isnt the actual health value, only gets passed to the healthcomponent once its calculated
     private LayerMask playerLayer;
 
@@ -35,6 +38,14 @@ public class Enemy : MonoBehaviour
     private float flankRadius = 15f;
     private Transform target;
     private GameObject propulsionSlot;
+
+    //Enemy States
+    private enum State{
+        IDLE,
+        PATROL,
+        ATTACK
+    }
+    State state;
     
     void Awake()
     {
@@ -70,42 +81,67 @@ public class Enemy : MonoBehaviour
         //healthComponent.health = health;
         headerInfo.Initialize(enemyName, health);
 
-        // Start the coroutine to choose random positions
-        StartCoroutine(ChooseRandomFlankPosition());
+        ChangeState(State.PATROL);
     }
     void Update()
     {
+        switch (state)
+        {
+            case State.IDLE:
+                stateText.text = "Idle";
+                if (Time.time - lastIdleTime > 2)
+                {
+                    lastIdleTime = Time.time;
+                    ChangeState(State.PATROL);
+                }
+                target = null;
+                DetectPlayer();
+                break;
+
+            case State.PATROL:
+                stateText.text = "Patrol";
+                ChooseRandomPatrolPosition();
+                DetectPlayer();
+                break;
+
+            case State.ATTACK:
+                stateText.text = "Attack";
+                PlayerController player = GameManager.instance.player;
+                target = player.transform;
+
+                flankWaitTime -= Time.deltaTime;
+                if (flankWaitTime < 0)
+                {
+                    flankWaitTime = Random.Range(minFlankTime, maxFlankTime);
+                    ChooseRandomFlankPosition();
+                }
+
+                if (sensor.IsInSight(player.gameObject))
+                {
+                    gun.Shoot(0, false);
+                }
+
+                if (!sensor.IsInRange(player.gameObject))
+                {
+                    target = null;
+                    state = State.PATROL; //change this to search later
+                }
+                break;
+        }
+
+        //Rotate the turret
         if (target != null)
         {
             Vector3 directionToPlayer = target.position - rotated.transform.position;
             directionToPlayer.y = 0; // Keep the rotation flat
             Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
             rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, rotation, Time.deltaTime * rotationSpeed);
-
-            // Raycast from rotated to detect the player
-            /*RaycastHit hit;
-            if (Physics.Raycast(rotated.transform.position, rotated.transform.forward, out hit, detectionDistance, layersToHit))
-            {
-                if (hit.collider.CompareTag("Player"))
-                {
-                    gun.Shoot(0, false);
-                }
-            }*/
-
-            if (sensor.IsInSight(GameManager.instance.player.gameObject))
-            {
-                gun.Shoot(0, false);
-            }
         }
 
-        //Search for nearby players
-        DetectPlayer();
-
         //rotate the propulsion part
-        // Get the current velocity of the agent (NavMeshAgent)
         Vector3 velocity = agent.velocity;
 
-        // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
+            // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
         if (velocity.magnitude > 0.1f)
         {
             // Get the direction the enemy is moving (ignore Y axis)
@@ -127,46 +163,49 @@ public class Enemy : MonoBehaviour
             lastPlayerDetectTime = Time.time;
             if (GameManager.instance.player != null)
             {
-                PlayerController player = GameManager.instance.player;
-
-                // calculate distance between us and the player
-                float dist = Vector2.Distance(transform.position, player.transform.position);
-                if (player.transform == target)
+                if (sensor.IsInRange(GameManager.instance.player.gameObject))
                 {
-                    if (dist > chaseRange)
-                        target = null;
-                }
-                else if (dist <= chaseRange)
-                {
-                    if (target == null)
-                        target = player.transform;
+                    state = State.ATTACK;
                 }
             }
             
         }
     }
     
-    private IEnumerator ChooseRandomFlankPosition()
+    private void ChooseRandomFlankPosition()
     {
-        while (true)
+        // Get a random position within flankRadius
+        Vector3 randomDirection = Random.insideUnitSphere * flankRadius;
+        randomDirection.y = 0; // Keep the Y position flat
+
+        // Calculate the target position relative to the player
+        if (target != null)
         {
-            // Wait for a random time interval
-            float waitTime = Random.Range(minFlankTime, maxFlankTime);
-            yield return new WaitForSeconds(waitTime);
+            Vector3 flankPosition = target.position + randomDirection;
 
-            // Get a random position within flankRadius
-            Vector3 randomDirection = Random.insideUnitSphere * flankRadius;
-            randomDirection.y = 0; // Keep the Y position flat
+            // Set the new destination
+            agent.SetDestination(flankPosition);
+        }
+    }
 
-            // Calculate the target position relative to the player
-            if (target != null)
+    private void ChooseRandomPatrolPosition()
+    {
+        if (target != null)
+        {
+            if (Vector2.Distance(transform.position, target.position) > 3) //dont get a new waypoint if still traveling
+                return;
+            else
             {
-                Vector3 flankPosition = target.position + randomDirection;
-
-                // Set the new destination
-                agent.SetDestination(flankPosition);
+                //choose a new patrol path or idle
+                State[] states = { State.IDLE, State.PATROL }; 
+                int randState = Random.Range(0, states.Length);
+                ChangeState(states[randState]);
             }
         }
+
+        int destination = Random.Range(0, GameManager.instance.spawnPointList.Count); //using spawnpoints as patrol waypoints so I dont have to get a random point in the world which would result in weird behaviour
+        target = GameManager.instance.spawnPointList[destination];
+        agent.SetDestination(target.position);
     }
 
     public void TakeDamage(int attackerId, float damage)
@@ -179,7 +218,6 @@ public class Enemy : MonoBehaviour
         if (health <= 0)
             Die();
     }
-
 
     private void Die()
     {
@@ -203,6 +241,14 @@ public class Enemy : MonoBehaviour
         }
         GameManager.instance.GetPlayer().AddKill(pointsForKill);
         Instantiate(explosionParticles, transform.position, Quaternion.identity);
+        GameManager.instance.enemies--;
         Destroy(gameObject);
+    }
+
+    private void ChangeState(State newState)
+    {
+        if (newState == State.IDLE)
+            lastIdleTime = Time.time;
+        state = newState;
     }
 }

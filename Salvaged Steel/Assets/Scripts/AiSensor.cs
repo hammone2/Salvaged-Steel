@@ -37,28 +37,44 @@ public class AiSensor : MonoBehaviour
 
     void Update()
     {
-        scanTimer -= Time.deltaTime;
+        /*scanTimer -= Time.deltaTime;
         if (scanTimer < 0)
         {
             scanTimer += scanInterval;
             Scan();
-        }
+        }*/
     }
 
     private void Scan() 
     {
-        count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
+        /*count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
 
         objects.Clear();
         for (int i = 0; i < count; ++i)
         {
             GameObject obj = colliders[i].gameObject;
-            //Debug.Log("ENTERED SPHERE OF INFLUENCE: " + obj);
+
             if (IsInSight(obj))
             {
                 objects.Add(obj);
             }
-        }
+        }*/
+    }
+
+    public bool IsInRange(GameObject obj)
+    {
+        Vector3 origin = transform.position;
+        Vector3 dest = obj.transform.position;
+
+        origin.y += height / 2;
+        dest.y = origin.y;
+        if (Physics.Linecast(origin, dest, occlusionLayers))
+            return false;
+
+        if (Vector3.Distance(dest, origin) > distance)
+            return false;
+
+        return true;
     }
 
     public bool IsInSight(GameObject obj)
@@ -85,7 +101,6 @@ public class AiSensor : MonoBehaviour
         if (Vector3.Distance(dest, origin) > distance)
             return false;          
 
-        //Debug.Log("IN SIGHT: " + obj);
         return true;
     }
 

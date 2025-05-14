@@ -14,16 +14,15 @@ public class Spawner : MonoBehaviour
     public float minSpawnCooldown = 2f;
     public float maxSpawnCooldown = 5f;
 
-    public bool isSpawning = true;
+    public int maxEnemies = 10;
 
-    // Cooldown for each spawn point (to prevent double-spawning from same point)
-    private float[] spawnPointCooldowns;
+    public bool isSpawning = true;
     private float spawnCoolDown;
 
     // Start is called before the first frame update
     void Start()
     {
-        //spawnPointCooldowns = new float[spawnPoints.Length];
+
     }
 
     private void Update()
@@ -35,23 +34,11 @@ public class Spawner : MonoBehaviour
     // Coroutine to spawn enemies at random times
     private void SpawnEnemies() //make this into coroutine?
     {
-        // Check all spawn points and attempt to spawn at each one
-        /*for (int i = 0; i < spawnPoints.Length; i++)
-        {
-            if (spawnPointCooldowns[i] <= 0) // If cooldown is finished, spawn an enemy
-            {
-                SpawnEnemy(i);  // Spawn an enemy at the i-th spawn point
-                // Set random cooldown for the spawn point
-                spawnPointCooldowns[i] = Random.Range(minSpawnCooldown, maxSpawnCooldown);
-            }
-            else
-            {
-                // Reduce cooldown for each spawn point
-                spawnPointCooldowns[i] -= Time.deltaTime;
-            }
-        }*/
         spawnCoolDown -= Time.deltaTime;
         if (spawnCoolDown > 0)
+            return;
+
+        if (GameManager.instance.enemies >= maxEnemies)
             return;
         
         int randomSpawns = Random.Range(3, 7); //choose how many enemies to spawn
@@ -83,5 +70,6 @@ public class Spawner : MonoBehaviour
         GameObject randomPrefabPath = enemyPrefabList[randomIndex];
 
         Instantiate(randomPrefabPath, GameManager.instance.spawnPointList[spawnPointIndex].position /*spawnPoints[spawnPointIndex].position*/, Quaternion.identity);
+        GameManager.instance.enemies++;
     }
 }
