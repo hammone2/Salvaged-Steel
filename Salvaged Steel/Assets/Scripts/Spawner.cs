@@ -19,12 +19,6 @@ public class Spawner : MonoBehaviour
     public bool isSpawning = true;
     private float spawnCoolDown;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     private void Update()
     {
         if (isSpawning)
@@ -54,7 +48,8 @@ public class Spawner : MonoBehaviour
                     continue;
                 }
             }
-            SpawnEnemy(spawnPoint);
+            if (GameManager.instance.enemies < maxEnemies)
+                SpawnEnemy(spawnPoint);
         }
 
         spawnCoolDown = Random.Range(minSpawnCooldown, maxSpawnCooldown);

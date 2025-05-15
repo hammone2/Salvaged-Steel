@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     public float respawnTime = 3f;
     public bool isRandomlyGenerated = false;
-    [HideInInspector] public int enemies;
+    public int enemies;
 
     // instance
     public static GameManager instance;

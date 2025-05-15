@@ -37,13 +37,21 @@ public class Enemy : MonoBehaviour
     private float maxFlankTime = 5f;
     private float flankRadius = 15f;
     private Transform target;
+    private Vector3 lastSpottedPos;
     private GameObject propulsionSlot;
+
+    //burst fire stuff
+    private bool canShoot = true;
+    private float shootTime;
+    private float lastBurstTime;
+    public float burstInterval = 3f;
 
     //Enemy States
     private enum State{
         IDLE,
         PATROL,
-        ATTACK
+        ATTACK,
+        SEARCH
     }
     State state;
     
@@ -85,6 +93,7 @@ public class Enemy : MonoBehaviour
     }
     void Update()
     {
+        Debug.Log("Is stopped: " + agent.isStopped);
         switch (state)
         {
             case State.IDLE:
@@ -118,14 +127,35 @@ public class Enemy : MonoBehaviour
 
                 if (sensor.IsInSight(player.gameObject))
                 {
-                    gun.Shoot(0, false);
+                    if (canShoot)
+                    {
+                        gun.Shoot(0, false);
+                        shootTime -= Time.deltaTime;
+                        if (shootTime < 0)
+                        {
+                            StartCoroutine(BurstFireCooldown());
+                        }
+                    }
                 }
 
                 if (!sensor.IsInRange(player.gameObject))
                 {
-                    target = null;
-                    state = State.PATROL; //change this to search later
+                    target = player.transform; //null;
+                    lastSpottedPos = player.transform.position;
+                    agent.SetDestination(lastSpottedPos);
+                    ChangeState(State.SEARCH);
                 }
+                break;
+
+            case State.SEARCH:
+                stateText.text = "Search";
+                DetectPlayer();
+                if (Vector2.Distance(transform.position, lastSpottedPos) < 3)
+                {
+                    target = null;
+                    ChangeState(State.PATROL);
+                }
+                    
                 break;
         }
 
@@ -164,9 +194,7 @@ public class Enemy : MonoBehaviour
             if (GameManager.instance.player != null)
             {
                 if (sensor.IsInRange(GameManager.instance.player.gameObject))
-                {
                     state = State.ATTACK;
-                }
             }
             
         }
@@ -247,8 +275,27 @@ public class Enemy : MonoBehaviour
 
     private void ChangeState(State newState)
     {
+        if (state == State.IDLE)
+            agent.isStopped = false;
         if (newState == State.IDLE)
+        {
+            agent.isStopped = true; //stop moving
             lastIdleTime = Time.time;
+        }
+        if (state == State.ATTACK)
+        {
+            shootTime = burstInterval;
+            canShoot = true;
+        }
+
         state = newState;
+    }
+
+    IEnumerator BurstFireCooldown()
+    {
+        canShoot = false;
+        yield return new WaitForSeconds(2);
+        shootTime = burstInterval;
+        canShoot = true;
     }
 }

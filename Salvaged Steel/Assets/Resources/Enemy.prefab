@@ -534,6 +534,7 @@ MonoBehaviour:
   pointsForKill: 10
   detectionDistance: 50
   playerDetectRate: 0.2
+  burstInterval: 1
 --- !u!195 &3088875532943100383
 NavMeshAgent:
   m_ObjectHideFlags: 0
