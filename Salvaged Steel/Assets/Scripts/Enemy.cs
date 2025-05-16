@@ -275,8 +275,7 @@ public class Enemy : MonoBehaviour
 
     private void ChangeState(State newState)
     {
-        if (state == State.IDLE)
-            agent.isStopped = false;
+        agent.isStopped = false; //removed the idle state check to fix permanent stop glicth
         if (newState == State.IDLE)
         {
             agent.isStopped = true; //stop moving

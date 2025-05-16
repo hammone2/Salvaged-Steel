@@ -364,7 +364,7 @@ public class PlayerController : MonoBehaviour
     public void End()
     {
         isPlaying = false;
-        Leaderboard.instance.SetLeaderboardEntry(score);
+        //Leaderboard.instance.SetLeaderboardEntry(score);
         HUD.instance.deathScreen.SetActive(true);
     }
 
