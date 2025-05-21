@@ -27,7 +27,6 @@ public class ItemInfo : MonoBehaviour
     [Header("Other Stuff")]
     [SerializeField] private Image banner;
     [SerializeField] private TextMeshProUGUI nameText;
-    public bool selected = false;
     public enum ItemType
     {
         Gun,
@@ -36,18 +35,10 @@ public class ItemInfo : MonoBehaviour
     }
     private ItemType itemType;
 
-    private void Update()
-    {
-        if (selected == false)
-            return;
-        transform.rotation = Quaternion.Euler(30, 0, 0);
-
-        Transform parentObject = transform.parent;
-        transform.position = parentObject.position + Vector3.up * 4;
-    }
-
     public void Initialize(Color rarityColor, GameObject item)
     {
+        gameObject.SetActive(true);
+
         // Try to get the components from the GameObject
         var partObject = item.GetComponent<PartObject>();
         var health = item.GetComponent<HealthComponent>();
@@ -87,6 +78,13 @@ public class ItemInfo : MonoBehaviour
 
         banner.color = rarityColor;
         nameText.text = item.name;
-        selected = true;
+    }
+
+    public void Deactivate()
+    {
+        gunInfo.SetActive(false);
+        propulsionInfo.SetActive(false);
+        turretInfo.SetActive(false);
+        gameObject.SetActive(false);
     }
 }

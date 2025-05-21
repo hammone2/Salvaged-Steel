@@ -24,6 +24,7 @@ public class HUD : MonoBehaviour
     public GameObject respawnScreen;
     public GameObject deathScreen;
     public GameObject loseScreen;
+    public GameObject itemInfo;
 
     private float reduceSpeed = 1f;
     public float lastHitTime;

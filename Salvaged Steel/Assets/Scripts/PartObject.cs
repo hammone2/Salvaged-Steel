@@ -7,7 +7,7 @@ public class PartObject : MonoBehaviour
     public Rigidbody rb;
     public BoxCollider bc;
     public ParticleSystem fireParticles;
-    public GameObject infoPrefab;
+    private GameObject infoPrefab;
     public bool isEquipped = true;
     [SerializeField] private Outline outline;
     private Transform originalParent;
@@ -19,7 +19,6 @@ public class PartObject : MonoBehaviour
     private float currentTimer = 0f; // Current time on the timer
     private Coroutine despawnCoroutine; // Reference to the coroutine
     private bool selected = false;
-
 
     public enum Rarity
     {
@@ -53,6 +52,7 @@ public class PartObject : MonoBehaviour
     {
         originalParent = transform.parent; // Store the original parent so that we can reassign it when dropping
         outline.OutlineColor = GetRarityColor(); //set the rarity color
+        infoPrefab = HUD.instance.itemInfo;
     }
 
     public void ShowInfo()
@@ -62,14 +62,12 @@ public class PartObject : MonoBehaviour
         if (selected == true)
             return;
         selected = true;
-        infoPrefab.SetActive(true);
         infoPrefab.GetComponent<ItemInfo>().Initialize(GetRarityColor(), gameObject);
     }
 
     public void HideInfo()
     {
-        infoPrefab.GetComponent<ItemInfo>().selected = false;
-        infoPrefab.SetActive(false);
+        infoPrefab.GetComponent<ItemInfo>().Deactivate();
         selected = false;
     }
 

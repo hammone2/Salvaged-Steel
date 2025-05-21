@@ -93,7 +93,6 @@ public class Enemy : MonoBehaviour
     }
     void Update()
     {
-        Debug.Log("Is stopped: " + agent.isStopped);
         switch (state)
         {
             case State.IDLE:
