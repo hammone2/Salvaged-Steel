@@ -225,13 +225,14 @@ public class PlayerController : MonoBehaviour
             }
 
             // Lerp camera position towards the halfway point
-            halfwayPoint.y = 10.5f; //doing this so the camera dosen't clip into the ground and cause weird shadows
-            halfwayPoint.z += -18.66f;
+            Vector3 camOffset = playerCamera.GetComponent<CameraShake>().initialPos;
+            halfwayPoint.y = camOffset.y; //10.5f; //doing this so the camera dosen't clip into the ground and cause weird shadows
+            halfwayPoint.z += camOffset.z; //-18.66f;
             playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
             // Smooth rotation towards the target direction
             Quaternion targetRotation = Quaternion.LookRotation(direction);
-            rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed); //rotated.transform.forward = direction;
+            rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
         }
     }
 

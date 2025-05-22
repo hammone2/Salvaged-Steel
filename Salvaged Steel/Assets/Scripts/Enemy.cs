@@ -195,7 +195,6 @@ public class Enemy : MonoBehaviour
                 if (sensor.IsInRange(GameManager.instance.player.gameObject))
                     state = State.ATTACK;
             }
-            
         }
     }
     

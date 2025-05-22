@@ -9,6 +9,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -48,10 +60,58 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7918335002988649766, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 090131bbbaf97f24cb34d0c84260fd3b, type: 2}
+    - target: {fileID: -7493596028755563170, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7493596028755563170, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: -7493596028755563170, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7493596028755563170, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: -7493596028755563170, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7493596028755563170, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: -4292154010595695564, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.92387956
+      objectReference: {fileID: 0}
+    - target: {fileID: -4292154010595695564, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4292154010595695564, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.38268343
+      objectReference: {fileID: 0}
+    - target: {fileID: -4292154010595695564, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4292154010595695564, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -45
+      objectReference: {fileID: 0}
     - target: {fileID: 882129737928793925, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -59,6 +119,14 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
       propertyPath: m_Name
       value: PineTree1
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: efa8a6594f03baf4ca64d897bc5f0bef, type: 3}
+      propertyPath: m_TagString
+      value: Wall
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -115,5 +183,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2, y: 19.260658, z: 2}
-  m_Center: {x: 0, y: 9.130329, z: 0}
+  m_Size: {x: 8, y: 18.816334, z: 8}
+  m_Center: {x: 0, y: 9.352491, z: 0}
