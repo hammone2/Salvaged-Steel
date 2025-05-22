@@ -7,7 +7,7 @@ using Unity.VisualScripting;
 
 public class RandomLevelGenerator : MonoBehaviour
 {
-    public GameObject wallPrefab;  // Wall prefab (e.g., cube)
+    public GameObject[] wallPrefab;  // Wall prefab (e.g., cube)
     public int width = 50;         // Grid width (number of tiles in X direction)
     public int height = 50;        // Grid height (number of tiles in Z direction)
     public int walkLength = 500;   // Number of steps the drunkard will take
@@ -55,7 +55,8 @@ public class RandomLevelGenerator : MonoBehaviour
             for (int z = 0; z < height; z++)
             {
                 Vector3 position = new Vector3(x * tileSize, 0, z * tileSize); // Adjust the position based on the tile size
-                var wall = Instantiate(wallPrefab, position, Quaternion.identity);
+                int prop = Random.Range(0, wallPrefab.Length);
+                var wall = Instantiate(wallPrefab[prop], position, Quaternion.identity);
                 grid[x, z] = wall;
                 wall.transform.SetParent(this.transform);
                 visited[x, z] = false;  // Mark all tiles as unvisited initially

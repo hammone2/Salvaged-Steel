@@ -3350,6 +3350,18 @@ PrefabInstance:
       propertyPath: wallPrefab
       value: 
       objectReference: {fileID: 3930901357632883463, guid: a3db38126e0f5ff4e959b1d9aaf42c35, type: 3}
+    - target: {fileID: 3062043228927059070, guid: 5aef9967f5b62cc459125e0986e4257d, type: 3}
+      propertyPath: wallPrefab.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3062043228927059070, guid: 5aef9967f5b62cc459125e0986e4257d, type: 3}
+      propertyPath: 'wallPrefab.Array.data[0]'
+      value: 
+      objectReference: {fileID: 4314949751170236351, guid: a22a89ded93a48943832137480018194, type: 3}
+    - target: {fileID: 3062043228927059070, guid: 5aef9967f5b62cc459125e0986e4257d, type: 3}
+      propertyPath: 'wallPrefab.Array.data[1]'
+      value: 
+      objectReference: {fileID: 6308411222926094776, guid: 0b286134ea1a03c45801c9147ebde158, type: 3}
     - target: {fileID: 4791342158403893886, guid: 5aef9967f5b62cc459125e0986e4257d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
