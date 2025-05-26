@@ -10,9 +10,6 @@ public class PlayerController : MonoBehaviour
     [Header ("Components & Layers")]
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private LayerMask partMask;
-    [SerializeField] private string defaultTurretPrefabPath;
-    [SerializeField] private string defaultPropulsionPrefabPath;
-    [SerializeField] private string defaultGunPrefabPath;
     [SerializeField] private GameObject defaultTurret;
     [SerializeField] private GameObject defaultPropulsion;
     [SerializeField] private GameObject defaultGun;
