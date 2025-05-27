@@ -187,7 +187,37 @@ public class Outline : MonoBehaviour {
     }
   }
 
-  void LoadSmoothNormals() {
+    // Method to recalculate outline when new meshes are introduced
+    public void RecalculateOutline()
+    {
+        // Cache renderers
+        renderers = GetComponentsInChildren<Renderer>();
+
+        // Retrieve or generate smooth normals
+        LoadSmoothNormals();
+
+        // Apply material properties immediately
+        needsUpdate = true;
+
+        foreach (var renderer in renderers)
+        {
+            // Skip ParticleSystemRenderers or TrailRenderers
+            if (renderer is ParticleSystemRenderer || renderer is TrailRenderer)
+            {
+                continue;
+            }
+
+            // Append outline shaders
+            var materials = renderer.sharedMaterials.ToList();
+
+            materials.Add(outlineMaskMaterial);
+            materials.Add(outlineFillMaterial);
+
+            renderer.materials = materials.ToArray();
+        }
+    }
+
+    void LoadSmoothNormals() {
 
     // Retrieve or generate smooth normals
     foreach (var meshFilter in GetComponentsInChildren<MeshFilter>()) {

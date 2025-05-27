@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     private PartObject lastSelectedPart = null;
     private int maxPickupDist = 15;
 
+    private Outline outline;
+
     private void Start()
     {
         //Assign parts to vars
@@ -62,6 +64,7 @@ public class PlayerController : MonoBehaviour
         moveSpeed = propulsion.moveSpeed;
         HUD.instance.InitializeValues();
         GameManager.instance.player = this;
+        outline = GetComponent<Outline>();
     }
 
     private void Update()
@@ -138,6 +141,8 @@ public class PlayerController : MonoBehaviour
                     moveSpeed = propulsion.moveSpeed;
                     HUD.instance.UpdatePropulsionPart();
                 }
+
+                outline.RecalculateOutline(); //update outline
             }
         }
 
@@ -223,8 +228,8 @@ public class PlayerController : MonoBehaviour
 
             // Lerp camera position towards the halfway point
             Vector3 camOffset = playerCamera.GetComponent<CameraShake>().initialPos;
-            halfwayPoint.y = camOffset.y; //10.5f; //doing this so the camera dosen't clip into the ground and cause weird shadows
-            halfwayPoint.z += camOffset.z; //-18.66f;
+            halfwayPoint.y = camOffset.y; //doing this so the camera dosen't clip into the ground and cause weird shadows
+            halfwayPoint.z += camOffset.z;
             playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
             // Smooth rotation towards the target direction
@@ -280,7 +285,6 @@ public class PlayerController : MonoBehaviour
 
                 if (partObject != null)
                 {
-                    Debug.Log("Found PartObject in child: " + child.name);
                     HealthComponent partHealth = partObject.GetComponent<HealthComponent>();
                     if (partHealth != null)
                     {
