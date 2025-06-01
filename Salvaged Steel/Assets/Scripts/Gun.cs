@@ -6,6 +6,7 @@ public class Gun : MonoBehaviour
     public Texture2D crosshair;
     public Transform bulletSpawner;
     public GameObject bulletPrefab;
+    public ParticleSystem muzzleFlash;
 
     [Header("Weapon Stats")]
     public float bulletSpeed = 32f;
@@ -51,6 +52,7 @@ public class Gun : MonoBehaviour
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
             cameraShake.shakeMagnitude = shakeMagnitude;
+        muzzleFlash.Play();
     }
 
     private void SpawnBullet(int id, Vector3 direction)

@@ -11,6 +11,7 @@ public class Bullet : MonoBehaviour
     private bool isMine;
     public float explosionRadius = 5f; // The radius in which damage is applied
     public float force = 10f; // The force of the explosion, can knock back objects
+    public GameObject hitSpark;
 
     public LayerMask damageableLayer;
 
@@ -49,6 +50,7 @@ public class Bullet : MonoBehaviour
         {
             if (explosive)
                 ApplySplashDamage(transform.position);
+            Instantiate(hitSpark, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
     }

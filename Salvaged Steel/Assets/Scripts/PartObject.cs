@@ -8,7 +8,6 @@ public class PartObject : MonoBehaviour
     public Rigidbody rb;
     public BoxCollider bc;
     public ParticleSystem fireParticles;
-    public VisualEffect fireEffect;
     private GameObject infoPrefab;
     public bool isEquipped = true;
     [SerializeField] private Outline outline;
@@ -52,7 +51,6 @@ public class PartObject : MonoBehaviour
     
     void Start()
     {
-        fireEffect.Stop();
         originalParent = transform.parent; // Store the original parent so that we can reassign it when dropping
         outline.OutlineColor = GetRarityColor(); //set the rarity color
         infoPrefab = HUD.instance.itemInfo;
@@ -146,8 +144,7 @@ public class PartObject : MonoBehaviour
         
         
         if (isExploding)
-            fireEffect.Play();
-            //fireParticles.Play();
+            fireParticles.Play();
         outline.enabled = true;
     }
 
