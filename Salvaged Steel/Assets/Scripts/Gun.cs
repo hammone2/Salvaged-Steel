@@ -51,7 +51,7 @@ public class Gun : MonoBehaviour
             UpdateStats();
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
-            cameraShake.shakeMagnitude = shakeMagnitude;
+            cameraShake.ScreenShake(shakeMagnitude);
         muzzleFlash.Play();
     }
 

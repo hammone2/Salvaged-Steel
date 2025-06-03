@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static UnityEngine.GraphicsBuffer;
+using UnityEngine.SocialPlatforms;
 
 public class HUD : MonoBehaviour
 {
@@ -26,14 +27,21 @@ public class HUD : MonoBehaviour
     public GameObject loseScreen;
     public GameObject itemInfo;
 
+    public GameObject healthStuff;
+    public Vector3 healthStuffAnchorPos;
+
     private float reduceSpeed = 1f;
     public float lastHitTime;
     private float animPause = 0.25f;
+
+    public float shakeMagnitude = 0f;
+    private float shakeFalloff = 0.01f;
 
     public static HUD instance;
     void Awake()
     {
         instance = this;
+        healthStuffAnchorPos = healthStuff.transform.localPosition;
     }
 
     public void Initialize(PlayerController localPlayer)
@@ -48,7 +56,14 @@ public class HUD : MonoBehaviour
             turretHealthAnimBar.fillAmount = Mathf.MoveTowards(turretHealthAnimBar.fillAmount, turretHealthBar.fillAmount, reduceSpeed * Time.deltaTime);
             propHealthAnimBar.fillAmount = Mathf.MoveTowards(propHealthAnimBar.fillAmount, propulsionHealthBar.fillAmount, reduceSpeed * Time.deltaTime);
         }
-            
+
+        if (shakeMagnitude > 0)
+            shakeMagnitude -= shakeFalloff;
+        if (shakeMagnitude < 0)
+            shakeMagnitude = 0;
+
+        healthStuff.transform.localPosition +=  Random.insideUnitSphere * shakeMagnitude;
+        healthStuff.transform.localPosition = Vector3.Lerp(healthStuff.transform.localPosition, healthStuffAnchorPos, 10f * Time.deltaTime);
     }
 
     public void InitializeValues()
@@ -109,5 +124,10 @@ public class HUD : MonoBehaviour
     {
         loseScreen.SetActive(true);
         wavesSurvivedText.SetText("Waves Survived: " + highestWave);
+    }
+
+    public void ScreenShake(float magnitude)
+    {
+        shakeMagnitude = magnitude * 10;
     }
 }

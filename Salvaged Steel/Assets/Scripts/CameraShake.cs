@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraShake : MonoBehaviour
 {
 
-    public float shakeMagnitude = 0.05f;
+    public float shakeMagnitude = 0f;
     private float shakeFalloff = 0.01f;
     [HideInInspector] public Vector3 initialPos;
 
@@ -22,5 +22,11 @@ public class CameraShake : MonoBehaviour
             shakeMagnitude = 0;
 
         transform.position += Random.insideUnitSphere * shakeMagnitude;
+    }
+
+    public void ScreenShake(float mag)
+    {
+        shakeMagnitude = mag;
+        HUD.instance.ScreenShake(shakeMagnitude);
     }
 }

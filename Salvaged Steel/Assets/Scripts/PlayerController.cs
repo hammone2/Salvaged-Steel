@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public Camera playerCamera;
     public List<GameObject> partSlots;
     public TextMeshPro nameTag;
+    private CameraShake cameraShake;
 
     [Header ("Networking")]
     public int id;
@@ -65,6 +66,8 @@ public class PlayerController : MonoBehaviour
         HUD.instance.InitializeValues();
         GameManager.instance.player = this;
         outline = GetComponent<Outline>();
+
+        cameraShake = playerCamera.GetComponent<CameraShake>();
     }
 
     private void Update()
@@ -143,6 +146,7 @@ public class PlayerController : MonoBehaviour
                 }
 
                 outline.RecalculateOutline(); //update outline
+                cameraShake.ScreenShake(0.5f);
             }
         }
 
@@ -255,13 +259,15 @@ public class PlayerController : MonoBehaviour
         HUD.instance.UpdateTurretHealth();
         HUD.instance.lastHitTime = Time.time;
 
+        cameraShake.ScreenShake(damage / 10);
+
         if (propHp.health <= 0 || turretHp.health <= 0)
         {
             lives--;
             HUD.instance.UpdateLivesText();
             gun.DisconnectCamera();
             Die();
-        }       
+        }
     }
 
 
