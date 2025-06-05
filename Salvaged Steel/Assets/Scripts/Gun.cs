@@ -14,7 +14,7 @@ public class Gun : MonoBehaviour
     public float shakeMagnitude = 0.15f;
     public float damage = 5f;
     public float bulletLifeTime = 5f;
-    public int ammo = 200;
+    public int ammo, maxAmmo = 200;
 
     [SerializeField, Range(0f, 100f)]
     public float accuracy = 100f;  // Accuracy of the shot (0 to 100)

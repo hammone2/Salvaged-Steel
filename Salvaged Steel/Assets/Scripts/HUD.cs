@@ -19,6 +19,7 @@ public class HUD : MonoBehaviour
     public TextMeshProUGUI wavesSurvivedText;
     public Image turretHealthBar;
     public Image propulsionHealthBar;
+    public Image gunAmmoBar;
     [SerializeField] private Image turretHealthAnimBar;
     [SerializeField] private Image propHealthAnimBar;
     public TextMeshProUGUI respawnText;
@@ -27,8 +28,8 @@ public class HUD : MonoBehaviour
     public GameObject loseScreen;
     public GameObject itemInfo;
 
-    public GameObject healthStuff;
-    public Vector3 healthStuffAnchorPos;
+    public GameObject shakable;
+    public Vector3 shakableAnchorPos;
 
     private float reduceSpeed = 1f;
     public float lastHitTime;
@@ -41,7 +42,7 @@ public class HUD : MonoBehaviour
     void Awake()
     {
         instance = this;
-        healthStuffAnchorPos = healthStuff.transform.localPosition;
+        shakableAnchorPos = shakable.transform.localPosition;
     }
 
     public void Initialize(PlayerController localPlayer)
@@ -62,8 +63,8 @@ public class HUD : MonoBehaviour
         if (shakeMagnitude < 0)
             shakeMagnitude = 0;
 
-        healthStuff.transform.localPosition +=  Random.insideUnitSphere * shakeMagnitude;
-        healthStuff.transform.localPosition = Vector3.Lerp(healthStuff.transform.localPosition, healthStuffAnchorPos, 10f * Time.deltaTime);
+        shakable.transform.localPosition +=  Random.insideUnitSphere * shakeMagnitude;
+        shakable.transform.localPosition = Vector3.Lerp(shakable.transform.localPosition, shakableAnchorPos, 10f * Time.deltaTime);
     }
 
     public void InitializeValues()
@@ -106,7 +107,8 @@ public class HUD : MonoBehaviour
 
     public void UpdateAmmoText()
     {
-        ammoText.text = "Ammo: " + player.gun.ammo;
+        ammoText.text = "" + player.gun.ammo;
+        gunAmmoBar.fillAmount = (float)player.gun.ammo / (float)player.gun.maxAmmo; //using float so the fill doesnt dissapear
     }
 
     public void UpdateLivesText()
