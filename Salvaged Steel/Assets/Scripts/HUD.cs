@@ -36,7 +36,7 @@ public class HUD : MonoBehaviour
     private float animPause = 0.25f;
 
     public float shakeMagnitude = 0f;
-    private float shakeFalloff = 0.01f;
+    private float shakeFalloff = 0.07f;
 
     public static HUD instance;
     void Awake()
@@ -65,6 +65,16 @@ public class HUD : MonoBehaviour
 
         shakable.transform.localPosition +=  Random.insideUnitSphere * shakeMagnitude;
         shakable.transform.localPosition = Vector3.Lerp(shakable.transform.localPosition, shakableAnchorPos, 10f * Time.deltaTime);
+
+        float maxOffset = 15f; // max distance allowed from anchor per axis
+        shakable.transform.localPosition = new Vector3(
+
+            Mathf.Clamp(shakable.transform.localPosition.x, shakableAnchorPos.x - maxOffset, shakableAnchorPos.x + maxOffset),
+            Mathf.Clamp(shakable.transform.localPosition.y, shakableAnchorPos.y - maxOffset, shakableAnchorPos.y + maxOffset),
+            Mathf.Clamp(shakable.transform.localPosition.z, shakableAnchorPos.z - maxOffset, shakableAnchorPos.z + maxOffset)
+
+            );
+
     }
 
     public void InitializeValues()
@@ -130,6 +140,7 @@ public class HUD : MonoBehaviour
 
     public void ScreenShake(float magnitude)
     {
-        shakeMagnitude = magnitude * 10;
+        if (magnitude > shakeMagnitude)
+            shakeMagnitude = magnitude * 10;
     }
 }

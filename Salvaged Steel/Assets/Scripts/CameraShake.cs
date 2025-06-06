@@ -24,9 +24,11 @@ public class CameraShake : MonoBehaviour
         transform.position += Random.insideUnitSphere * shakeMagnitude;
     }
 
-    public void ScreenShake(float mag)
+    public void ScreenShake(float magnitude)
     {
-        shakeMagnitude = mag;
-        HUD.instance.ScreenShake(shakeMagnitude);
+        if (magnitude > shakeMagnitude)
+            shakeMagnitude = magnitude;
+        HUD.instance.ScreenShake(magnitude);
+        Debug.Log(shakeMagnitude);
     }
 }
