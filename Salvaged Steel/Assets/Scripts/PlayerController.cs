@@ -16,7 +16,11 @@ public class PlayerController : MonoBehaviour
     public GameObject explosionParticles;
     public GameObject rotated;
     public CharacterController characterController;
+    
     public Camera playerCamera;
+    public GameObject cameraAnchor;
+    private Vector3 camInitialPos;
+    
     public List<GameObject> partSlots;
     public TextMeshPro nameTag;
     private CameraShake cameraShake;
@@ -50,6 +54,11 @@ public class PlayerController : MonoBehaviour
     private int maxPickupDist = 15;
 
     private Outline outline;
+
+    private void Awake()
+    {
+        camInitialPos = cameraAnchor.transform.localPosition;
+    }
 
     private void Start()
     {
@@ -231,10 +240,10 @@ public class PlayerController : MonoBehaviour
             }
 
             // Lerp camera position towards the halfway point
-            Vector3 camOffset = playerCamera.GetComponent<CameraShake>().initialPos;
+            Vector3 camOffset = camInitialPos; //playerCamera.GetComponent<CameraShake>().initialPos;
             halfwayPoint.y = camOffset.y; //doing this so the camera dosen't clip into the ground and cause weird shadows
             halfwayPoint.z += camOffset.z;
-            playerCamera.transform.position = Vector3.Lerp(playerCamera.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
+            /*playerCamera*/cameraAnchor.transform.position = Vector3.Lerp(/*playerCamera*/cameraAnchor.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
             // Smooth rotation towards the target direction
             Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -258,6 +267,7 @@ public class PlayerController : MonoBehaviour
         HUD.instance.UpdateHullHealth();
         HUD.instance.UpdateTurretHealth();
         HUD.instance.lastHitTime = Time.time;
+        HUD.instance.IncreaseOverlayIntensity();
 
         cameraShake.ScreenShake(damage / 10);
 

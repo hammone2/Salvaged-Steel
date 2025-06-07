@@ -33,7 +33,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 7521065853580043135}
+  - {fileID: 2316661720305526008}
   - {fileID: 1087136156371231757}
   - {fileID: 3665589798355773946}
   - {fileID: 1942012297022536514}
@@ -91,6 +91,7 @@ MonoBehaviour:
   rotated: {fileID: 8474589995969924259}
   characterController: {fileID: 6155153432676378862}
   playerCamera: {fileID: 7272727008885131595}
+  cameraAnchor: {fileID: 3132676962398312579}
   partSlots:
   - {fileID: 3285437720762532343}
   - {fileID: 525513987054452319}
@@ -339,6 +340,38 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_renderer: {fileID: 2943734897261630789}
   m_maskType: 0
+--- !u!1 &3132676962398312579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2316661720305526008}
+  m_Layer: 8
+  m_Name: CameraAnchor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2316661720305526008
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3132676962398312579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 24.6, z: -24.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7521065853580043135}
+  m_Father: {fileID: 3007127202091563609}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3285437720762532343
 GameObject:
   m_ObjectHideFlags: 0
@@ -399,12 +432,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4818859608119972538}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.38268343, y: 0, z: 0, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 24.6, z: -24.6}
+  m_LocalRotation: {x: 0.38268343, y: -0, z: -0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 3007127202091563609}
+  m_Father: {fileID: 2316661720305526008}
   m_LocalEulerAnglesHint: {x: 45, y: 0, z: 0}
 --- !u!20 &7272727008885131595
 Camera:
@@ -471,6 +504,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shakeMagnitude: 0
   initialPos: {x: 0, y: 0, z: 0}
+  anchor: {fileID: 3132676962398312579}
 --- !u!114 &8270835950698871915
 MonoBehaviour:
   m_ObjectHideFlags: 0

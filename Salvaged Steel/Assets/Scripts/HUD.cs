@@ -31,6 +31,9 @@ public class HUD : MonoBehaviour
     public GameObject shakable;
     public Vector3 shakableAnchorPos;
 
+    public GameObject damageOverlay;
+    private Material damageOverlayMat;
+
     private float reduceSpeed = 1f;
     public float lastHitTime;
     private float animPause = 0.25f;
@@ -43,6 +46,7 @@ public class HUD : MonoBehaviour
     {
         instance = this;
         shakableAnchorPos = shakable.transform.localPosition;
+        damageOverlayMat = damageOverlay.GetComponent<Image>().material;
     }
 
     public void Initialize(PlayerController localPlayer)
@@ -75,6 +79,7 @@ public class HUD : MonoBehaviour
 
             );
 
+        damageOverlayMat.SetFloat("_VignetteIntensity", Mathf.Lerp(damageOverlayMat.GetFloat("_VignetteIntensity"), 0f, 0.5f * Time.deltaTime));
     }
 
     public void InitializeValues()
@@ -142,5 +147,13 @@ public class HUD : MonoBehaviour
     {
         if (magnitude > shakeMagnitude)
             shakeMagnitude = magnitude * 10;
+    }
+
+    public void IncreaseOverlayIntensity()
+    {
+        if (damageOverlayMat.GetFloat("_VignetteIntensity") > 2.5f)
+            damageOverlayMat.SetFloat("_VignetteIntensity", 2.5f);
+        else
+            damageOverlayMat.SetFloat("_VignetteIntensity", damageOverlayMat.GetFloat("_VignetteIntensity") + 0.5f);
     }
 }
