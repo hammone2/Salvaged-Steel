@@ -8,6 +8,7 @@ public class Explosion : MonoBehaviour
     private bool isMine;
     public float explosionRadius = 5f; // The radius in which damage is applied
     public LayerMask layersToHit;
+    public float shakeAmount;
 
     void Start()
     {
@@ -29,7 +30,7 @@ public class Explosion : MonoBehaviour
 
                 //if (player.id != attackerId)
                 player.TakeDamage(attackerId, damage);
-                player.playerCamera.GetComponent<CameraShake>().ScreenShake(5f);
+                player.playerCamera.GetComponent<CameraShake>().ScreenShake(shakeAmount);
             }
             else if (hitCollider.CompareTag("Enemy"))
             {
