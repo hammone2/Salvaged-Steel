@@ -124,7 +124,7 @@ Material:
     - _TilingMultiplier: 0
     - _UIMaskSoftnessX: 1
     - _UIMaskSoftnessY: 1
-    - _VignetteIntensity: 0.26137468
+    - _VignetteIntensity: 0.002356621
     - _VignettePower: 4
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1

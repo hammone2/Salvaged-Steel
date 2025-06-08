@@ -181,7 +181,11 @@ public class Enemy : MonoBehaviour
 
             // Smoothly rotate the propulsionSlot towards the target rotation
             propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
+
+            propulsion.WalkAnimation();
         }
+        else if (velocity.magnitude == 0)
+            propulsion.IdleAnimation();
     }
 
     // updates the targeted player

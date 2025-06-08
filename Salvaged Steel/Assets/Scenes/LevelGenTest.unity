@@ -165,6 +165,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefabList:
   - {fileID: 7411886825182336122, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+  - {fileID: 7742888968772102826, guid: dab7fbaaef231b043a267df33edfe65a, type: 3}
   spawnPoints: []
   minSpawnCooldown: 5
   maxSpawnCooldown: 10

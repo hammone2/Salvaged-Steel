@@ -105,7 +105,11 @@ public class PlayerController : MonoBehaviour
 
             // Smoothly rotate the propulsionSlot towards the target rotation
             propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
+
+            propulsion.WalkAnimation();
         }
+        else if (move.magnitude == 0)
+            propulsion.IdleAnimation();
 
         // doing this because player started flying upwards for some reason
         if (transform.position.y > 0)
