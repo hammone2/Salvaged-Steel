@@ -20,8 +20,6 @@ public class CameraShake : MonoBehaviour
             shakeMagnitude -= shakeFalloff;
         if (shakeMagnitude < 0)
             shakeMagnitude = 0;
-
-        //transform.position += Random.insideUnitSphere * shakeMagnitude;
         
         
         transform.localPosition += Random.insideUnitSphere * shakeMagnitude;

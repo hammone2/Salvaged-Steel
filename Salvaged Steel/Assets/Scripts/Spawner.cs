@@ -65,11 +65,11 @@ public class Spawner : MonoBehaviour
         // Get the random prefab path
         GameObject randomPrefabPath = enemyPrefabList[randomIndex];
 
-        //Instantiate(randomPrefabPath, GameManager.instance.spawnPointList[spawnPointIndex].position /*spawnPoints[spawnPointIndex].position*/, Quaternion.identity);
+        //Spawn drop pod
         Vector3 dropPodSpawn = GameManager.instance.spawnPointList[spawnPointIndex].position;
         dropPodSpawn.y = 50;
         GameObject newPod = Instantiate(dropPod, dropPodSpawn, Quaternion.identity);
-        newPod.GetComponent<DropPod>().SpawnDropPod(randomPrefabPath, GameManager.instance.spawnPointList[spawnPointIndex].position);
+        newPod.GetComponent<DropPod>().SpawnDropPod(randomPrefabPath, GameManager.instance.spawnPointList[spawnPointIndex].position, false);
         GameManager.instance.enemies++;
     }
 }

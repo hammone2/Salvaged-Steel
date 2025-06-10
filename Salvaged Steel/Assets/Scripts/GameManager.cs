@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
     public bool isRandomlyGenerated = false;
     public int enemies;
 
+    [Header("Other")]
+    [SerializeField] private GameObject dropPod;
+
     // instance
     public static GameManager instance;
     void Awake()
@@ -29,17 +32,24 @@ public class GameManager : MonoBehaviour
     {
         if (isRandomlyGenerated)
             return;
-        /*int index = Random.Range(0, spawnPoints.Length);
-        Transform spawnPoint = spawnPoints[index];
-        Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity); //using vector 3 instead of transform so player isnt parented to the level*/
-        SpawnPlayer();
+
+        InitializePlayer();
+    }
+
+    public void InitializePlayer()
+    {
+        int index = Random.Range(0, spawnPointList.Count);
+        Transform spawnPoint = spawnPointList[index];
+        Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity); //using vector 3 instead of transform so player isnt parented to the level
     }
 
     public void SpawnPlayer()
     {
         int index = Random.Range(0, spawnPointList.Count);
-        Transform spawnPoint = spawnPointList[index];
-        Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity); //using vector 3 instead of transform so player isnt parented to the level
+        Vector3 dropPodSpawn = spawnPointList[index].position;
+        dropPodSpawn.y = 50;
+        GameObject newPod = Instantiate(dropPod, dropPodSpawn, Quaternion.identity);
+        newPod.GetComponent<DropPod>().SpawnDropPod(playerPrefab, spawnPointList[index].position, true);
     }
 
     public void CheckLoseCondition()

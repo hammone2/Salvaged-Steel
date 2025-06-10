@@ -34,7 +34,7 @@ public class RandomLevelGenerator : MonoBehaviour
         GenerateLevel();
         transform.eulerAngles = new Vector3(0, 45, 0);
         StartCoroutine(CreateNavMesh());
-        GameManager.instance.SpawnPlayer();
+        GameManager.instance.InitializePlayer();
     }
 
     IEnumerator CreateNavMesh()

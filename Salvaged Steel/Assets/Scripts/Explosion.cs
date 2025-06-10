@@ -28,7 +28,6 @@ public class Explosion : MonoBehaviour
             {
                 PlayerController player = GameManager.instance.GetPlayer();
 
-                //if (player.id != attackerId)
                 player.TakeDamage(attackerId, damage);
                 player.playerCamera.GetComponent<CameraShake>().ScreenShake(shakeAmount);
             }

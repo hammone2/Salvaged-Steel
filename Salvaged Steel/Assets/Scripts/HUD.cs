@@ -47,6 +47,7 @@ public class HUD : MonoBehaviour
         instance = this;
         shakableAnchorPos = shakable.transform.localPosition;
         damageOverlayMat = damageOverlay.GetComponent<Image>().material;
+        damageOverlayMat.SetFloat("_VignetteIntensity", 0f);
     }
 
     public void Initialize(PlayerController localPlayer)

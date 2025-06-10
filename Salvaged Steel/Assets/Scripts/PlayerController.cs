@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using TMPro;
+using PlayFab.EventsModels;
 
 public class PlayerController : MonoBehaviour
 {
@@ -19,7 +20,6 @@ public class PlayerController : MonoBehaviour
     
     public Camera playerCamera;
     public GameObject cameraAnchor;
-    private Vector3 camInitialPos;
     
     public List<GameObject> partSlots;
     public TextMeshPro nameTag;
@@ -55,17 +55,15 @@ public class PlayerController : MonoBehaviour
 
     private Outline outline;
 
-    private void Awake()
-    {
-        camInitialPos = cameraAnchor.transform.localPosition;
-    }
-
     private void Start()
     {
         //Assign parts to vars
         nameTag.text = "YOU";
         HUD.instance.Initialize(this);
         gun = gunSlot.transform.GetChild(0).GetComponent<Gun>();
+        playerCamera = PlayerCamera.instance.cam;
+        cameraAnchor = PlayerCamera.instance.gameObject;
+        cameraAnchor.transform.position = transform.position;
         gun.GetCamera(playerCamera);
         SetCustomCursor(gun.crosshair);
         turret = turretSlot.transform.GetChild(0).GetComponent<Turret>();
@@ -244,10 +242,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Lerp camera position towards the halfway point
-            Vector3 camOffset = camInitialPos; //playerCamera.GetComponent<CameraShake>().initialPos;
-            halfwayPoint.y = camOffset.y; //doing this so the camera dosen't clip into the ground and cause weird shadows
-            halfwayPoint.z += camOffset.z;
-            /*playerCamera*/cameraAnchor.transform.position = Vector3.Lerp(/*playerCamera*/cameraAnchor.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
+            cameraAnchor.transform.position = Vector3.Lerp(cameraAnchor.transform.position, halfwayPoint, Time.deltaTime * cameraSmoothSpeed);
 
             // Smooth rotation towards the target direction
             Quaternion targetRotation = Quaternion.LookRotation(direction);
@@ -325,6 +320,7 @@ public class PlayerController : MonoBehaviour
         if (lives > 0)
         {
             Vector3 spawnPos = GameManager.instance.spawnPointList[Random.Range(0, GameManager.instance.spawnPointList.Count)].position;
+            //this.gameObject.SetActive(false);
             StartCoroutine(Spawn(spawnPos, GameManager.instance.respawnTime));
         }
         else if (lives <= 0)
@@ -351,8 +347,11 @@ public class PlayerController : MonoBehaviour
             countdown -= 1f;  // Decrease the countdown by 1 second
             yield return new WaitForSeconds(1f); // Wait for 1 second before updating again
         }
+
+        GameManager.instance.SpawnPlayer();
         HUD.instance.respawnScreen.SetActive(false);
-        transform.position = spawnPos;
+        
+        /*transform.position = spawnPos;
 
         GameObject newTurret = Instantiate(defaultTurret, turretSlot.transform.position, Quaternion.identity);
         newTurret.GetComponent<PartObject>().Equip(turretSlot.transform);
@@ -373,9 +372,37 @@ public class PlayerController : MonoBehaviour
         HUD.instance.UpdateAmmoText();
 
         cc.enabled = true;
-        isAlive = true;
+        isAlive = true;*/
     }
 
+    public void Respawn(Vector3 spawnPos)
+    {
+        CharacterController cc = GetComponent<CharacterController>();
+        transform.position = spawnPos;
+
+        GameObject newTurret = Instantiate(defaultTurret, turretSlot.transform.position, Quaternion.identity);
+        newTurret.GetComponent<PartObject>().Equip(turretSlot.transform);
+        turret = newTurret.GetComponent<Turret>();
+        HUD.instance.UpdateTurretPart();
+
+        GameObject newPropulsion = Instantiate(defaultPropulsion, propulsionSlot.transform.position, Quaternion.identity);
+        newPropulsion.GetComponent<PartObject>().Equip(propulsionSlot.transform);
+        propulsion = newPropulsion.GetComponent<Propulsion>();
+        moveSpeed = propulsion.moveSpeed;
+        HUD.instance.UpdatePropulsionPart();
+
+        GameObject newGun = Instantiate(defaultGun, gunSlot.transform.position, Quaternion.identity);
+        newGun.GetComponent<PartObject>().Equip(gunSlot.transform);
+        gun = newGun.GetComponent<Gun>();
+        gun.GetCamera(playerCamera);
+        SetCustomCursor(gun.crosshair);
+        HUD.instance.UpdateAmmoText();
+
+        cameraAnchor.transform.position = transform.position;
+
+        cc.enabled = true;
+        isAlive = true;
+    }
 
     public void AddKill(int scoreToAdd)
     {
