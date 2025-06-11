@@ -338,6 +338,8 @@ public class PlayerController : MonoBehaviour
         HUD.instance.respawnScreen.SetActive(true);
         float countdown = timeToSpawn;
 
+        //cameraAnchor = null;
+
         // Display the countdown on the TextMesh while waiting
         while (countdown > 0)
         {
@@ -350,29 +352,6 @@ public class PlayerController : MonoBehaviour
 
         GameManager.instance.SpawnPlayer();
         HUD.instance.respawnScreen.SetActive(false);
-        
-        /*transform.position = spawnPos;
-
-        GameObject newTurret = Instantiate(defaultTurret, turretSlot.transform.position, Quaternion.identity);
-        newTurret.GetComponent<PartObject>().Equip(turretSlot.transform);
-        turret = newTurret.GetComponent<Turret>();
-        HUD.instance.UpdateTurretPart();
-
-        GameObject newPropulsion = Instantiate(defaultPropulsion, propulsionSlot.transform.position, Quaternion.identity);
-        newPropulsion.GetComponent<PartObject>().Equip(propulsionSlot.transform);
-        propulsion = newPropulsion.GetComponent<Propulsion>();
-        moveSpeed = propulsion.moveSpeed;
-        HUD.instance.UpdatePropulsionPart();
-
-        GameObject newGun = Instantiate(defaultGun, gunSlot.transform.position, Quaternion.identity);
-        newGun.GetComponent<PartObject>().Equip(gunSlot.transform);
-        gun = newGun.GetComponent<Gun>();
-        gun.GetCamera(playerCamera);
-        SetCustomCursor(gun.crosshair);
-        HUD.instance.UpdateAmmoText();
-
-        cc.enabled = true;
-        isAlive = true;*/
     }
 
     public void Respawn(Vector3 spawnPos)
@@ -398,6 +377,8 @@ public class PlayerController : MonoBehaviour
         SetCustomCursor(gun.crosshair);
         HUD.instance.UpdateAmmoText();
 
+
+        //cameraAnchor = PlayerCamera.instance.gameObject;
         cameraAnchor.transform.position = transform.position;
 
         cc.enabled = true;

@@ -34,7 +34,7 @@ public class RandomLevelGenerator : MonoBehaviour
         GenerateLevel();
         transform.eulerAngles = new Vector3(0, 45, 0);
         StartCoroutine(CreateNavMesh());
-        GameManager.instance.InitializePlayer();
+        //GameManager.instance.SpawnPlayer();
     }
 
     IEnumerator CreateNavMesh()
@@ -42,6 +42,7 @@ public class RandomLevelGenerator : MonoBehaviour
         //using a coroutine since mesh was being generated over destroyed level geometry
         yield return new WaitForSeconds(1);
         GetComponent<NavMeshSurface>().BuildNavMesh();
+        GameManager.instance.SpawnPlayer();
     }
 
     void InitializeGrid()

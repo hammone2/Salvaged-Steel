@@ -35,9 +35,17 @@ public class DropPod : MonoBehaviour
     private void SpawnPlayer()
     {
         if (GameManager.instance.player != null)
+        {
             GameManager.instance.player.gameObject.SetActive(true);
+            GameManager.instance.player.Respawn(spawnLocation);
+        }
+        else
+        {
+            GameManager.instance.InitializePlayer(spawnLocation);
+        }
 
-        GameManager.instance.player.Respawn(spawnLocation);
+
+            PlayerCamera.instance.RemovePosition();
         DestroyDropPod();
     }
 

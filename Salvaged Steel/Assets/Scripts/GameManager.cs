@@ -28,28 +28,22 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
-    private void Start()
+    public void InitializePlayer(Vector3 spawnPos)
     {
-        if (isRandomlyGenerated)
-            return;
-
-        InitializePlayer();
-    }
-
-    public void InitializePlayer()
-    {
-        int index = Random.Range(0, spawnPointList.Count);
-        Transform spawnPoint = spawnPointList[index];
-        Instantiate(playerPrefab, spawnPoint.position, Quaternion.identity); //using vector 3 instead of transform so player isnt parented to the level
+        Instantiate(playerPrefab, spawnPos, Quaternion.identity); //using vector 3 instead of transform so player isnt parented to the level
     }
 
     public void SpawnPlayer()
     {
         int index = Random.Range(0, spawnPointList.Count);
         Vector3 dropPodSpawn = spawnPointList[index].position;
-        dropPodSpawn.y = 50;
+        dropPodSpawn.y = 100;
         GameObject newPod = Instantiate(dropPod, dropPodSpawn, Quaternion.identity);
         newPod.GetComponent<DropPod>().SpawnDropPod(playerPrefab, spawnPointList[index].position, true);
+        PlayerCamera.instance.NewPosition(newPod.transform);
+
+        if (player == null)
+            PlayerCamera.instance.transform.position = newPod.transform.position;
     }
 
     public void CheckLoseCondition()
