@@ -99,7 +99,6 @@ MonoBehaviour:
   rb: {fileID: 1072483204410497982}
   bc: {fileID: 806445550721682672}
   fireParticles: {fileID: 4529206385664010227}
-  fireEffect: {fileID: 0}
   isEquipped: 1
   outline: {fileID: 3879084742231711819}
   itemRarity: 0
@@ -117,7 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 1
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 5
+  outlineWidth: 2.5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -210,8 +209,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5783015636918444820, guid: 5b55adfbd55956b4e94862e405036196, type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783015636918444820, guid: 5b55adfbd55956b4e94862e405036196, type: 3}
       propertyPath: ShapeModule.randomDirectionAmount
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5783015636918444820, guid: 5b55adfbd55956b4e94862e405036196, type: 3}
+      propertyPath: InitialModule.startSpeed.minScalar
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 5783015636918444820, guid: 5b55adfbd55956b4e94862e405036196, type: 3}
       propertyPath: InitialModule.gravityModifier.scalar

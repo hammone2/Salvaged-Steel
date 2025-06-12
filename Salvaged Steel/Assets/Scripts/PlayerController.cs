@@ -268,7 +268,7 @@ public class PlayerController : MonoBehaviour
         HUD.instance.lastHitTime = Time.time;
         HUD.instance.IncreaseOverlayIntensity();
 
-        cameraShake.ScreenShake(damage / 10);
+        cameraShake.ScreenShake(damage / 20);
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {

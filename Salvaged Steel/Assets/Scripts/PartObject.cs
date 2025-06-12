@@ -143,8 +143,8 @@ public class PartObject : MonoBehaviour
         despawnCoroutine = StartCoroutine(DespawnTimer());
         
         
-        if (isExploding)
-            fireParticles.Play();
+        //if (isExploding)
+            //fireParticles.Play();
         outline.enabled = true;
     }
 

@@ -29,6 +29,9 @@ public class Spawner : MonoBehaviour
     // Coroutine to spawn enemies at random times
     private void SpawnEnemies() //make this into coroutine?
     {
+        if (GameManager.instance.player == null) //dont spawn any enemies if the player has not been initialized yet
+            return;
+
         spawnCoolDown -= Time.deltaTime;
         if (spawnCoolDown > 0)
             return;

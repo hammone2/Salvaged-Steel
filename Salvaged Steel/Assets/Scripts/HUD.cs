@@ -33,6 +33,7 @@ public class HUD : MonoBehaviour
 
     public GameObject damageOverlay;
     private Material damageOverlayMat;
+    public Image fade;
 
     private float reduceSpeed = 1f;
     public float lastHitTime;
@@ -48,6 +49,8 @@ public class HUD : MonoBehaviour
         shakableAnchorPos = shakable.transform.localPosition;
         damageOverlayMat = damageOverlay.GetComponent<Image>().material;
         damageOverlayMat.SetFloat("_VignetteIntensity", 0f);
+
+        StartCoroutine(StartFadeOut());
     }
 
     public void Initialize(PlayerController localPlayer)
@@ -156,5 +159,30 @@ public class HUD : MonoBehaviour
             damageOverlayMat.SetFloat("_VignetteIntensity", 2.5f);
         else
             damageOverlayMat.SetFloat("_VignetteIntensity", damageOverlayMat.GetFloat("_VignetteIntensity") + 0.5f);
+    }
+
+    IEnumerator StartFadeOut()
+    {
+        yield return new WaitForSeconds(0.75f);
+        StartCoroutine(FadeOut());
+    }
+
+    IEnumerator FadeOut()
+    {
+        float elapsed = 0f;
+        float duration = 1.25f;
+        Color originalColor = fade.color;
+
+        while (elapsed < duration)
+        {
+            float alpha = Mathf.Lerp(originalColor.a, 0f, elapsed / duration);
+            fade.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Ensure alpha is exactly 0 at the end
+        fade.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
     }
 }
