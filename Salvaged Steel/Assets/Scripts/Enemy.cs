@@ -265,7 +265,8 @@ public class Enemy : MonoBehaviour
                 if (partObject != null)
                 {
                     gun = null;
-                    partObject.Drop(true, Random.Range(10f, 15f));
+                    if (Random.Range(0,100) > 50)
+                        partObject.Drop(true, Random.Range(10f, 15f));
                 }
             }
         }
