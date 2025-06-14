@@ -25,6 +25,8 @@ public class DropPod : MonoBehaviour
             else
                 SpawnPlayer();
         }
+
+        transform.Rotate(Vector3.up * (100f * Time.deltaTime)); //spin the pod around
     }
     private void SpawnTank()
     {

@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour
         HealthComponent turretHp = turret.GetComponent<HealthComponent>();
         curAttackerId = attackerID;
 
-        float damageFactor = 60f;
+        float damageFactor = 20f;
         propHp.TakeDamage(damage / damageFactor);
         turretHp.TakeDamage(damage / damageFactor);
 
