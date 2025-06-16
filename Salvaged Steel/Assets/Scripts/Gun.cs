@@ -8,6 +8,7 @@ public class Gun : MonoBehaviour
     public Transform bulletSpawner;
     public GameObject bulletPrefab;
     public ParticleSystem muzzleFlash;
+    [SerializeField] private Animator animator;
 
     [Header("Weapon Stats")]
     public float bulletSpeed = 32f;
@@ -54,6 +55,7 @@ public class Gun : MonoBehaviour
         if (cameraShake != null)
             cameraShake.ScreenShake(shakeMagnitude);
         muzzleFlash.Play();
+        PlayShootAnimation();
     }
 
     private void SpawnBullet(int id, Vector3 direction)
@@ -80,5 +82,12 @@ public class Gun : MonoBehaviour
     {
         if (cameraShake != null)
             cameraShake = null;
+    }
+
+    private void PlayShootAnimation()
+    {
+        if (!animator)
+            return;
+        animator.SetTrigger("TriShoot");
     }
 }
