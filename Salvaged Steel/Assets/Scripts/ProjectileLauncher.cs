@@ -32,21 +32,15 @@ public class ProjectileLauncher : MonoBehaviour
 
 
             Vector3 targetPos = new Vector3(groundDirection.magnitude, direction.y, 0);
-            float height = targetPos.y + targetPos.magnitude / 2f;
-            height = Mathf.Max(0.01f, height);
+            float height = 10f; //targetPos.y + targetPos.magnitude / 2f;
+            //height = Mathf.Max(0.01f, height);
             float v0;
             float time;
             float _angle;
             CalculatePathWithHeight(targetPos, height, out v0, out _angle, out time);
 
 
-            // Rotate the cannon to aim upwards
-            Vector3 velocityDirection = new Vector3(Mathf.Cos(_angle), Mathf.Sin(_angle), 0);
-            Quaternion targetRotation = Quaternion.LookRotation(velocityDirection);
-            gun.transform.localRotation = Quaternion.Slerp(gun.transform.rotation, targetRotation, Time.deltaTime * 5f);
-
-            gunBase.transform.localRotation = Quaternion.LookRotation(groundDirection);
-
+            gunBase.transform.rotation = Quaternion.LookRotation(groundDirection);
 
 
             DrawPath(groundDirection.normalized, v0, _angle, time, step);
