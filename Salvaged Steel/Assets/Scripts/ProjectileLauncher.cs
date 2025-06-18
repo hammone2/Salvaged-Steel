@@ -13,6 +13,7 @@ public class ProjectileLauncher : MonoBehaviour
 
     [SerializeField] Projectile projectile;
     [SerializeField] GameObject gun;
+    [SerializeField] GameObject gunBase;
 
     private Camera cam;
 
@@ -39,14 +40,21 @@ public class ProjectileLauncher : MonoBehaviour
             CalculatePathWithHeight(targetPos, height, out v0, out _angle, out time);
 
 
+            // Rotate the cannon to aim upwards
+            Vector3 velocityDirection = new Vector3(Mathf.Cos(_angle), Mathf.Sin(_angle), 0);
+            Quaternion targetRotation = Quaternion.LookRotation(velocityDirection);
+            gun.transform.localRotation = Quaternion.Slerp(gun.transform.rotation, targetRotation, Time.deltaTime * 5f);
+
+            gunBase.transform.localRotation = Quaternion.LookRotation(groundDirection);
+
+
+
             DrawPath(groundDirection.normalized, v0, _angle, time, step);
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 projectile.StopAllCoroutines();
                 projectile.StartCoroutine(projectile.Movement(firePoint, groundDirection.normalized, v0, _angle, time));
             }
-
-            gun.transform.rotation = Quaternion.LookRotation(direction);
         }
     }
 
