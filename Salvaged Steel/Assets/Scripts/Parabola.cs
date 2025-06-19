@@ -61,11 +61,6 @@ public class ParabolaGenerator : MonoBehaviour
 
         gunBase.transform.rotation = Quaternion.LookRotation(endPoint);
 
-        /*/Barrel rotation
-        float slope = 2 * a * c;
-        Vector3 tangent = new Vector3(1f, slope, 0f).normalized; // direction along the curve
-        gunBarrel.transform.rotation = Quaternion.LookRotation(tangent);*/
-
         // Barrel rotation
         float slope = 2 * a * c;
 
@@ -93,45 +88,7 @@ public class ParabolaGenerator : MonoBehaviour
         // Start moving the projectile
         ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
         projectileController.Initialize(parabolaPointsCopy, projectileSpeed);
-        //StartCoroutine(MoveProjectileAlongParabola(projectile));
     }
-
-    /*IEnumerator<WaitForSeconds> MoveProjectileAlongParabola(GameObject projectile)
-    {
-        float time = 0f;
-        float travelTime = Vector3.Distance(parabolaPoints[0], parabolaPoints[parabolaPoints.Count - 1]) / projectileSpeed;
-
-        // Move projectile along the parabola
-        while (time < travelTime)
-        {
-            time += Time.deltaTime;
-            float t = time / travelTime;
-
-            // Clamp t to ensure it never exceeds 1.0
-            t = Mathf.Clamp01(t);
-
-            // Interpolate position along the parabola path
-            Vector3 currentPoint = GetParabolaPointAtT(t);
-            projectile.transform.position = currentPoint;
-
-            // Ensure we don't go out of bounds when calculating direction
-            float nextT = Mathf.Min(t + 0.01f, 1f);  // Ensure the next point is within bounds
-            Vector3 nextPoint = GetParabolaPointAtT(nextT);
-            Vector3 direction = (nextPoint - currentPoint).normalized;
-            projectile.transform.rotation = Quaternion.LookRotation(direction);
-
-            yield return null;
-        }
-
-        // Ensure it ends at the final point
-        projectile.transform.position = parabolaPoints[parabolaPoints.Count - 1];
-    }
-
-    Vector3 GetParabolaPointAtT(float t)
-    {
-        int pointIndex = Mathf.FloorToInt(t * (parabolaPoints.Count - 1));
-        return parabolaPoints[pointIndex];
-    }*/
 
     private (bool success, Vector3 position) GetMousePosition()
     {
@@ -148,7 +105,6 @@ public class ParabolaGenerator : MonoBehaviour
             return (success: false, position: Vector3.zero);
         }
     }
-
 
     void OnDrawGizmos()
     {
