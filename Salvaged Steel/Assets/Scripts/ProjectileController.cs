@@ -33,6 +33,8 @@ public class ProjectileController : MonoBehaviour
         }
 
         isMoving = true;
+
+        Debug.Log("Shell spawned");
     }
 
     private void Update()

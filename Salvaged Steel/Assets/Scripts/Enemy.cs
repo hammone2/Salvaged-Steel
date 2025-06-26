@@ -128,6 +128,9 @@ public class Enemy : MonoBehaviour
                 {
                     if (canShoot)
                     {
+                        Mortar m = gun.GetComponent<Gun>() as Mortar;
+                        if (m != null)
+                            m.endPoint = target.position;
                         gun.Shoot(0, false);
                         shootTime -= Time.deltaTime;
                         if (shootTime < 0)

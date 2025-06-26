@@ -164,13 +164,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefabList:
-  - {fileID: 7411886825182336122, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
-  - {fileID: 7742888968772102826, guid: dab7fbaaef231b043a267df33edfe65a, type: 3}
+  - {fileID: 4661905609658821442, guid: 96c0fc44514412c4196dfa708311ecdd, type: 3}
   dropPod: {fileID: 6774227263157919981, guid: 20c9b3e306101254c9274952a39de373, type: 3}
   spawnPoints: []
   minSpawnCooldown: 5
   maxSpawnCooldown: 10
-  maxEnemies: 7
+  maxEnemies: 1
   isSpawning: 1
 --- !u!1001 &69983820
 PrefabInstance:

@@ -23,10 +23,10 @@ public class Gun : MonoBehaviour
 
     public float[] spreadAngles = new float[] { 0f }; // The angles for shotgun spread
 
-    private float lastShootTime;
-    private CameraShake cameraShake;
+    [HideInInspector] public float lastShootTime;
+    [HideInInspector] public CameraShake cameraShake;
 
-    public void Shoot(int id, bool isPlayer)
+    public virtual void Shoot(int id, bool isPlayer)
     {
         if (Time.time - lastShootTime < fireRate)
             return;
@@ -65,7 +65,7 @@ public class Gun : MonoBehaviour
         bullet.GetComponent<Bullet>().Initialize(damage, id, bulletLifeTime);
     }
 
-    private void UpdateStats()
+    public void UpdateStats()
     {
         ammo -= 1;
     }
@@ -84,7 +84,7 @@ public class Gun : MonoBehaviour
             cameraShake = null;
     }
 
-    private void PlayShootAnimation()
+    public void PlayShootAnimation()
     {
         if (!animator)
             return;

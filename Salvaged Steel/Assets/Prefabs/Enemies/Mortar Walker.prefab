@@ -1,0 +1,157 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1662398464244161760
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1481753328870131533}
+    m_Modifications:
+    - target: {fileID: 1284267411228939060, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_Name
+      value: MortarPrototype
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 267debc78246c824097f52cc3e679774, type: 3}
+--- !u!114 &290082775000493694 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: -7848487553204178274, guid: 267debc78246c824097f52cc3e679774, type: 3}
+  m_PrefabInstance: {fileID: 1662398464244161760}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce2fb09c9526b3b4a8df988ae9b5b30f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &7854908853149448456 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8795595374806345192, guid: 267debc78246c824097f52cc3e679774, type: 3}
+  m_PrefabInstance: {fileID: 1662398464244161760}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2769192327216463672
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1423071092279881299, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1892988308211863931, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: gun
+      value: 
+      objectReference: {fileID: 290082775000493694}
+    - target: {fileID: 1892988308211863931, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: enemyName
+      value: Mortar Walker
+      objectReference: {fileID: 0}
+    - target: {fileID: 5131494250860580283, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: distance
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 5131494250860580283, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: occlusionLayers.m_Bits
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7411886825182336122, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      propertyPath: m_Name
+      value: Mortar Walker
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 5136974316565658250, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3674404525616658549, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7854908853149448456}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+--- !u!4 &1481753328870131533 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3674404525616658549, guid: 5b8b1bf29cb21eb4ba8f79769c733c43, type: 3}
+  m_PrefabInstance: {fileID: 2769192327216463672}
+  m_PrefabAsset: {fileID: 0}
