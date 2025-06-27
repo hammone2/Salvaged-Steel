@@ -30,6 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1361742763952491529}
+  - {fileID: 8275036936155848229}
   m_Father: {fileID: 3203982329223489552}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3664677085528808067
@@ -118,6 +119,37 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5881514052628772815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8275036936155848229}
+  m_Layer: 10
+  m_Name: Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8275036936155848229
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5881514052628772815}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 2.93}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7029253987717214691}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6669786421460841844
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,11 +343,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crosshair: {fileID: 2800000, guid: 7286196301c02cb419ec5e3d8ab8ea46, type: 3}
-  bulletSpawner: {fileID: 3203982329223489552}
+  bulletSpawner: {fileID: 8275036936155848229}
   bulletPrefab: {fileID: 5067882530682183283, guid: 36aa641c805b33748aa94d8af329f436, type: 3}
   muzzleFlash: {fileID: 0}
   animator: {fileID: 0}
-  bulletSpeed: 32
+  bulletSpeed: 16
   fireRate: 0.15
   shakeMagnitude: 0.15
   damage: 5
@@ -331,7 +363,6 @@ MonoBehaviour:
   interval: 0.1
   endPoint: {x: 10, y: 0, z: 0}
   gunBarrel: {fileID: 2996626941249913904}
-  gunBase: {fileID: 0}
   parabolaPoints: []
 --- !u!4 &8795595374806345192 stripped
 Transform:

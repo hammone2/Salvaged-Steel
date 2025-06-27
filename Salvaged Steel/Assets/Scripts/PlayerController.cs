@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using TMPro;
 using PlayFab.EventsModels;
+using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -247,6 +248,11 @@ public class PlayerController : MonoBehaviour
             // Smooth rotation towards the target direction
             Quaternion targetRotation = Quaternion.LookRotation(direction);
             rotated.transform.rotation = Quaternion.Slerp(rotated.transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+
+            //Stuff for the mortar
+            Mortar m = gun.GetComponent<Gun>() as Mortar;
+            if (m != null)
+                m.endPoint = position;
         }
     }
 

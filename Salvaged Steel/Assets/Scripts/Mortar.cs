@@ -11,7 +11,6 @@ public class Mortar : Gun
 
     [Header("Gun Components")]
     [SerializeField] private GameObject gunBarrel;
-    [SerializeField] private GameObject gunBase;
 
     [HideInInspector]
     public List<Vector3> parabolaPoints = new List<Vector3>();
@@ -34,8 +33,6 @@ public class Mortar : Gun
             cameraShake.ScreenShake(shakeMagnitude);
         //muzzleFlash.Play();
         PlayShootAnimation();
-
-        Debug.Log("Shot");
     }
 
     void GenerateParabola()
@@ -80,7 +77,7 @@ public class Mortar : Gun
         if (parabolaPoints.Count < 2) return;
 
         // Spawn projectile at the starting point
-        GameObject projectile = Instantiate(bulletPrefab, parabolaPoints[0], Quaternion.identity);
+        GameObject projectile = Instantiate(bulletPrefab, bulletSpawner.position /*parabolaPoints[0]*/, Quaternion.identity);
         List<Vector3> parabolaPointsCopy = new List<Vector3>(parabolaPoints);
 
         // Start moving the projectile

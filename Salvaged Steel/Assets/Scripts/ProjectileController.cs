@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 public class ProjectileController : MonoBehaviour
 {
     public float rotationSpeed = 360f;
+    public LayerMask layersToHit;
 
     private List<Vector3> parabolaPoints;  // The parabola path the projectile will follow
     private float speed;                   // Speed of the projectile
@@ -14,6 +15,7 @@ public class ProjectileController : MonoBehaviour
     private float traveledDistance = 0f;   // Distance traveled so far
 
     private bool isMoving = false;         // Whether the projectile is still moving
+    private bool isArmed = false;
 
     public void Initialize(List<Vector3> parabolaPoints, float speed)
     {
@@ -34,7 +36,7 @@ public class ProjectileController : MonoBehaviour
 
         isMoving = true;
 
-        Debug.Log("Shell spawned");
+        StartCoroutine(ArmTimer());
     }
 
     private void Update()
@@ -77,5 +79,23 @@ public class ProjectileController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (((1 << other.gameObject.layer) & layersToHit) != 0)
+        {
+            if (isArmed)
+            {
+                Destroy(this.gameObject);
+                Debug.Log("Destroyed by " + other);
+            }
+        }
+    }
+
+    private IEnumerator ArmTimer()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isArmed = true;
     }
 }
