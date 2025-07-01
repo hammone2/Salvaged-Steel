@@ -7,6 +7,12 @@ public class ProjectileController : MonoBehaviour
 {
     public float rotationSpeed = 360f;
     public LayerMask layersToHit;
+    public float explosionRadius = 5f; // The radius in which damage is applied
+    public float force = 10f; // The force of the explosion, can knock back objects
+    public GameObject hitSpark;
+    private int attackerId;
+    private bool isMine;
+    [HideInInspector] public float damage;
 
     private List<Vector3> parabolaPoints;  // The parabola path the projectile will follow
     private float speed;                   // Speed of the projectile
@@ -17,10 +23,12 @@ public class ProjectileController : MonoBehaviour
     private bool isMoving = false;         // Whether the projectile is still moving
     private bool isArmed = false;
 
-    public void Initialize(List<Vector3> parabolaPoints, float speed)
+    public void Initialize(List<Vector3> parabolaPoints, float speed, float damage, int attackerId)
     {
         this.parabolaPoints = parabolaPoints;
         this.speed = speed;
+        this.damage = damage;
+        this.attackerId = attackerId;
 
         // Set projectile's position to the first point
         transform.position = parabolaPoints[0];
@@ -87,14 +95,55 @@ public class ProjectileController : MonoBehaviour
         {
             if (isArmed)
             {
-                Destroy(this.gameObject);
+                Explode();
             }
         }
+    }
+
+    private void Explode()
+    {
+        ApplySplashDamage(transform.position);
+        Vector3 explosionPos = new Vector3(transform.position.x, 0.01f ,transform.position.z); //spawn on the ground
+        Instantiate(hitSpark, explosionPos, Quaternion.identity);
+        Destroy(this.gameObject);
     }
 
     private IEnumerator ArmTimer()
     {
         yield return new WaitForSeconds(0.5f);
         isArmed = true;
+    }
+
+    // Method to be called when splash damage occurs
+    public void ApplySplashDamage(Vector3 explosionPoint)
+    {
+        // Create a sphere-shaped overlap to detect all colliders within the radius
+        Collider[] hitColliders = Physics.OverlapSphere(explosionPoint, explosionRadius, layersToHit);
+
+        // Loop through all the colliders hit by the explosion
+        foreach (var hitCollider in hitColliders)
+        {
+
+            if (hitCollider.CompareTag("Player"))
+            {
+                PlayerController player = GameManager.instance.GetPlayer();
+
+                //if (player.id != attackerId)
+                player.TakeDamage(attackerId, damage);
+            }
+            else if (hitCollider.CompareTag("Enemy"))
+            {
+                // might do a GetEnemy() func in GameManager
+                Enemy enemy = hitCollider.GetComponent<Enemy>();
+                enemy.TakeDamage(attackerId, damage);
+            }
+        }
+    }
+
+    // Draw the explosion radius in the editor for visualization
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

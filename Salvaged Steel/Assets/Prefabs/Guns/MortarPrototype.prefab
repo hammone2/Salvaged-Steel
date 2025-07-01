@@ -278,7 +278,7 @@ MonoBehaviour:
   bulletSpeed: 24
   fireRate: 1.5
   shakeMagnitude: 0.2
-  damage: 5
+  damage: 50
   bulletLifeTime: 5
   ammo: 20
   maxAmmo: 20

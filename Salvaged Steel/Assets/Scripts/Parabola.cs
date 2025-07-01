@@ -87,7 +87,7 @@ public class ParabolaGenerator : MonoBehaviour
 
         // Start moving the projectile
         ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
-        projectileController.Initialize(parabolaPointsCopy, projectileSpeed);
+        projectileController.Initialize(parabolaPointsCopy, projectileSpeed, 1f, 0);
     }
 
     private (bool success, Vector3 position) GetMousePosition()

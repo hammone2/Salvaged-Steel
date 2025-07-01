@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour
 
     public LayerMask damageableLayer;
 
-    public void Initialize(float damage, int attackerId, float lifeTime)
+    public virtual void Initialize(float damage, int attackerId, float lifeTime)
     {
         this.damage = damage;
         this.attackerId = attackerId;

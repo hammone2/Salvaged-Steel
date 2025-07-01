@@ -22,8 +22,9 @@ public class Mortar : Gun
         if (ammo <= 0)
             return;
 
+        
         GenerateParabola();
-        SpawnProjectile();
+        SpawnProjectile(id);
 
         lastShootTime = Time.time;
         if (isPlayer)
@@ -72,7 +73,7 @@ public class Mortar : Gun
         gunBarrel.transform.rotation = Quaternion.LookRotation(forwardWithSlope);
     }
 
-    void SpawnProjectile()
+    void SpawnProjectile(int attackerId)
     {
         if (parabolaPoints.Count < 2) return;
 
@@ -82,7 +83,7 @@ public class Mortar : Gun
 
         // Start moving the projectile
         ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
-        projectileController.Initialize(parabolaPointsCopy, bulletSpeed);
+        projectileController.Initialize(parabolaPointsCopy, bulletSpeed, damage, attackerId);
     }
 
     void OnDrawGizmos() //draw the curve
