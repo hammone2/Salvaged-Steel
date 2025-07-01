@@ -31,7 +31,7 @@ public class Mortar : Gun
         HUD.instance.UpdateAmmoText();
         if (cameraShake != null)
             cameraShake.ScreenShake(shakeMagnitude);
-        //muzzleFlash.Play();
+        muzzleFlash.Play();
         PlayShootAnimation();
     }
 

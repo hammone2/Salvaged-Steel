@@ -88,7 +88,6 @@ public class ProjectileController : MonoBehaviour
             if (isArmed)
             {
                 Destroy(this.gameObject);
-                Debug.Log("Destroyed by " + other);
             }
         }
     }
