@@ -278,7 +278,7 @@ MonoBehaviour:
   bulletSpeed: 24
   fireRate: 1.5
   shakeMagnitude: 0.2
-  damage: 50
+  damage: 100
   bulletLifeTime: 5
   ammo: 20
   maxAmmo: 20
@@ -287,7 +287,7 @@ MonoBehaviour:
   - 0
   lastShootTime: 0
   cameraShake: {fileID: 0}
-  height: 10
+  height: 20
   interval: 0.1
   endPoint: {x: 10, y: 0, z: 0}
   gunBarrel: {fileID: 2846940617531687658}

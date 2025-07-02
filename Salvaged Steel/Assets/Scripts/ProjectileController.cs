@@ -127,8 +127,6 @@ public class ProjectileController : MonoBehaviour
             if (hitCollider.CompareTag("Player"))
             {
                 PlayerController player = GameManager.instance.GetPlayer();
-
-                //if (player.id != attackerId)
                 player.TakeDamage(attackerId, damage);
             }
             else if (hitCollider.CompareTag("Enemy"))

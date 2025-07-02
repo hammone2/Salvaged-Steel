@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic; //for list
 
 public class GameManager : MonoBehaviour
@@ -21,11 +22,28 @@ public class GameManager : MonoBehaviour
     [Header("Other")]
     [SerializeField] private GameObject dropPod;
 
+    //Gamemode stuff
+    private bool _missionComplete = false;
+    public bool missionComplete
+    {
+        get { return _missionComplete;}
+        set 
+        { 
+            _missionComplete = value;
+            if (_missionComplete)
+            {
+                Debug.Log("Mission Complete!");
+                //put boss stuff here later
+            }
+        }
+    }
+
     // instance
     public static GameManager instance;
     void Awake()
     {
         instance = this;
+        missionComplete = true;
     }
 
     public void InitializePlayer(Vector3 spawnPos)
