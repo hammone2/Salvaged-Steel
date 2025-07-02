@@ -258,7 +258,6 @@ public class PlayerController : MonoBehaviour
 
     public void TakeDamage(int attackerID, float damage)
     {
-        Debug.Log("Damaged");
         if (isAlive == false)
             return;
         HealthComponent propHp = propulsion.GetComponent<HealthComponent>();

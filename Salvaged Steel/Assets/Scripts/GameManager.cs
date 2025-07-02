@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic; //for list
 
@@ -17,7 +18,26 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     public float respawnTime = 3f;
     public bool isRandomlyGenerated = false;
-    public int enemies;
+    public List<Mission> missionList;
+    [HideInInspector] public Mission mission;
+    public static event Action<int> OnEnemyKilled;
+    private int enemiesKilled;
+
+    private int _enemies;
+    public int enemies
+    {
+        get { return _enemies; } 
+        set
+        {
+            if (_enemies > value) //has an enemy been killed?
+            {
+                enemiesKilled += 1;
+                OnEnemyKilled?.Invoke(enemiesKilled);
+                Debug.Log(enemiesKilled);
+            }
+            _enemies = value;
+        }
+    }
 
     [Header("Other")]
     [SerializeField] private GameObject dropPod;
@@ -43,7 +63,6 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
-        missionComplete = true;
     }
 
     public void InitializePlayer(Vector3 spawnPos)
@@ -53,7 +72,7 @@ public class GameManager : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        int index = Random.Range(0, spawnPointList.Count);
+        int index = UnityEngine.Random.Range(0, spawnPointList.Count);
         Vector3 dropPodSpawn = spawnPointList[index].position;
         dropPodSpawn.y = 100;
         GameObject newPod = Instantiate(dropPod, dropPodSpawn, Quaternion.identity);
