@@ -1,22 +1,16 @@
 using UnityEngine;
 
-public class Mission : MonoBehaviour
+[CreateAssetMenu(menuName = "Missions/Kill Enemies")]
+public class KillEnemies : Mission
 {
-    public void MissionComplete()
-    {
-        GameManager.instance.missionComplete = true;
-    }
-
-
-    //make all this stuff into a child script later
     public int targetKills = 1;
 
-    void OnEnable()
+    public override void Register()
     {
         GameManager.OnEnemyKilled += HandleEnemyKilled;
     }
 
-    void OnDisable()
+    public override void Unregister()
     {
         GameManager.OnEnemyKilled -= HandleEnemyKilled;
     }
@@ -25,7 +19,6 @@ public class Mission : MonoBehaviour
     {
         if (totalKills >= targetKills)
         {
-            Debug.Log("Mission complete! " + totalKills + " enemies killed.");
             MissionComplete();
         }
     }

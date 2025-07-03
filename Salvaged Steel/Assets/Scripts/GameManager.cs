@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     public float respawnTime = 3f;
     public bool isRandomlyGenerated = false;
-    public List<Mission> missionList;
+    public Mission[] missionList;
     [HideInInspector] public Mission mission;
     public static event Action<int> OnEnemyKilled;
     private int enemiesKilled;
@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
             {
                 enemiesKilled += 1;
                 OnEnemyKilled?.Invoke(enemiesKilled);
-                Debug.Log(enemiesKilled);
             }
             _enemies = value;
         }
@@ -63,6 +62,11 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         instance = this;
+
+        //select a mission type for the level
+        int missionIndex = UnityEngine.Random.Range(0, missionList.Length);
+        mission = missionList[missionIndex];
+        mission.Register();
     }
 
     public void InitializePlayer(Vector3 spawnPos)
@@ -108,5 +112,15 @@ public class GameManager : MonoBehaviour
     public PlayerController GetPlayer()
     {
         return player;
+    }
+
+    public void StartMissionCoroutine(IEnumerator coroutine)
+    {
+        StartCoroutine(coroutine);
+    }
+
+    private void OnDestroy()
+    {
+        mission.Unregister();
     }
 }
