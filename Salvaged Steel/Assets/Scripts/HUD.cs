@@ -42,10 +42,20 @@ public class HUD : MonoBehaviour
     public float shakeMagnitude = 0f;
     private float shakeFalloff = 0.07f;
 
-    public static HUD instance;
+    [Header("Mission Widget Stuff")]
+    public GameObject timedWidget;
+    public GameObject killWidget;
+    public TextMeshProUGUI missionName;
+    public TextMeshProUGUI missionProgressText;
+    public Image missionProgressBar;
+
+
+    [HideInInspector] public static HUD instance;
     void Awake()
     {
         instance = this;
+        fade.gameObject.SetActive(true);
+
         shakableAnchorPos = shakable.transform.localPosition;
         damageOverlayMat = damageOverlay.GetComponent<Image>().material;
         damageOverlayMat.SetFloat("_VignetteIntensity", 0f);

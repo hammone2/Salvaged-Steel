@@ -8,6 +8,8 @@ public class KillEnemies : Mission
     public override void Register()
     {
         GameManager.OnEnemyKilled += HandleEnemyKilled;
+        HUD.instance.missionName.SetText("Kill Enemies");
+        HUD.instance.missionProgressText.SetText("0/"+targetKills);
     }
 
     public override void Unregister()
@@ -17,6 +19,7 @@ public class KillEnemies : Mission
 
     void HandleEnemyKilled(int totalKills)
     {
+        HUD.instance.missionProgressText.SetText(totalKills + "/" + targetKills);
         if (totalKills >= targetKills)
         {
             MissionComplete();
