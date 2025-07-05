@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
             if (_missionComplete)
             {
                 Spawner.instance.isSpawning = false;
-                //spawn boss
+                Spawner.instance.SpawnBoss(new Vector3(128f, 0, 0)); //temporary vector solution
             }
         }
     }
