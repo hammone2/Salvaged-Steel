@@ -116,11 +116,11 @@ public class RandomLevelGenerator : MonoBehaviour
         int gridZ = Mathf.FloorToInt(newPos.z / tileSize);
 
         // Prevent moving into the outermost edges (left, right, bottom, top)
-        //if (gridX > 0 && gridX < width - 1 && gridZ > 0 && gridZ < height - 1)
-        //{
+        if (gridX > 0 && gridX < width - 1 && gridZ > 0 && gridZ < height - 1)
+        {
             // Update the position only if it's within the valid bounds
             currentPos = newPos;
-        //}
+        }
 
         // Keep the drunkard within bounds of the grid
         currentPos.x = Mathf.Clamp(currentPos.x, 0, (width - 2) * tileSize);
