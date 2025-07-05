@@ -163,7 +163,7 @@ MonoBehaviour:
   m_GenerateLinks: 0
   m_IgnoreFromBuild: 0
   m_ApplyToChildren: 1
-  m_AffectedAgents: ffffffff
+  m_AffectedAgents: 00000000
 --- !u!65 &5893737721491307166
 BoxCollider:
   m_ObjectHideFlags: 0

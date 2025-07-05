@@ -51,8 +51,8 @@ public class GameManager : MonoBehaviour
             _missionComplete = value;
             if (_missionComplete)
             {
-                Debug.Log("Mission Complete!");
-                //put boss stuff here later
+                Spawner.instance.isSpawning = false;
+                //spawn boss
             }
         }
     }

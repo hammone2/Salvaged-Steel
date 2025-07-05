@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7a0772382879864d80f3f5a4e1ede50, type: 3}
   m_Name: KillEnemies
   m_EditorClassIdentifier: 
-  targetKills: 1
+  targetKills: 3

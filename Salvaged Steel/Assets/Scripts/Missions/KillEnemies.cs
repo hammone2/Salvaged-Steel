@@ -20,6 +20,7 @@ public class KillEnemies : Mission
     void HandleEnemyKilled(int totalKills)
     {
         HUD.instance.missionProgressText.SetText(totalKills + "/" + targetKills);
+        SetProgressBar(totalKills, targetKills);
         if (totalKills >= targetKills)
         {
             MissionComplete();

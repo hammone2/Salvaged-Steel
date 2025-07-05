@@ -20,6 +20,13 @@ public class Spawner : MonoBehaviour
     public bool isSpawning = true;
     private float spawnCoolDown;
 
+    public static Spawner instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     private void Update()
     {
         if (isSpawning)

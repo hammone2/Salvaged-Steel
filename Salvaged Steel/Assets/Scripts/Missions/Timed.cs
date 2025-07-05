@@ -29,9 +29,8 @@ public class Timed : Mission
 
             yield return new WaitForSeconds(1f);
             timeRemaining--;
+            SetProgressBar(timeRemaining,missionTime);
         }
-
-        HUD.instance.missionProgressText.SetText("Mission Complete!");
         MissionComplete();
     }
 }
