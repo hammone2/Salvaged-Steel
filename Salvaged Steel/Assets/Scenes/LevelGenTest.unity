@@ -170,7 +170,7 @@ MonoBehaviour:
   dropPod: {fileID: 6774227263157919981, guid: 20c9b3e306101254c9274952a39de373, type: 3}
   bossDropPod: {fileID: 8184531858817204778, guid: fbc881414f3171945be873bba26513f0, type: 3}
   bossPrefabList:
-  - {fileID: 5334062601865687856, guid: 841be0fab9a80ba46bc53688e1029946, type: 3}
+  - {fileID: 7350429210356645664, guid: d3368e41fdbca804a820cb1f7dc8a7fb, type: 3}
   spawnPoints: []
   minSpawnCooldown: 5
   maxSpawnCooldown: 10
@@ -515,6 +515,7 @@ GameObject:
   - component: {fileID: 1136528721}
   - component: {fileID: 1136528720}
   - component: {fileID: 1136528719}
+  - component: {fileID: 1136528723}
   m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
@@ -612,6 +613,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
+--- !u!114 &1136528723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136528718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_AgentTypeID: -1372625422
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 5.3333335
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 23800000, guid: 4a5aba500a032614eae0cd88b4549b24, type: 2}
+  m_BuildHeightMesh: 0
 --- !u!1 &1443455103
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,6 +951,10 @@ PrefabInstance:
       propertyPath: m_NavMeshData
       value: 
       objectReference: {fileID: 23800000, guid: 8dec2634aa72eea41b9f8358e2c42862, type: 2}
+    - target: {fileID: 5176655568707745329, guid: 5aef9967f5b62cc459125e0986e4257d, type: 3}
+      propertyPath: m_LayerMask.m_Bits
+      value: 136
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 439472779302723080, guid: 5aef9967f5b62cc459125e0986e4257d, type: 3}
     m_RemovedGameObjects: []
