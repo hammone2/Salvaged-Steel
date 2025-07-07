@@ -83,7 +83,7 @@ public class Mortar : Gun
 
         // Start moving the projectile
         ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
-        projectileController.Initialize(parabolaPointsCopy, bulletSpeed, damage, attackerId);
+        projectileController.Initialize(parabolaPointsCopy, bulletSpeed, damage);
     }
 
     void OnDrawGizmos() //draw the curve

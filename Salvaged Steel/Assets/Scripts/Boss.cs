@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,6 +9,14 @@ public class Boss : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     private bool isMoving;
     private float attackDistance = 10f;
+
+    public int numberOfPoints = 8;       // Number of points to generate
+    public float radius = 5f;            // Radius of the circle
+
+    public float damage = 25f;
+    public float bulletSpeed = 10f;
+    public Transform bulletSpawner;
+    public GameObject bulletPrefab;
 
     private enum State
     {
@@ -70,6 +80,22 @@ public class Boss : MonoBehaviour
     {
         animator.SetTrigger("TriShoot");
         currentShootCooldown = shootCooldown;
+
+        //use for loop to generate end points for missiles and shoot
+        for (int i = 0; i < numberOfPoints; i++)
+        {
+            //use vector3's here instead of objs
+            float angle = i * Mathf.PI * 2f / numberOfPoints;
+            Vector3 newPos = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
+            newPos += transform.position;
+
+            /*GameObject point = new GameObject("Point_" + i);
+            point.transform.position = transform.position + newPos;
+            point.transform.parent = transform;*/
+
+            GenerateParabola(newPos);
+        }
+
     }
 
     private void WalkAnimation()
@@ -90,6 +116,43 @@ public class Boss : MonoBehaviour
     {
         currentDestinationCooldown = destinationCooldown;
         agent.SetDestination(GameManager.instance.player.transform.position);
+    }
+
+    void GenerateParabola(Vector3 endPoint)
+    {
+        List<Vector3> parabolaPoints = new List<Vector3>();
+
+        float t = Vector3.Distance(transform.position, endPoint); //distance;
+        float b = 50f; //height
+        float c = t / 2f;
+        float a = b / (c * c);
+
+        Vector3 direction = (endPoint - transform.position).normalized;
+        float step = 0.5f;
+        int numSteps = Mathf.CeilToInt(t / step);
+
+        for (int i = 0; i <= numSteps; i++)
+        {
+            float x = i * step;
+            float y = -a * Mathf.Pow((x - c), 2) + b;
+            Vector3 point = transform.position + direction * x + Vector3.up * y;
+            parabolaPoints.Add(point);
+        }
+
+        //spawn projectile here then clear the points
+        if (parabolaPoints.Count < 2) return;
+
+        // Spawn projectile at the starting point
+        GameObject projectile = Instantiate(bulletPrefab, bulletSpawner.position, Quaternion.identity);
+        List<Vector3> parabolaPointsCopy = new List<Vector3>(parabolaPoints);
+
+        // Start moving the projectile
+        ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
+        projectileController.Initialize(parabolaPointsCopy, bulletSpeed, damage);
+
+
+
+        parabolaPoints.Clear();
     }
 
     public void Die()

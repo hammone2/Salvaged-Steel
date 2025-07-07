@@ -10,7 +10,6 @@ public class ProjectileController : MonoBehaviour
     public float explosionRadius = 5f; // The radius in which damage is applied
     public float force = 10f; // The force of the explosion, can knock back objects
     public GameObject hitSpark;
-    private int attackerId;
     private bool isMine;
     [HideInInspector] public float damage;
 
@@ -23,12 +22,11 @@ public class ProjectileController : MonoBehaviour
     private bool isMoving = false;         // Whether the projectile is still moving
     private bool isArmed = false;
 
-    public void Initialize(List<Vector3> parabolaPoints, float speed, float damage, int attackerId)
+    public void Initialize(List<Vector3> parabolaPoints, float speed, float damage)
     {
         this.parabolaPoints = parabolaPoints;
         this.speed = speed;
         this.damage = damage;
-        this.attackerId = attackerId;
 
         // Set projectile's position to the first point
         transform.position = parabolaPoints[0];
