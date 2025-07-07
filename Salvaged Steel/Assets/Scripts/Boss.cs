@@ -8,10 +8,9 @@ public class Boss : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;
     private bool isMoving;
-    private float attackDistance = 10f;
+    private float attackDistance = 150f;
 
     public int numberOfPoints = 8;       // Number of points to generate
-    public float radius = 5f;            // Radius of the circle
 
     public float damage = 25f;
     public float bulletSpeed = 10f;
@@ -28,8 +27,14 @@ public class Boss : MonoBehaviour
     public float shootCooldown = 1f;
     private float currentShootCooldown;
 
+    public float attackTime = 10f;
+    private float currentAttackTime;
+
     private float destinationCooldown = 1f;
     private float currentDestinationCooldown;
+
+    public float moveTime = 10f;
+    private float currentMoveTime;
 
     private void Start()
     {
@@ -49,12 +54,13 @@ public class Boss : MonoBehaviour
                 if (currentDestinationCooldown <= 0)
                     SetDestination();
 
-
-                if (Vector3.Distance(transform.position, GameManager.instance.player.transform.position) <= attackDistance)
+                currentMoveTime = Mathf.MoveTowards(currentMoveTime, 0f, Time.deltaTime);
+                if (currentMoveTime <= 0)
                 {
                     agent.isStopped = true;
                     agent.ResetPath();
                     isMoving = false;
+                    currentAttackTime = attackTime;
                     state = State.SHOOT;
                 }
                     
@@ -65,10 +71,13 @@ public class Boss : MonoBehaviour
                 if (currentShootCooldown <= 0)
                     Shoot();
 
-                if (Vector3.Distance(transform.position, GameManager.instance.player.transform.position) > attackDistance)
+                //if (Vector3.Distance(transform.position, GameManager.instance.player.transform.position) > attackDistance)
+                currentAttackTime = Mathf.MoveTowards(currentAttackTime, 0f, Time.deltaTime);
+                if (currentAttackTime <= 0)
                 {
                     agent.isStopped = false;
                     currentDestinationCooldown = 0f;
+                    currentMoveTime = moveTime;
                     state = State.MOVE;
                 }
                     
@@ -81,6 +90,8 @@ public class Boss : MonoBehaviour
         animator.SetTrigger("TriShoot");
         currentShootCooldown = shootCooldown;
 
+        float radius = Vector3.Distance(transform.position, GameManager.instance.player.transform.position);
+
         //use for loop to generate end points for missiles and shoot
         for (int i = 0; i < numberOfPoints; i++)
         {
@@ -88,10 +99,6 @@ public class Boss : MonoBehaviour
             float angle = i * Mathf.PI * 2f / numberOfPoints;
             Vector3 newPos = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)) * radius;
             newPos += transform.position;
-
-            /*GameObject point = new GameObject("Point_" + i);
-            point.transform.position = transform.position + newPos;
-            point.transform.parent = transform;*/
 
             GenerateParabola(newPos);
         }

@@ -30,7 +30,6 @@ public class Enemy : MonoBehaviour
     private float lastPlayerDetectTime;
     private float flankWaitTime;
     private float lastIdleTime;
-    private float health = 0f; //this isnt the actual health value, only gets passed to the healthcomponent once its calculated
     private LayerMask playerLayer;
 
     private float minFlankTime = 1f;
