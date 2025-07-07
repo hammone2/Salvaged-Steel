@@ -23,20 +23,7 @@ public class Explosion : MonoBehaviour
         // Loop through all the colliders hit by the explosion
         foreach (var hitCollider in hitColliders)
         {
-
-            if (hitCollider.CompareTag("Player"))
-            {
-                PlayerController player = GameManager.instance.GetPlayer();
-
-                player.TakeDamage(attackerId, damage);
-                player.playerCamera.GetComponent<CameraShake>().ScreenShake(shakeAmount);
-            }
-            else if (hitCollider.CompareTag("Enemy"))
-            {
-                // might do a GetEnemy() func in GameManager
-                Enemy enemy = hitCollider.GetComponent<Enemy>();
-                enemy.TakeDamage(attackerId, damage);
-            }
+            DealDamage.ApplyDamage(hitCollider, damage);
         }
     }
 }

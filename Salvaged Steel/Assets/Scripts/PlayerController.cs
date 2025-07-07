@@ -256,13 +256,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public void TakeDamage(int attackerID, float damage)
+    public void TakeDamage(float damage)
     {
         if (isAlive == false)
             return;
         HealthComponent propHp = propulsion.GetComponent<HealthComponent>();
         HealthComponent turretHp = turret.GetComponent<HealthComponent>();
-        curAttackerId = attackerID;
 
         float damageFactor = 20f;
         propHp.TakeDamage(damage / damageFactor);

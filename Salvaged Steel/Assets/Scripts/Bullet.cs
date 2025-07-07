@@ -25,25 +25,8 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        // Try to get the Health component from the other game object
-        HealthComponent healthComponent = other.GetComponent<HealthComponent>();
-        PlayerController playerController = other.GetComponent<PlayerController>();
-
-        // did we hit a player or enemy?
-        // if this is the local player's bullet, damage the hit enemy
-        // if its not the local player, then damage the local player
-        // we're using client side hit detection
-        if (other.CompareTag("Player"))
-        {
-            PlayerController player = GameManager.instance.GetPlayer();
-            player.TakeDamage(attackerId, damage);
-        }
-        else if (other.CompareTag("Enemy"))
-        {
-            // might do a GetEnemy() func in GameManager
-            Enemy enemy = other.GetComponent<Enemy>();
-            enemy.TakeDamage(attackerId, damage);
-        }
+        DealDamage.ApplyDamage(other,damage);
+        
 
         // Check if the collider is in one of the specified layers
         if (((1 << other.gameObject.layer) & layersToHit) != 0)
@@ -64,20 +47,7 @@ public class Bullet : MonoBehaviour
         // Loop through all the colliders hit by the explosion
         foreach (var hitCollider in hitColliders)
         {
-
-            if (hitCollider.CompareTag("Player"))
-            {
-                PlayerController player = GameManager.instance.GetPlayer();
-
-                if (player.id != attackerId)
-                    player.TakeDamage(attackerId, damage);
-            }
-            else if (hitCollider.CompareTag("Enemy"))
-            {
-                // might do a GetEnemy() func in GameManager
-                Enemy enemy = hitCollider.GetComponent<Enemy>();
-                enemy.TakeDamage(attackerId, damage);
-            }
+            DealDamage.ApplyDamage(hitCollider, damage);
         }
     }
 

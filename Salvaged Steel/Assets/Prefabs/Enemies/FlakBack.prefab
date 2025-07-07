@@ -14,9 +14,10 @@ GameObject:
   - component: {fileID: 2821108433021213301}
   - component: {fileID: 8632912230371358773}
   - component: {fileID: 8997956033730126836}
-  m_Layer: 0
+  - component: {fileID: 8011839944262810870}
+  m_Layer: 9
   m_Name: FlakBack
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,6 +148,38 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8011839944262810870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7350429210356645664}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32675bcb3f9d2554c8bef7d19195cbf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 5000
+  maxHealth: 0
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7375319021152033102}
+        m_TargetAssemblyTypeName: Boss, Assembly-CSharp
+        m_MethodName: Die
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDamage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &8859803004685166223
 PrefabInstance:
   m_ObjectHideFlags: 0

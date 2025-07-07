@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -19,11 +18,13 @@ public class Boss : MonoBehaviour
     public float shootCooldown = 1f;
     private float currentShootCooldown;
 
+    private float destinationCooldown = 1f;
+    private float currentDestinationCooldown;
+
     private void Start()
     {
         state = State.MOVE;
         agent.SetDestination(GameManager.instance.player.transform.position);
-        StartCoroutine(SetDestination());
     }
 
     private void Update()
@@ -34,9 +35,15 @@ public class Boss : MonoBehaviour
                 if (agent.velocity.magnitude > 0.1f)
                     WalkAnimation();
 
+                currentDestinationCooldown = Mathf.MoveTowards(currentDestinationCooldown, 0f, Time.deltaTime);
+                if (currentDestinationCooldown <= 0)
+                    SetDestination();
+
+
                 if (Vector3.Distance(transform.position, GameManager.instance.player.transform.position) <= attackDistance)
                 {
                     agent.isStopped = true;
+                    agent.ResetPath();
                     isMoving = false;
                     state = State.SHOOT;
                 }
@@ -51,6 +58,7 @@ public class Boss : MonoBehaviour
                 if (Vector3.Distance(transform.position, GameManager.instance.player.transform.position) > attackDistance)
                 {
                     agent.isStopped = false;
+                    currentDestinationCooldown = 0f;
                     state = State.MOVE;
                 }
                     
@@ -78,12 +86,14 @@ public class Boss : MonoBehaviour
             Destroy(other.gameObject);
     }
 
-    IEnumerator SetDestination()
+    private void SetDestination()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(1f);
-            agent.SetDestination(GameManager.instance.player.transform.position);
-        }
+        currentDestinationCooldown = destinationCooldown;
+        agent.SetDestination(GameManager.instance.player.transform.position);
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
     }
 }

@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
     public Gun gun;
     public Propulsion propulsion;
     public LayerMask layersToHit;
-    public HealthComponent healthComponent;
+    [SerializeField] private HealthComponent healthComponent;
     public HeaderInfo headerInfo;
     public TextMeshProUGUI stateText;
     public string enemyName;
@@ -82,12 +82,12 @@ public class Enemy : MonoBehaviour
                 {
                     HealthComponent _healthComponent = partObject.GetComponent<HealthComponent>();
                     if (_healthComponent != null)
-                        health += _healthComponent.health;
+                        healthComponent.health += _healthComponent.health;
                 }
             }
         }
         //healthComponent.health = health;
-        headerInfo.Initialize(enemyName, health);
+        headerInfo.Initialize(enemyName, healthComponent.health);
 
         ChangeState(State.PATROL);
     }
@@ -241,18 +241,19 @@ public class Enemy : MonoBehaviour
         agent.SetDestination(target.position);
     }
 
-    public void TakeDamage(int attackerId, float damage)
+    public void TakeDamage(/*int attackerId, float damage*/)
     {
-        if (health <= 0)
+        /*if (health <= 0)
             return;
         health -= damage;
         headerInfo.UpdateHealthBar(health);
         curAttackerId = attackerId;
         if (health <= 0)
-            Die();
+            Die();*/
+        headerInfo.UpdateHealthBar(healthComponent.health);
     }
 
-    private void Die()
+    public void Die()
     {
         // Loop through each GameObject in the list
         foreach (GameObject obj in partSlots)
