@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -16,6 +17,12 @@ public class Boss : MonoBehaviour
     public float bulletSpeed = 10f;
     public Transform bulletSpawner;
     public GameObject bulletPrefab;
+
+    public GameObject propulsionSlot;
+    public float propRotSpeed = 8f;
+
+    public HeaderInfo headerInfo;
+    public HealthComponent healthComponent;
 
     private enum State
     {
@@ -36,10 +43,13 @@ public class Boss : MonoBehaviour
     public float moveTime = 10f;
     private float currentMoveTime;
 
+    public string enemyName;
+
     private void Start()
     {
         state = State.MOVE;
         agent.SetDestination(GameManager.instance.player.transform.position);
+        headerInfo.Initialize(enemyName, healthComponent.health);
     }
 
     private void Update()
@@ -47,8 +57,24 @@ public class Boss : MonoBehaviour
         switch (state)
         {
             case State.MOVE:
-                if (agent.velocity.magnitude > 0.1f)
+
+                //rotate the propulsion part
+                Vector3 velocity = agent.velocity;
+
+                // If the enemy is moving (velocity magnitude > 0), rotate the propulsionSlot
+                if (velocity.magnitude > 0.1f)
+                {
+                    // Get the direction the enemy is moving (ignore Y axis)
+                    Vector3 moveDirection = new Vector3(velocity.x, 0, velocity.z).normalized;
+
+                    // Calculate the target rotation, looking in the direction of movement
+                    Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+
+                    // Smoothly rotate the propulsionSlot towards the target rotation
+                    propulsionSlot.transform.rotation = Quaternion.Lerp(propulsionSlot.transform.rotation, targetRotation, Time.deltaTime * propRotSpeed);
+
                     WalkAnimation();
+                }
 
                 currentDestinationCooldown = Mathf.MoveTowards(currentDestinationCooldown, 0f, Time.deltaTime);
                 if (currentDestinationCooldown <= 0)
@@ -160,6 +186,11 @@ public class Boss : MonoBehaviour
 
 
         parabolaPoints.Clear();
+    }
+
+    public void TakeDamage()
+    {
+        headerInfo.UpdateHealthBar(healthComponent.health);
     }
 
     public void Die()

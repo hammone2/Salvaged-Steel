@@ -240,15 +240,8 @@ public class Enemy : MonoBehaviour
         agent.SetDestination(target.position);
     }
 
-    public void TakeDamage(/*int attackerId, float damage*/)
+    public void TakeDamage()
     {
-        /*if (health <= 0)
-            return;
-        health -= damage;
-        headerInfo.UpdateHealthBar(health);
-        curAttackerId = attackerId;
-        if (health <= 0)
-            Die();*/
         headerInfo.UpdateHealthBar(healthComponent.health);
     }
 
