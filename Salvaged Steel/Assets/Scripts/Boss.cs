@@ -22,7 +22,9 @@ public class Boss : MonoBehaviour
     public float propRotSpeed = 8f;
 
     public HeaderInfo headerInfo;
-    public HealthComponent healthComponent;
+    public HealthComponent[] healthComponents;
+    public float health;
+    private float currentHealth;
 
     private enum State
     {
@@ -49,7 +51,15 @@ public class Boss : MonoBehaviour
     {
         state = State.MOVE;
         agent.SetDestination(GameManager.instance.player.transform.position);
-        headerInfo.Initialize(enemyName, healthComponent.health);
+        headerInfo.Initialize(enemyName, health);
+
+        for (int i = 0; i < healthComponents.Length; i++)
+        {
+            HealthComponent healthComponent = healthComponents[i];
+            healthComponent.health = health;
+        }
+
+        currentHealth = health;
     }
 
     private void Update()
@@ -184,13 +194,29 @@ public class Boss : MonoBehaviour
         projectileController.Initialize(parabolaPointsCopy, bulletSpeed, damage);
 
 
-
         parabolaPoints.Clear();
     }
 
     public void TakeDamage()
     {
-        headerInfo.UpdateHealthBar(healthComponent.health);
+        float temp = health;
+
+        for (int i = 0; i < healthComponents.Length; i++)
+        {
+            HealthComponent healthComponent = healthComponents[i];
+            float damage = healthComponent.maxHealth - healthComponent.health;
+            temp -= damage;
+        }
+
+        currentHealth = temp;
+
+        if (currentHealth <= 0)
+        {
+            Die();
+            return;
+        }
+
+        headerInfo.UpdateHealthBar(currentHealth);
     }
 
     public void Die()
