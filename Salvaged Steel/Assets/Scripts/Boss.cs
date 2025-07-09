@@ -3,6 +3,8 @@ using System.Net;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using static UnityEngine.GraphicsBuffer;
+using UnityEngine.UIElements;
 
 public class Boss : MonoBehaviour
 {
@@ -15,8 +17,13 @@ public class Boss : MonoBehaviour
 
     public float damage = 25f;
     public float bulletSpeed = 10f;
+    public float turretRotationSpeed = 360f;
     public Transform bulletSpawner;
     public GameObject bulletPrefab;
+    public GameObject turret;
+    public float gunRange = 300f;
+
+    public LayerMask occlusionLayers;
 
     public GameObject propulsionSlot;
     public float propRotSpeed = 8f;
@@ -118,6 +125,22 @@ public class Boss : MonoBehaviour
                 }
                     
                 break;
+        }
+
+        //Rotate the turret
+        Vector3 directionToPlayer = GameManager.instance.player.transform.position - turret.transform.position;
+        Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
+        turret.transform.rotation = Quaternion.Slerp(turret.transform.rotation, rotation, Time.deltaTime * turretRotationSpeed);
+
+        //turret raycast
+        RaycastHit hit;
+        Vector3 direction = turret.transform.position - GameManager.instance.player.transform.position;
+        if (Physics.Raycast(turret.transform.position, direction, out hit, gunRange, occlusionLayers))
+        {
+            if (hit.collider.gameObject.CompareTag("Player"))
+            {
+                //machine gun shoot logic here
+            } 
         }
     }
 

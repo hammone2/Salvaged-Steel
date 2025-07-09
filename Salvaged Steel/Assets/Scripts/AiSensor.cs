@@ -35,32 +35,6 @@ public class AiSensor : MonoBehaviour
         scanInterval = 1.0f / scanFrequency;
     }
 
-    void Update()
-    {
-        /*scanTimer -= Time.deltaTime;
-        if (scanTimer < 0)
-        {
-            scanTimer += scanInterval;
-            Scan();
-        }*/
-    }
-
-    private void Scan() 
-    {
-        /*count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
-
-        objects.Clear();
-        for (int i = 0; i < count; ++i)
-        {
-            GameObject obj = colliders[i].gameObject;
-
-            if (IsInSight(obj))
-            {
-                objects.Add(obj);
-            }
-        }*/
-    }
-
     public bool IsInRange(GameObject obj)
     {
         Vector3 origin = transform.position;
