@@ -11,7 +11,6 @@ public class Boss : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private NavMeshAgent agent;
     private bool isMoving;
-    private float attackDistance = 150f;
 
     public int numberOfPoints = 8;       // Number of points to generate
 
@@ -22,6 +21,7 @@ public class Boss : MonoBehaviour
     public GameObject bulletPrefab;
     public GameObject turret;
     public float gunRange = 300f;
+    public Gun gun;
 
     public LayerMask occlusionLayers;
 
@@ -114,7 +114,6 @@ public class Boss : MonoBehaviour
                 if (currentShootCooldown <= 0)
                     Shoot();
 
-                //if (Vector3.Distance(transform.position, GameManager.instance.player.transform.position) > attackDistance)
                 currentAttackTime = Mathf.MoveTowards(currentAttackTime, 0f, Time.deltaTime);
                 if (currentAttackTime <= 0)
                 {
@@ -128,18 +127,21 @@ public class Boss : MonoBehaviour
         }
 
         //Rotate the turret
-        Vector3 directionToPlayer = GameManager.instance.player.transform.position - turret.transform.position;
+        Vector3 playerPos = GameManager.instance.player.transform.position;
+        playerPos.y = 0.5f; //doing this so the raycast actually hits the player
+        Vector3 directionToPlayer = playerPos - turret.transform.position;
         Quaternion rotation = Quaternion.LookRotation(directionToPlayer);
         turret.transform.rotation = Quaternion.Slerp(turret.transform.rotation, rotation, Time.deltaTime * turretRotationSpeed);
 
         //turret raycast
         RaycastHit hit;
-        Vector3 direction = turret.transform.position - GameManager.instance.player.transform.position;
-        if (Physics.Raycast(turret.transform.position, direction, out hit, gunRange, occlusionLayers))
+        Vector3 forward = turret.transform.TransformDirection(Vector3.forward) * gunRange;
+        Debug.DrawRay(turret.transform.position, forward, Color.greenYellow);
+        if (Physics.Raycast(turret.transform.position, forward, out hit, gunRange, occlusionLayers))
         {
             if (hit.collider.gameObject.CompareTag("Player"))
             {
-                //machine gun shoot logic here
+                gun.Shoot(0, false);
             } 
         }
     }
