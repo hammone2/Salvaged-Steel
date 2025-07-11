@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject defaultTurret;
     [SerializeField] private GameObject defaultPropulsion;
     [SerializeField] private GameObject defaultGun;
+    [SerializeField] private AudioClip damageImpact;
     public GameObject explosionParticles;
     public GameObject rotated;
     public CharacterController characterController;
@@ -273,6 +274,8 @@ public class PlayerController : MonoBehaviour
         HUD.instance.IncreaseOverlayIntensity();
 
         cameraShake.ScreenShake(damage / 20);
+
+        SoundFXManager.instance.PlaySoundFXClip(damageImpact, transform, 5f);
 
         if (propHp.health <= 0 || turretHp.health <= 0)
         {

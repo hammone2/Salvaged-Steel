@@ -580,6 +580,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleEffect: {fileID: 7649380602036789379, guid: 71674caf551cf124ab1a16ac3365425d, type: 3}
+  impactSound: {fileID: 8300000, guid: de5c9ca50f0bde847a3c67b796039c3d, type: 3}
 --- !u!1 &8122206206598585386
 GameObject:
   m_ObjectHideFlags: 0

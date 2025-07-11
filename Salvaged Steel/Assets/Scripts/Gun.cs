@@ -9,6 +9,7 @@ public class Gun : MonoBehaviour
     public GameObject bulletPrefab;
     public ParticleSystem muzzleFlash;
     [SerializeField] private Animator animator;
+    [SerializeField] private AudioClip shootSound;
 
     [Header("Weapon Stats")]
     public float bulletSpeed = 32f;
@@ -55,6 +56,7 @@ public class Gun : MonoBehaviour
         if (cameraShake != null)
             cameraShake.ScreenShake(shakeMagnitude);
         muzzleFlash.Play();
+        SoundFXManager.instance.PlaySoundFXClip(shootSound, bulletSpawner, 1f);
         PlayShootAnimation();
     }
 

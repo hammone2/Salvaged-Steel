@@ -6,6 +6,7 @@ public class DropPod : MonoBehaviour
 {
     public GameObject particleEffect;
 
+    [SerializeField] private AudioClip impactSound;
     private GameObject enemyPrefab;
     private Vector3 spawnLocation;
     private bool hasArrived = false;
@@ -63,6 +64,7 @@ public class DropPod : MonoBehaviour
         particleLocation.y = 0.01f;
         Instantiate(particleEffect, particleLocation, Quaternion.identity);
 
+        SoundFXManager.instance.PlaySoundFXClip(impactSound, transform, 1f);
         Destroy(gameObject);
     }
 }

@@ -12,6 +12,8 @@ public class Boss : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     private bool isMoving;
 
+    [SerializeField] private AudioClip shootSound;
+
     public int numberOfPoints = 8;       // Number of points to generate
 
     public float damage = 25f;
@@ -218,6 +220,7 @@ public class Boss : MonoBehaviour
         ProjectileController projectileController = projectile.GetComponent<ProjectileController>();
         projectileController.Initialize(parabolaPointsCopy, bulletSpeed, damage);
 
+        SoundFXManager.instance.PlaySoundFXClip(shootSound, bulletSpawner, 0.25f);
 
         parabolaPoints.Clear();
     }

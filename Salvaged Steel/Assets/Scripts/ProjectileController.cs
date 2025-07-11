@@ -12,6 +12,7 @@ public class ProjectileController : MonoBehaviour
     public GameObject hitSpark;
     private bool isMine;
     [HideInInspector] public float damage;
+    [SerializeField] private AudioClip explosionSound;
 
     private List<Vector3> parabolaPoints;  // The parabola path the projectile will follow
     private float speed;                   // Speed of the projectile
@@ -103,6 +104,7 @@ public class ProjectileController : MonoBehaviour
         ApplySplashDamage(transform.position);
         Vector3 explosionPos = new Vector3(transform.position.x, 0.01f ,transform.position.z); //spawn on the ground
         Instantiate(hitSpark, explosionPos, Quaternion.identity);
+        SoundFXManager.instance.PlaySoundFXClip(explosionSound, transform, 1f);
         Destroy(this.gameObject);
     }
 

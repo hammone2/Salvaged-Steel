@@ -85,6 +85,7 @@ MonoBehaviour:
   defaultTurret: {fileID: 1934600359068709612, guid: 33c4237bef6d60844b938621a4690985, type: 3}
   defaultPropulsion: {fileID: 1427995908063905384, guid: ccdec02616c1e20479fc26c0bb93de3f, type: 3}
   defaultGun: {fileID: 7679884548056279701, guid: d78a87a5532856144a6a83fba8ad87d2, type: 3}
+  damageImpact: {fileID: 8300000, guid: 8410b812e4fe926438eeac4163a80fae, type: 3}
   explosionParticles: {fileID: 7649380602036789379, guid: c1068c22c864dc54c842b8bb8fd93c5f, type: 3}
   rotated: {fileID: 8474589995969924259}
   characterController: {fileID: 6155153432676378862}
