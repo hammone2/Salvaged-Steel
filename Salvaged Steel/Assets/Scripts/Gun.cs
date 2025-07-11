@@ -9,7 +9,7 @@ public class Gun : MonoBehaviour
     public GameObject bulletPrefab;
     public ParticleSystem muzzleFlash;
     [SerializeField] private Animator animator;
-    [SerializeField] private AudioClip shootSound;
+    public AudioClip shootSound;
 
     [Header("Weapon Stats")]
     public float bulletSpeed = 32f;

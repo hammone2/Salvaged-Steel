@@ -203,7 +203,7 @@ PrefabInstance:
     - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: shootSound
       value: 
-      objectReference: {fileID: 8300000, guid: 15d56503db435cf4ea892e2e05aebba7, type: 3}
+      objectReference: {fileID: 8300000, guid: 105475dd47400fb49aa6c6ed05250eb2, type: 3}
     - target: {fileID: 6807089192682307198, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: bulletSpeed
       value: 64

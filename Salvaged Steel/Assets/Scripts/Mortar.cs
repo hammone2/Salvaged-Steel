@@ -33,6 +33,7 @@ public class Mortar : Gun
         if (cameraShake != null)
             cameraShake.ScreenShake(shakeMagnitude);
         muzzleFlash.Play();
+        SoundFXManager.instance.PlaySoundFXClip(shootSound, bulletSpawner, 1f);
         PlayShootAnimation();
     }
 

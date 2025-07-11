@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject defaultPropulsion;
     [SerializeField] private GameObject defaultGun;
     [SerializeField] private AudioClip damageImpact;
+    [SerializeField] private AudioClip equipSound;
     public GameObject explosionParticles;
     public GameObject rotated;
     public CharacterController characterController;
@@ -134,7 +135,6 @@ public class PlayerController : MonoBehaviour
                     else
                         gun.gameObject.GetComponent<PartObject>().DespawnItem(); //despawn the gun if there is no ammo left
                     selectedPart.Equip(gunSlot.transform);
-                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, gunSlot.transform);
                     gun = selectedPart.GetComponent<Gun>();
                     gun.GetCamera(playerCamera);
                     SetCustomCursor(gun.crosshair);
@@ -144,7 +144,6 @@ public class PlayerController : MonoBehaviour
                 {
                     turret.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     selectedPart.Equip(turretSlot.transform);
-                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, turretSlot.transform);
                     turret = selectedPart.GetComponent<Turret>();
                     HUD.instance.UpdateTurretPart();
                 }
@@ -152,7 +151,6 @@ public class PlayerController : MonoBehaviour
                 {
                     propulsion.gameObject.GetComponent<PartObject>().Drop(false, dropForce);
                     selectedPart.Equip(propulsionSlot.transform);
-                    //selectedPart.photonView.RPC("Equip", RpcTarget.Others, propulsionSlot.transform);
                     propulsion = selectedPart.GetComponent<Propulsion>();
                     moveSpeed = propulsion.moveSpeed;
                     HUD.instance.UpdatePropulsionPart();
@@ -160,6 +158,7 @@ public class PlayerController : MonoBehaviour
 
                 outline.RecalculateOutline(); //update outline
                 cameraShake.ScreenShake(0.5f);
+                SoundFXManager.instance.PlaySoundFXClip(equipSound, transform, 1f);
             }
         }
 

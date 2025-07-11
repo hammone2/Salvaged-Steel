@@ -223,7 +223,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6448710876084782331, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_Size.z
-      value: 0.9805856
+      value: 3.2948563
       objectReference: {fileID: 0}
     - target: {fileID: 6448710876084782331, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_Center.x
@@ -235,7 +235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6448710876084782331, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_Center.z
-      value: 0.28950006
+      value: 1.4466354
       objectReference: {fileID: 0}
     - target: {fileID: 8658097743384022886, guid: fdf1dc58933ac714bbee4b3ed177be0d, type: 3}
       propertyPath: m_LocalPosition.z
@@ -275,6 +275,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5067882530682183283, guid: 36aa641c805b33748aa94d8af329f436, type: 3}
   muzzleFlash: {fileID: 5774964726885907262}
   animator: {fileID: 7328895864431073325}
+  shootSound: {fileID: 8300000, guid: 0123307f02d937d4db988a83153ea0e5, type: 3}
   bulletSpeed: 24
   fireRate: 1.5
   shakeMagnitude: 0.2
