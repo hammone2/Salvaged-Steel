@@ -272,7 +272,7 @@ public class PlayerController : MonoBehaviour
         HUD.instance.lastHitTime = Time.time;
         HUD.instance.IncreaseOverlayIntensity();
 
-        cameraShake.ScreenShake(damage / 20);
+        cameraShake.ScreenShake(0.45f/*damage / 20*/);
 
         SoundFXManager.instance.PlaySoundFXClip(damageImpact, transform, 5f);
 
