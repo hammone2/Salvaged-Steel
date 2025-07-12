@@ -174,7 +174,7 @@ MonoBehaviour:
   spawnPoints: []
   minSpawnCooldown: 5
   maxSpawnCooldown: 10
-  maxEnemies: 1
+  maxEnemies: 7
   isSpawning: 1
 --- !u!1001 &69983820
 PrefabInstance:

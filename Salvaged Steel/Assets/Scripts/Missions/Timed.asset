@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068966cb08078dc4593fc7b9a3270233, type: 3}
   m_Name: Timed
   m_EditorClassIdentifier: 
-  missionTime: 60
+  missionTime: 180

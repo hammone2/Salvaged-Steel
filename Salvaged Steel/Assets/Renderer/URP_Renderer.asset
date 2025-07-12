@@ -105,12 +105,12 @@ MonoBehaviour:
   m_PrefilteringModeAdditionalLightShadows: 0
   m_PrefilterXRKeywords: 1
   m_PrefilteringModeForwardPlus: 0
-  m_PrefilteringModeDeferredRendering: 0
+  m_PrefilteringModeDeferredRendering: 2
   m_PrefilteringModeScreenSpaceOcclusion: 0
   m_PrefilterDebugKeywords: 1
   m_PrefilterWriteRenderingLayers: 1
   m_PrefilterHDROutput: 1
-  m_PrefilterAlphaOutput: 0
+  m_PrefilterAlphaOutput: 1
   m_PrefilterSSAODepthNormals: 1
   m_PrefilterSSAOSourceDepthLow: 1
   m_PrefilterSSAOSourceDepthMedium: 1
@@ -128,9 +128,9 @@ MonoBehaviour:
   m_PrefilterSoftShadowsQualityHigh: 1
   m_PrefilterSoftShadows: 0
   m_PrefilterScreenCoord: 1
-  m_PrefilterNativeRenderPass: 1
+  m_PrefilterNativeRenderPass: 0
   m_PrefilterUseLegacyLightmaps: 0
-  m_PrefilterBicubicLightmapSampling: 0
+  m_PrefilterBicubicLightmapSampling: 1
   m_ShaderVariantLogLevel: 0
   m_ShadowCascades: 0
   m_Textures:
