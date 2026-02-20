@@ -1,2 +1,2 @@
-Play Here (old multiplayer co-op version. Doesn't work): https://hammone2.github.io/Salvaged-Steel/
-Itch.io Version (Most up-to-date version): https://mind-virus-interactive.itch.io/salvaged-steel-alpha
+- Play Here (old multiplayer co-op version. Doesn't work): https://hammone2.github.io/Salvaged-Steel/
+- Itch.io Version (Most up-to-date version): https://mind-virus-interactive.itch.io/salvaged-steel-alpha
